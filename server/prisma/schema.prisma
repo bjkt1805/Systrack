@@ -13,4 +13,332 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-// Modelos
+
+// ---------------- MODELOS ----------------
+
+// -- MODELO DE USUARIO -- 
+model Usuario {
+  id              Int       @id @default(autoincrement())
+  correo          String    @unique
+  contrasenaHash  String
+  rol             Rol       @default(CLIENTE)
+  ultimoIngresoAt DateTime?
+  activo          Boolean   @default(true)
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  tecnico         Tecnico? // 1-1 opcional
+  tickets         Ticket[]             @relation("TicketsSolicitante") // 1-M (solicitante)
+  ticketsCerrados Ticket[]             @relation("TicketsCerradosPor") // 1-M (cerrador)
+  historiales     HistorialTicket[]    @relation("HistorialCambiadoPor") // 1-M (cambiadoPor)
+  notifsEnviadas  Notificacion[]       @relation("NotifsEnviadas") // 1-M (emisor)
+  notifsRecibidas Notificacion[]       @relation("NotifsRecibidas") // 1-M (receptor)
+  valoraciones    ValoracionServicio[] // 1-M (valoraciones hechas)
+}
+
+// -- MODELO DE TÉCNICO -- 
+model Tecnico {
+  id        Int           @id @default(autoincrement())
+  usuarioId Int           @unique
+  estado    EstadoTecnico @default(DISPONIBLE)
+
+  // Carga de trabajo persistida (opcional): cantidad de tickets abiertos/asignados
+  cargaTrabajo Int @default(0)
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  usuario        Usuario               @relation(fields: [usuarioId], references: [id]) // 1-1
+  especialidades TecnicoEspecialidad[] // M2M implícita (con PK compuesta)
+  asignaciones   Asignacion[] // 1-M
+  tickets        Ticket[]              @relation("TicketsAsignadosATecnico") // 1-M (asignación de tiquetes al técnico)
+}
+
+// -- MODELO DE ESPECIALIDAD -- 
+model Especialidad {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @unique
+  descripcion String?
+
+  // Relaciones
+  tecnicos   TecnicoEspecialidad[] // M2M implícita (con PK compuesta)
+  categorias CategoriaEspecialidad[] // M2M implícita (con PK compuesta)
+}
+
+// -- MODELO SLA -- 
+model SLA {
+  id                   Int     @id @default(autoincrement())
+  nombre               String  @unique
+  maxMinutosRespuesta  Int
+  maxMinutosResolucion Int
+  activo               Boolean @default(true)
+
+  // Relaciones
+  categorias Categoria[] // 1-M
+}
+
+// -- MODELO CATEGORIA -- 
+model Categoria {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @unique
+  descripcion String?
+  slaId       Int
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  sla            SLA                     @relation(fields: [slaId], references: [id]) // M-1
+  etiquetas      Etiqueta[] // M2M implícita (con PK compuesta)
+  especialidades CategoriaEspecialidad[] // M2M implícita (con PK compuesta)
+  tickets        Ticket[] // 1-M
+}
+
+// -- MODELO DE ETIQUETA --
+model Etiqueta {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+
+  // Relaciones
+  categorias Categoria[] // M2M implícita (con PK compuesta)
+}
+
+// -- MODELO DE TÉCNICO-ESPECIALIDAD (TABLA INTERMEDIA) --
+model TecnicoEspecialidad {
+  tecnicoId      Int
+  especialidadId Int
+
+  tecnico      Tecnico      @relation(fields: [tecnicoId], references: [id])
+  especialidad Especialidad @relation(fields: [especialidadId], references: [id])
+
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  @@id([tecnicoId, especialidadId]) // Llave primaria compuesta
+}
+
+// -- MODELO DE CATEGORIA-ESPECIALIDAD (TABLA INTERMEDIA) --
+model CategoriaEspecialidad {
+  categoriaId    Int
+  especialidadId Int
+
+  categoria    Categoria    @relation(fields: [categoriaId], references: [id])
+  especialidad Especialidad @relation(fields: [especialidadId], references: [id])
+
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  @@id([categoriaId, especialidadId]) // Llave primaria compuesta
+}
+
+// -- MODELO DE TICKET --
+model Ticket {
+  id          Int          @id @default(autoincrement())
+  codigo      String       @unique @db.VarChar(32) // p.ej. "INC-2025-0001"
+  titulo      String
+  descripcion String
+  estado      EstadoTicket @default(PENDIENTE)
+  prioridad   Prioridad    @default(MEDIA)
+
+  solicitanteId     Int
+  categoriaId       Int
+  tecnicoAsignadoId Int?
+
+  // Deadlines basados en SLA de la categoría (persistidos para auditoría)
+  fechaLimiteRespuesta  DateTime
+  fechaLimiteResolucion DateTime
+
+  respondidoAt      DateTime?
+  resueltoAt        DateTime?
+  cerradoAt         DateTime?
+  cerradoPorId      Int?
+  cumplioRespuesta  Boolean?
+  cumplioResolucion Boolean?
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  solicitante     Usuario   @relation("TicketsSolicitante", fields: [solicitanteId], references: [id])
+  cerradoPor      Usuario?  @relation("TicketsCerradosPor", fields: [cerradoPorId], references: [id])
+  categoria       Categoria @relation(fields: [categoriaId], references: [id])
+  tecnicoAsignado Tecnico?  @relation("TicketsAsignadosATecnico", fields: [tecnicoAsignadoId], references: [id])
+
+  // Relaciones
+  imagenes       ImagenTicket[] // 1-M
+  historiales    HistorialTicket[] // 1-M
+  asignaciones   Asignacion[] // 1-M
+  notificaciones Notificacion[] // 1-M
+  valoracion     ValoracionServicio? // 1-1
+
+  //@@index([estado]) // para búsquedas frecuentes por estado
+  //@@index([categoriaId]) // para búsquedas frecuentes por categoría
+  //@@index([tecnicoAsignadoId]) // para búsquedas frecuentes por técnico asignado
+  //@@index([fechaLimiteResolucion]) // para búsquedas frecuentes por fecha límite de resolución
+}
+
+// -- MODELO DE IMAGEN DEL TICKET --
+model ImagenTicket {
+  id          Int     @id @default(autoincrement())
+  ticketId    Int
+  historialId Int?
+  url         String
+  descripcion String?
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  ticket    Ticket           @relation(fields: [ticketId], references: [id]) // M-1|
+  historial HistorialTicket? @relation(fields: [historialId], references: [id]) // M-1 opcional
+
+  //@@index([ticketId]) // para búsquedas frecuentes por ticket
+  //@@index([historialId]) // para búsquedas frecuentes por historial
+}
+
+// -- MODELO DE HISTORIAL DEL TICKET --
+model HistorialTicket {
+  id            Int           @id @default(autoincrement())
+  ticketId      Int
+  cambiadoPorId Int
+  deEstado      EstadoTicket?
+  aEstado       EstadoTicket
+  nota          String?
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  ticket      Ticket         @relation(fields: [ticketId], references: [id]) // M-1
+  cambiadoPor Usuario        @relation("HistorialCambiadoPor", fields: [cambiadoPorId], references: [id]) // M-1
+  imagenes    ImagenTicket[] // 1-M
+
+  //@@index([ticketId]) // para búsquedas frecuentes por ticket
+  //@@index([cambiadoPorId]) // para búsquedas frecuentes por cambiado por
+}
+
+// -- MODELO DE REGLAS DE AUTO-ASIGNACIÓN DEL TICKET --
+model Regla {
+  id          Int       @id @default(autoincrement())
+  nombre      String    @unique
+  activa      Boolean   @default(true)
+  eliminadaAt DateTime?
+
+  // Pesos simples (opcional) o `criterios` JSON
+  pesoPrioridad    Float?
+  pesoSlaRestante  Float?
+  pesoCargaTrabajo Float?
+
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  asignaciones Asignacion[] // 1-M
+
+  //@@index([activa]) // para búsquedas frecuentes por activa
+}
+
+// -- MODELO DE ASIGNACIÓN DEL TICKET A LOS TÉCNICOS --
+model Asignacion {
+  ticketId         Int
+  tecnicoId        Int
+  metodo           MetodoAsignacion
+  motivo           String?
+  puntajePrioridad Int?
+  slaRestanteMin   Int?
+  reglaId          Int?
+  creadoAt         DateTime         @default(now()) @db.DateTime(0)
+  updatedAt        DateTime         @default(now()) @updatedAt @db.DateTime(0)
+
+  ticket  Ticket  @relation(fields: [ticketId], references: [id])
+  tecnico Tecnico @relation(fields: [tecnicoId], references: [id])
+  regla   Regla?  @relation(fields: [reglaId], references: [id])
+
+  @@id([ticketId, tecnicoId]) // PK compuesta, estilo de tu plantilla
+  //@@index([reglaId])
+}
+
+// -- MODELO DE NOTIFICACIÓN --
+model Notificacion {
+  id         Int                @id @default(autoincrement())
+  tipo       TipoNotificacion
+  emisorId   Int?
+  receptorId Int
+  ticketId   Int?
+  estado     EstadoNotificacion @default(PENDIENTE)
+  mensaje    String?
+  creadoAt   DateTime           @default(now()) @db.DateTime(0)
+  leidoAt    DateTime?          @db.DateTime(0)
+  atendidoAt DateTime?          @db.DateTime(0)
+  updatedAt  DateTime           @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  emisor   Usuario? @relation("NotifsEnviadas", fields: [emisorId], references: [id]) // M-1 
+  receptor Usuario  @relation("NotifsRecibidas", fields: [receptorId], references: [id]) // M-1
+  ticket   Ticket?  @relation(fields: [ticketId], references: [id]) // M-1 opcional
+
+  //@@index([receptorId]) // para búsquedas frecuentes por receptor
+  //@@index([ticketId]) // para búsquedas frecuentes por ticket
+  //@@index([tipo]) // para búsquedas frecuentes por tipo
+}
+
+// -- MODELO DE VALORACIÓN DEL SERVICIO --
+model ValoracionServicio {
+  id          Int      @id @default(autoincrement())
+  ticketId    Int      @unique
+  puntaje     Int // 1..5 (validar en lógica/migración SQL)
+  comentario  String?
+  creadoPorId Int
+  creadoAt    DateTime @default(now()) @db.DateTime(0)
+  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  // Relaciones
+  ticket    Ticket  @relation(fields: [ticketId], references: [id]) // 1-1
+  creadoPor Usuario @relation(fields: [creadoPorId], references: [id]) // M-1
+}
+
+// -------------------------
+// ENUMS (en español, MAYÚSCULAS)
+// -------------------------
+enum Rol {
+  ADMIN
+  TECNICO
+  CLIENTE
+}
+
+enum EstadoTicket {
+  PENDIENTE
+  ASIGNADO
+  EN_PROCESO
+  RESUELTO
+  CERRADO
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum MetodoAsignacion {
+  AUTOMATICA
+  MANUAL
+}
+
+enum TipoNotificacion {
+  TICKET_ASIGNADO
+  ESTADO_CAMBIADO
+  NUEVA_OBSERVACION
+  INICIO_SESION
+}
+
+enum EstadoNotificacion {
+  PENDIENTE
+  ATENDIDA
+}
+
+enum EstadoTecnico {
+  DISPONIBLE
+  NO_DISPONIBLE
+  DESCONECTADO
+}
