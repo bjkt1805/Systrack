@@ -1,20 +1,20 @@
 import { Router } from 'express'
-import { UsuarioController } from '../controllers/usuarioController'
+import { TecnicoController } from '../controllers/tecnicoController'
 
-export class UsuarioRoutes {
+export class TecnicoRoutes {
 
     // Definición de las rutas
     static get routes(): Router {
         const router = Router()
-        const controller = new UsuarioController()
+        const controller = new TecnicoController()
 
-        //GET localhost:3000/usuario/
+        //GET localhost:3000/tecnico/
         router.get('/', controller.get)
 
-        //GET localhost:3000/usuario/search?clave=valor
+        //GET localhost:3000/tecnico/search?clave=valor
         router.get('/search',controller.search)
         
-        //GET localhost:3000/usuario/3
+        //GET localhost:3000/tecnico/3
         router.get('/:id',controller.getById) 
 
         return router

@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { UsuarioRoutes } from './usuario.routes';
+import { TecnicoRoutes } from './tecnico.routes';
 
 export class AppRoutes {
     static get routes(): Router {
         const router = Router();
 
         // ----Agregar las rutas---- 
-        router.use('/usuario',UsuarioRoutes.routes)
+        router.use('/tecnico',TecnicoRoutes.routes)
         return router;
     }
 }

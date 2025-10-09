@@ -2,10 +2,10 @@ import { PrismaClient, Rol, EstadoTecnico } from "../../generated/prisma";
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/custom.error";
 
-export class UsuarioController {
+export class TecnicoController {
     prisma = new PrismaClient();
 
-    // OBTENER TODOS LOS USUARIOS (FILTRADOS POR ROL DE TÉCNICO)
+    // OBTENER TODOS LOS TÉCNICOS (FILTRADOS POR ROL DE TÉCNICO)
     // TAMBIÉN SE INCLUYE PAGINACIÓN 
     get = async (request: Request, response: Response, next: NextFunction) => {
         try {
@@ -82,7 +82,7 @@ export class UsuarioController {
         }
     };
 
-    // OBTENER UN USUARIO TÉCNICO A TRAVÉS DE SU ID
+    // OBTENER UN TÉCNICO A TRAVÉS DE SU ID
     getById = async (
         request: Request,
         response: Response,
@@ -94,7 +94,7 @@ export class UsuarioController {
         }
     };
 
-    // BUSCAR USUARIO POR NOMBRE
+    // BUSCAR TÉCNICO POR NOMBRE
         search = async (
         request: Request,
         response: Response,
@@ -135,14 +135,15 @@ export class UsuarioController {
     };
 
 
-    //CREAR USUARIO
+    //CREAR TÉCNICO
     create = async (request: Request, response: Response, next: NextFunction) => {
         try {
         } catch (error) {
             next(error);
         }
     };
-    //Actualizar
+
+    //ACTUALIZAR TÉCNICO
     update = async (request: Request, response: Response, next: NextFunction) => {
         try {
         } catch (error) {
