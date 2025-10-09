@@ -4,6 +4,12 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// Cambios sugeridos:
+// 1) Eliminar `Tecnico`; mover campos a `Usuario` (opcionales / nulos)
+// 2) Relaciones Muchos a Muchos implícitas: Usuario↔Especialidad, Categoria↔Especialidad, Categoria↔Etiqueta
+// 3) ImagenTicket sólo se relaciona con HistorialTicket (sin FK a Ticket)
+// 4) Notificacion mantiene ticketId como opcional (puede eliminarse si se desea)
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -25,36 +31,36 @@ model Usuario {
   ultimoIngresoAt DateTime?
   activo          Boolean   @default(true)
 
-  creadoAt  DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
-
-  // Relaciones
-  tecnico         Tecnico? // 1-1 opcional
-  tickets         Ticket[]             @relation("TicketsSolicitante") // 1-M (solicitante)
-  ticketsCerrados Ticket[]             @relation("TicketsCerradosPor") // 1-M (cerrador)
-  historiales     HistorialTicket[]    @relation("HistorialCambiadoPor") // 1-M (cambiadoPor)
-  notifsEnviadas  Notificacion[]       @relation("NotifsEnviadas") // 1-M (emisor)
-  notifsRecibidas Notificacion[]       @relation("NotifsRecibidas") // 1-M (receptor)
-  valoraciones    ValoracionServicio[] // 1-M (valoraciones hechas)
-}
-
-// -- MODELO DE TÉCNICO -- 
-model Tecnico {
-  id        Int           @id @default(autoincrement())
-  usuarioId Int           @unique
-  estado    EstadoTecnico @default(DISPONIBLE)
-
-  // Carga de trabajo persistida (opcional): cantidad de tickets abiertos/asignados
-  cargaTrabajo Int @default(0)
+  // Campos movidos desde "Tecnico" (opcionales // nulos)
+  estadoTecnico EstadoTecnico?
+  cargaTrabajo  Int?           @default(0)
 
   creadoAt  DateTime @default(now()) @db.DateTime(0)
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
 
-  // Relaciones
-  usuario        Usuario               @relation(fields: [usuarioId], references: [id]) // 1-1
-  especialidades TecnicoEspecialidad[] // M2M implícita (con PK compuesta)
-  asignaciones   Asignacion[] // 1-M
-  tickets        Ticket[]              @relation("TicketsAsignadosATecnico") // 1-M (asignación de tiquetes al técnico)
+  // Relaciones 
+
+  // Especialidades del usuario (si actúa como técnico)
+  especialidades Especialidad[] // M2M implícita Usuario↔Especialidad
+
+  // Tickets creados/cerrados por el usuario
+  tickets         Ticket[] @relation("TicketsSolicitante") // 1-M (solicitante)
+  ticketsCerrados Ticket[] @relation("TicketsCerradosPor") // 1-M (cerrador)
+
+  // Tickets asignados a este usuario (si es técnico)
+  ticketsAsignados Ticket[] @relation("TicketsAsignadosAUsuario") // 1-M (asignación de tiquetes al usuario-técnico)
+
+  // Historial de cambios hechos por el usuario en el tiquete
+  historiales HistorialTicket[] @relation("HistorialCambiadoPor") // 1-M (cambiadoPor)
+
+  // Notificaciones enviadas/recibidas por el usuario
+  notifsEnviadas  Notificacion[] @relation("NotifsEnviadas") // 1-M (emisor)
+  notifsRecibidas Notificacion[] @relation("NotifsRecibidas") // 1-M (receptor)
+
+  // Valoraciones hechas por el usuario
+  valoraciones ValoracionServicio[] // 1-M (valoraciones hechas)
+
+  asignaciones Asignacion[]
 }
 
 // -- MODELO DE ESPECIALIDAD -- 
@@ -64,8 +70,8 @@ model Especialidad {
   descripcion String?
 
   // Relaciones
-  tecnicos   TecnicoEspecialidad[] // M2M implícita (con PK compuesta)
-  categorias CategoriaEspecialidad[] // M2M implícita (con PK compuesta)
+  tecnicos   Usuario[] // M2M implícita (con PK compuesta) Usuarios con rol TECNICO y esta especialidad
+  categorias Categoria[] // M2M implícita (con PK compuesta) Categorías asociadas a esta especialidad
 }
 
 // -- MODELO SLA -- 
@@ -91,9 +97,9 @@ model Categoria {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
 
   // Relaciones
-  sla            SLA                     @relation(fields: [slaId], references: [id]) // M-1
+  sla            SLA            @relation(fields: [slaId], references: [id]) // M-1
   etiquetas      Etiqueta[] // M2M implícita (con PK compuesta)
-  especialidades CategoriaEspecialidad[] // M2M implícita (con PK compuesta)
+  especialidades Especialidad[] // M2M implícita (con PK compuesta)
   tickets        Ticket[] // 1-M
 }
 
@@ -104,32 +110,6 @@ model Etiqueta {
 
   // Relaciones
   categorias Categoria[] // M2M implícita (con PK compuesta)
-}
-
-// -- MODELO DE TÉCNICO-ESPECIALIDAD (TABLA INTERMEDIA) --
-model TecnicoEspecialidad {
-  tecnicoId      Int
-  especialidadId Int
-
-  tecnico      Tecnico      @relation(fields: [tecnicoId], references: [id])
-  especialidad Especialidad @relation(fields: [especialidadId], references: [id])
-
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
-
-  @@id([tecnicoId, especialidadId]) // Llave primaria compuesta
-}
-
-// -- MODELO DE CATEGORIA-ESPECIALIDAD (TABLA INTERMEDIA) --
-model CategoriaEspecialidad {
-  categoriaId    Int
-  especialidadId Int
-
-  categoria    Categoria    @relation(fields: [categoriaId], references: [id])
-  especialidad Especialidad @relation(fields: [especialidadId], references: [id])
-
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
-
-  @@id([categoriaId, especialidadId]) // Llave primaria compuesta
 }
 
 // -- MODELO DE TICKET --
@@ -143,12 +123,13 @@ model Ticket {
 
   solicitanteId     Int
   categoriaId       Int
-  tecnicoAsignadoId Int?
+  usuarioAsignadoId Int?
 
   // Deadlines basados en SLA de la categoría (persistidos para auditoría)
   fechaLimiteRespuesta  DateTime
   fechaLimiteResolucion DateTime
 
+  // Timestamps de acciones clave
   respondidoAt      DateTime?
   resueltoAt        DateTime?
   cerradoAt         DateTime?
@@ -162,38 +143,20 @@ model Ticket {
   solicitante     Usuario   @relation("TicketsSolicitante", fields: [solicitanteId], references: [id])
   cerradoPor      Usuario?  @relation("TicketsCerradosPor", fields: [cerradoPorId], references: [id])
   categoria       Categoria @relation(fields: [categoriaId], references: [id])
-  tecnicoAsignado Tecnico?  @relation("TicketsAsignadosATecnico", fields: [tecnicoAsignadoId], references: [id])
+  usuarioAsignado Usuario?  @relation("TicketsAsignadosAUsuario", fields: [usuarioAsignadoId], references: [id])
 
   // Relaciones
-  imagenes       ImagenTicket[] // 1-M
+
+  // LAS IMÁGENES SE RELACIONAN CON HistorialTicket, NO DIRECTO CON Ticket
   historiales    HistorialTicket[] // 1-M
   asignaciones   Asignacion[] // 1-M
   notificaciones Notificacion[] // 1-M
   valoracion     ValoracionServicio? // 1-1
 
-  //@@index([estado]) // para búsquedas frecuentes por estado
-  //@@index([categoriaId]) // para búsquedas frecuentes por categoría
-  //@@index([tecnicoAsignadoId]) // para búsquedas frecuentes por técnico asignado
-  //@@index([fechaLimiteResolucion]) // para búsquedas frecuentes por fecha límite de resolución
-}
-
-// -- MODELO DE IMAGEN DEL TICKET --
-model ImagenTicket {
-  id          Int     @id @default(autoincrement())
-  ticketId    Int
-  historialId Int?
-  url         String
-  descripcion String?
-
-  creadoAt  DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
-
-  // Relaciones
-  ticket    Ticket           @relation(fields: [ticketId], references: [id]) // M-1|
-  historial HistorialTicket? @relation(fields: [historialId], references: [id]) // M-1 opcional
-
-  //@@index([ticketId]) // para búsquedas frecuentes por ticket
-  //@@index([historialId]) // para búsquedas frecuentes por historial
+  @@index([estado]) // para búsquedas frecuentes por estado
+  @@index([categoriaId]) // para búsquedas frecuentes por categoría
+  @@index([usuarioAsignadoId]) // para búsquedas frecuentes por usuario (técnico) asignado
+  @@index([fechaLimiteResolucion]) // para búsquedas frecuentes por fecha límite de resolución
 }
 
 // -- MODELO DE HISTORIAL DEL TICKET --
@@ -213,8 +176,23 @@ model HistorialTicket {
   cambiadoPor Usuario        @relation("HistorialCambiadoPor", fields: [cambiadoPorId], references: [id]) // M-1
   imagenes    ImagenTicket[] // 1-M
 
-  //@@index([ticketId]) // para búsquedas frecuentes por ticket
-  //@@index([cambiadoPorId]) // para búsquedas frecuentes por cambiado por
+  @@index([ticketId]) // para búsquedas frecuentes por ticket
+  @@index([cambiadoPorId]) // para búsquedas frecuentes por cambiado por
+}
+
+// -- MODELO DE IMAGEN DEL TICKET -- (sin FK directa a Ticket)
+model ImagenTicket {
+  id          Int     @id @default(autoincrement())
+  historialId Int
+  url         String
+  descripcion String?
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
+
+  historial HistorialTicket @relation(fields: [historialId], references: [id])
+
+  @@index([historialId])
 }
 
 // -- MODELO DE REGLAS DE AUTO-ASIGNACIÓN DEL TICKET --
@@ -234,13 +212,13 @@ model Regla {
   // Relaciones
   asignaciones Asignacion[] // 1-M
 
-  //@@index([activa]) // para búsquedas frecuentes por activa
+  @@index([activa]) // para búsquedas frecuentes por activa
 }
 
-// -- MODELO DE ASIGNACIÓN DEL TICKET A LOS TÉCNICOS --
+// -- MODELO DE ASIGNACIÓN DEL TICKET A LOS TÉCNICOS) --
 model Asignacion {
   ticketId         Int
-  tecnicoId        Int
+  usuarioTecnicoId Int
   metodo           MetodoAsignacion
   motivo           String?
   puntajePrioridad Int?
@@ -249,12 +227,13 @@ model Asignacion {
   creadoAt         DateTime         @default(now()) @db.DateTime(0)
   updatedAt        DateTime         @default(now()) @updatedAt @db.DateTime(0)
 
+  // Relaciones
   ticket  Ticket  @relation(fields: [ticketId], references: [id])
-  tecnico Tecnico @relation(fields: [tecnicoId], references: [id])
+  usuario Usuario @relation(fields: [usuarioTecnicoId], references: [id])
   regla   Regla?  @relation(fields: [reglaId], references: [id])
 
-  @@id([ticketId, tecnicoId]) // PK compuesta, estilo de tu plantilla
-  //@@index([reglaId])
+  @@id([ticketId, usuarioTecnicoId]) // PK compuesta
+  @@index([reglaId]) // para búsquedas frecuentes por regla
 }
 
 // -- MODELO DE NOTIFICACIÓN --
@@ -276,9 +255,9 @@ model Notificacion {
   receptor Usuario  @relation("NotifsRecibidas", fields: [receptorId], references: [id]) // M-1
   ticket   Ticket?  @relation(fields: [ticketId], references: [id]) // M-1 opcional
 
-  //@@index([receptorId]) // para búsquedas frecuentes por receptor
-  //@@index([ticketId]) // para búsquedas frecuentes por ticket
-  //@@index([tipo]) // para búsquedas frecuentes por tipo
+  @@index([receptorId]) // para búsquedas frecuentes por receptor
+  @@index([ticketId]) // para búsquedas frecuentes por ticket
+  @@index([tipo]) // para búsquedas frecuentes por tipo
 }
 
 // -- MODELO DE VALORACIÓN DEL SERVICIO --
@@ -297,7 +276,7 @@ model ValoracionServicio {
 }
 
 // -------------------------
-// ENUMS (en español, MAYÚSCULAS)
+// ENUMS
 // -------------------------
 enum Rol {
   ADMIN
