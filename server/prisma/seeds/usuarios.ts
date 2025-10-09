@@ -1,7 +1,6 @@
-// src/prisma/seeds/usuarios.ts (ajusta la ruta según tu estructura)
 import { EstadoTecnico, Prisma, Rol } from "../../generated/prisma";
 
-export const usuarios: Prisma.UsuarioCreateManyInput[] = [
+export const usuarios = [
   // -- ADMIN --
   {
     nombreUsuario: "brianKellerman2025",
