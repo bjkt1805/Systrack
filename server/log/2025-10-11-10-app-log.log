@@ -1,0 +1,72 @@
+2025-10-11 10:57:31.461 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.categoria.findMany()` invocation in
+/Users/warner/Systrack/server/source/controllers/categoriaController.ts:43:57
+
+  40 };
+  41 
+  42 //Select * from usuario where rol = 'TECNICO' AND (nombre like 'onsulta%' OR descripcion like '%consulta%') AND estadoTecnico = 'DISPONIBLE' order by descripcion asc limit 20 offset 0;
+→ 43 const listado = await this.prisma.categoria.findMany({
+       where: {
+         rol: "TECNICO",
+         ~~~
+     ?   AND?: CategoriaWhereInput | CategoriaWhereInput[],
+     ?   OR?: CategoriaWhereInput[],
+     ?   NOT?: CategoriaWhereInput | CategoriaWhereInput[],
+     ?   id?: IntFilter | Int,
+     ?   nombre?: StringFilter | String,
+     ?   descripcion?: StringNullableFilter | String | Null,
+     ?   slaId?: IntFilter | Int,
+     ?   creadoAt?: DateTimeFilter | DateTime,
+     ?   updatedAt?: DateTimeFilter | DateTime,
+     ?   sla?: SLAScalarRelationFilter | SLAWhereInput,
+     ?   etiquetas?: EtiquetaListRelationFilter,
+     ?   especialidades?: EspecialidadListRelationFilter,
+     ?   tickets?: TicketListRelationFilter
+       },
+       orderBy: {
+         descripcion: "asc"
+       },
+       select: {
+         nombre: true,
+         descripcion: true,
+         slaId: true
+       }
+     })
+
+Unknown argument `rol`. Did you mean `AND`? Available options are marked with ?.
+2025-10-11 10:57:46.706 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.categoria.findMany()` invocation in
+/Users/warner/Systrack/server/source/controllers/categoriaController.ts:43:57
+
+  40 };
+  41 
+  42 //Select * from usuario where rol = 'TECNICO' AND (nombre like 'onsulta%' OR descripcion like '%consulta%') AND estadoTecnico = 'DISPONIBLE' order by descripcion asc limit 20 offset 0;
+→ 43 const listado = await this.prisma.categoria.findMany({
+       where: {
+         rol: "TECNICO",
+         ~~~
+     ?   AND?: CategoriaWhereInput | CategoriaWhereInput[],
+     ?   OR?: CategoriaWhereInput[],
+     ?   NOT?: CategoriaWhereInput | CategoriaWhereInput[],
+     ?   id?: IntFilter | Int,
+     ?   nombre?: StringFilter | String,
+     ?   descripcion?: StringNullableFilter | String | Null,
+     ?   slaId?: IntFilter | Int,
+     ?   creadoAt?: DateTimeFilter | DateTime,
+     ?   updatedAt?: DateTimeFilter | DateTime,
+     ?   sla?: SLAScalarRelationFilter | SLAWhereInput,
+     ?   etiquetas?: EtiquetaListRelationFilter,
+     ?   especialidades?: EspecialidadListRelationFilter,
+     ?   tickets?: TicketListRelationFilter
+       },
+       orderBy: {
+         descripcion: "asc"
+       },
+       select: {
+         nombre: true,
+         descripcion: true,
+         slaId: true
+       }
+     })
+
+Unknown argument `rol`. Did you mean `AND`? Available options are marked with ?.

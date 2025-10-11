@@ -1,6 +1,8 @@
 import { usuarios } from "./seeds/usuarios";
 import { especialidades } from "./seeds/especialidades";
 import { PrismaClient } from "../generated/prisma";
+import { categoria } from "./seeds/categoria";
+import { SLA } from "./seeds/sla";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -23,6 +25,26 @@ const main = async () => {
     });
 
     // Mapeo N a N entre técnicos y especialidades
+
+
+
+
+    // Sla - createMany (crear varios registros sin registrar relaciones) -- Se tienen que insertar primero los SLA porque las categorías dependen de ellos
+    await prisma.sLA.createMany({
+      data: SLA,
+
+      // Respetar campo unique (email)
+      skipDuplicates: true,
+    });
+
+    // Categorias - createMany (crear varios registros sin registrar relaciones)
+    await prisma.categoria.createMany({
+      data: categoria,
+
+      // Respetar campo unique (email)
+      skipDuplicates: true,
+    });
+
 
 
 
