@@ -138,10 +138,8 @@ export class TecnicoController {
         especialidades: tecnico.especialidades,
         cargaTrabajo,
         disponible,
-        // Puedes agregar más campos si lo necesitas
       });
     } catch (error: any) {
-      // Si ocurre un error, lo pasa al manejador de errores
       next(error);
     }
   };
