@@ -11,7 +11,7 @@ export class TicketRoutes {
         //GET localhost:3000/ticket/
         router.get('/', controller.get)
 
-        //GET localhost:3000/ticket/search?clave=valor
+        //GET localhost:3000/ticket/search?clave=valor -- Eje: http://localhost:3000/ticket/search?termino=laptop&userId=1&userRol=ADMINISTRADOR
         router.get('/search',controller.search)
         
         //GET localhost:3000/ticket/3
