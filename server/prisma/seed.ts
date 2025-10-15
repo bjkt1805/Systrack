@@ -3,6 +3,7 @@ import { especialidades } from "./seeds/especialidades";
 import { PrismaClient } from "../generated/prisma";
 import { categoria } from "./seeds/categoria";
 import { SLA } from "./seeds/sla";
+import { ticket } from "./seeds/ticket";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -46,6 +47,13 @@ const main = async () => {
     });
 
 
+    // Ticket - createMany (crear varios registros sin registrar relaciones)
+    await prisma.ticket.createMany({
+      data: ticket,
+
+      // Respetar campo unique (email)
+      skipDuplicates: true,
+    });
 
 
   } catch (error) {

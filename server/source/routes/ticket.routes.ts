@@ -1,0 +1,22 @@
+import { Router } from 'express'
+import { TicketController } from '../controllers/ticketController'
+
+export class TicketRoutes {
+
+    // Definición de las rutas
+    static get routes(): Router {
+        const router = Router()
+        const controller = new TicketController()
+
+        //GET localhost:3000/ticket/
+        router.get('/', controller.get)
+
+        //GET localhost:3000/ticket/search?clave=valor
+        router.get('/search',controller.search)
+        
+        //GET localhost:3000/ticket/3
+        router.get('/:id',controller.getById) 
+
+        return router
+    }
+}
