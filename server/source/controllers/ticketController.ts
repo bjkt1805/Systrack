@@ -49,8 +49,8 @@ export class TicketController {
         // incluir el where construido arriba
         where,
 
-        // ordenar por descripcion de forma ascendente
-        orderBy: { descripcion: "asc" },
+        // ordenar por id de forma ascendente
+        orderBy: { id: "asc" },
 
         // select para traer máximo 4 campos
         select: {
@@ -87,28 +87,36 @@ export class TicketController {
       const ticket = await this.prisma.ticket.findUnique({
         // Busca el ticket por su 'id'
         where: { id },
-        include: {
-          // Incluye la información del usuario solicitante
+        select: {
+          id: true,
+          codigo: true,
+          titulo: true,
+          descripcion: true,
+          estado: true,
+          prioridad: true,
           solicitante: true,
-          // Incluye la información de la categoría asociada
-          categoria: {
-            // Dentro de la categoría, incluye el SLA relacionado
-            include: {
-              sla: true,
-            },
-          },
+          categoria: true,
+          usuarioAsignado: true,
+          fechaLimiteRespuesta: true,
+          fechaLimiteResolucion: true,
+          respondidoAt : true,
+          resueltoAt : true,
+          cerradoAt : true,
+          cumplioRespuesta : true,
+          cumplioResolucion : true,
           // Incluye el historial de estados, observaciones y evidencias del ticket
           historiales: true,
           // Incluye la valoración del ticket (puntaje y comentario)
           valoracion: true,
         },
       });
+
       // Si se encuentra, responde con toda la información del ticket
       response.json(ticket);
 
-      // Si no se encuentra la categoría, responde con error 404
+      // Si no se encuentra el tiquete, responde con error 404
       if (!ticket) {
-        return next(AppError.notFound("Categoría no encontrada"));
+        return next(AppError.notFound("Tiquete no encontrado"));
       }
     } catch (error: any) {
       next(error);

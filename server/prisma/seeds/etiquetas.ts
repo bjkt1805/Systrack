@@ -1,0 +1,63 @@
+export const etiquetas = [
+   
+  // Etiquetas relacionadas con "Hardware"
+  { nombre: "Laptop" },
+  { nombre: "Monitor" },
+  { nombre: "Teclado" },
+  { nombre: "Mouse" },
+  { nombre: "CPU" },
+  { nombre: "Impresora" },
+  { nombre: "Disco duro" },
+  { nombre: "Fuente de poder" },
+  { nombre: "Reparación de componentes" },
+  { nombre: "Mantenimiento preventivo" },
+  { nombre: "Mantenimiento correctivo" },
+  { nombre: "Instalación de hardware" },
+  { nombre: "Diagnóstico de fallas" },
+
+  // Etiquetas relacionadas con "Redes y Conectividad"
+  { nombre: "Wi-Fi" },
+  { nombre: "VPN" },
+  { nombre: "Router" },
+  { nombre: "Switch" },
+  { nombre: "Cableado estructurado" },
+  { nombre: "Firewall" },
+  { nombre: "Conexión lenta" },
+  { nombre: "Sin acceso a Internet" },
+  { nombre: "Configuración IP" },
+  { nombre: "Ciberseguridad" },
+  { nombre: "Ancho de banda" },
+  { nombre: "DNS" },
+  { nombre: "Servidores de red" },
+
+  // Etiquetas relacionadas con "Soporte a usuario final"
+  { nombre: "Restablecimiento de contraseña" },
+  { nombre: "Correo electrónico" },
+  { nombre: "Acceso denegado" },
+  { nombre: "Instalación de software" },
+  { nombre: "Actualización de software" },
+  { nombre: "Creación de usuario" },
+  { nombre: "Directorios activos" },
+  { nombre: "Soporte remoto" },
+  { nombre: "Outlook" },
+  { nombre: "Microsoft Teams" },
+  { nombre: "Zoom" },
+  { nombre: "Office 365" },
+  { nombre: "Software no responde" },
+
+  // Etiquetas relacionadas con "Aplicaciones y sistemas internos"
+  { nombre: "ERP" },
+  { nombre: "Sistema de facturación" },
+  { nombre: "Base de datos" },
+  { nombre: "Actualización de sistema" },
+  { nombre: "Error de aplicación" },
+  { nombre: "Desarrollo de software" },
+  { nombre: "Bug interno" },
+  { nombre: "Integración de sistemas" },
+  { nombre: "SQL" },
+  { nombre: "API" },
+  { nombre: "Soporte a aplicaciones" },
+  { nombre: "Optimización de rendimiento" },
+  { nombre: "Mantenimiento de sistema" },
+
+];

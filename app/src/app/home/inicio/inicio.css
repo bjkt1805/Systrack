@@ -1,0 +1,59 @@
+mat-card {
+    width: 45%;
+    margin: 2em auto;
+    text-align: center;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .example-header-image {
+        background-image: url("/images/gamepad.png");
+        background-size: cover;
+    }
+
+    img.mat-card-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    mat-card-header.primary-title {
+        color: var(--mat-sys-on-primary);
+        border-radius: 20px 20px 0 0;
+        padding: 1em;
+
+        mat-card-title,
+        mat-card-subtitle {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .example-header-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 0.5em;
+            border: 2px solid var(--mat-sys-on-primary);
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+    mat-card-content.secondary-title {
+        color: var(--mat-sys-on-secondary);
+        padding: 1em;
+        border-radius: 0 0 20px 20px;
+
+        p.text {
+            margin: 0;
+            font-size: 1em;
+        }
+    }
+}

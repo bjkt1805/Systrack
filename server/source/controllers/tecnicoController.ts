@@ -91,7 +91,7 @@ export class TecnicoController {
     }
   };
 
-  // OBTENER UN TÉCNICO A TRAVÉS DE SU ID
+  // OBTENER UN TÉCNICO A TRAVÉS DE SU ID (devolver solo si es técnico)
   getById = async (
     request: Request,
     response: Response,
@@ -108,8 +108,8 @@ export class TecnicoController {
       }
 
       // Busca el técnico por su 'id' en la DB
-      const tecnico = await this.prisma.usuario.findUnique({
-        where: { id }, // Filtro por id
+      const tecnico = await this.prisma.usuario.findFirst({
+        where: { id, rol: Rol.TECNICO }, // Filtro por id y por rol de técnico
         include: {
           especialidades: true, // Incluye la lista de especialidades asociadas
           asignaciones: true, // Incluye la lista de asignaciones/tickets

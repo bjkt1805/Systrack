@@ -1,9 +1,10 @@
 import { usuarios } from "./seeds/usuarios";
 import { especialidades } from "./seeds/especialidades";
-import { PrismaClient } from "../generated/prisma";
+import { Prisma, PrismaClient } from "../generated/prisma";
 import { categoria } from "./seeds/categoria";
-import { SLA } from "./seeds/sla";
+import { SLA } from "./seeds/SLA";
 import { ticket } from "./seeds/ticket";
+import { etiquetas } from "./seeds/etiquetas";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -25,10 +26,13 @@ const main = async () => {
       skipDuplicates: true,
     });
 
-    // Mapeo N a N entre técnicos y especialidades
+    // Etiquetas - createMany (crear varios registros sin registrar relaciones)
+    await prisma.etiqueta.createMany({
+      data: etiquetas,
 
-
-
+      // Respetar campo unique (nombre)
+      skipDuplicates: true,
+    });
 
     // Sla - createMany (crear varios registros sin registrar relaciones) -- Se tienen que insertar primero los SLA porque las categorías dependen de ellos
     await prisma.sLA.createMany({
@@ -46,7 +50,6 @@ const main = async () => {
       skipDuplicates: true,
     });
 
-
     // Ticket - createMany (crear varios registros sin registrar relaciones)
     await prisma.ticket.createMany({
       data: ticket,
@@ -55,6 +58,188 @@ const main = async () => {
       skipDuplicates: true,
     });
 
+    // MAPEO MUCHOS A MUCHOS ENTRE TÉCNICOS Y ESPECIALIDADES
+
+    // Actualizar el Técnico 1 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "tecnico1" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 1 }, // Conectar con la especialidad de Redes
+            { id: 2 }, // Conectar con la especialidad de Mantenimiento preventivo y correctivo
+            { id: 3 }, // Conectar con la especialidad de Soporte en infraestructura
+          ],
+        },
+      },
+    });
+
+    // Actualizar el Técnico 2 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "tecnico2" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 4 }, // Conectar con la especialidad de Administrador de redes
+            { id: 5 }, // Conectar con la especialidad de Electrónica básica
+            { id: 6 }, // Conectar con la especialidad de Administrador de sistemas
+          ],
+        },
+      },
+    });
+
+    // MAPEO MUCHOS A MUCHOS ENTRE CATEGORIAS Y ETIQUETAS
+
+    // Actualizar la Categoría 1 creada con sus etiquetas
+    await prisma.categoria.update({
+      where: { id: 1 },
+      data: {
+        etiquetas: {
+          connect: [
+            { id: 1 }, // Conectar con la etiqueta Laptop
+            { id: 2 }, // Conectar con la etiqueta Monitor
+            { id: 3 }, // Conectar con la etiqueta Teclado
+            { id: 4 }, // Conectar con la etiqueta Mouse
+            { id: 5 }, // Conectar con la etiqueta CPU
+            { id: 6 }, // Conectar con la etiqueta Impresora
+            { id: 7 }, // Conectar con la etiqueta Disco duro
+            { id: 8 }, // Conectar con la etiqueta Fuente de poder
+            { id: 9 }, // Conectar con la etiqueta Reparación de componentes
+            { id: 10 }, // Conectar con la etiqueta Mantenimiento preventivo
+            { id: 11 }, // Conectar con la etiqueta Mantenimiento correctivo
+            { id: 12 }, // Conectar con la etiqueta Instalación de hardware
+            { id: 13 }, // Conectar con la etiqueta Diagnóstico de fallas
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 2 creada con sus etiquetas
+    await prisma.categoria.update({
+      where: { id: 2 },
+      data: {
+        etiquetas: {
+          connect: [
+            { id: 14 }, // Conectar con la etiqueta Wi-Fi
+            { id: 15 }, // Conectar con la etiqueta VPN
+            { id: 16 }, // Conectar con la etiqueta Router
+            { id: 17 }, // Conectar con la etiqueta Switch
+            { id: 18 }, // Conectar con la etiqueta Cableado estructurado
+            { id: 19 }, // Conectar con la etiqueta Firewall
+            { id: 20 }, // Conectar con la etiqueta Conexión lenta
+            { id: 21 }, // Conectar con la etiqueta Sin acceso a Internet
+            { id: 22 }, // Conectar con la etiqueta Configuración IP
+            { id: 23 }, // Conectar con la etiqueta Ciberseguridad
+            { id: 24 }, // Conectar con la etiqueta Ancho de banda
+            { id: 25 }, // Conectar con la etiqueta DNS
+            { id: 26 }, // Conectar con la etiqueta Servidores de red
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 3 creada con sus etiquetas
+    await prisma.categoria.update({
+      where: { id: 3 },
+      data: {
+        etiquetas: {
+          connect: [
+            { id: 27 }, // Conectar con la etiqueta Restablecimiento de contraseña
+            { id: 28 }, // Conectar con la etiqueta Correo electrónico
+            { id: 29 }, // Conectar con la etiqueta Acceso denegado
+            { id: 30 }, // Conectar con la etiqueta Instalación de software
+            { id: 31 }, // Conectar con la etiqueta Actualización de software
+            { id: 32 }, // Conectar con la etiqueta Creación de usuario
+            { id: 33 }, // Conectar con la etiqueta Directorios activos
+            { id: 34 }, // Conectar con la etiqueta Soporte remoto
+            { id: 35 }, // Conectar con la etiqueta Outlook
+            { id: 36 }, // Conectar con la etiqueta Microsoft Teams
+            { id: 37 }, // Conectar con la etiqueta Zoom
+            { id: 38 }, // Conectar con la etiqueta Office 365
+            { id: 39 }, // Conectar con la etiqueta Software no responde
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 4 creada con sus etiquetas
+    await prisma.categoria.update({
+      where: { id: 4 },
+      data: {
+        etiquetas: {
+          connect: [
+            { id: 40 }, // Conectar con la etiqueta ERP
+            { id: 41 }, // Conectar con la etiqueta Sistema de facturación
+            { id: 42 }, // Conectar con la etiqueta Base de datos
+            { id: 43 }, // Conectar con la etiqueta Actualización de sistema
+            { id: 42 }, // Conectar con la etiqueta Error de aplicación
+            { id: 43 }, // Conectar con la etiqueta Desarrollo de software
+            { id: 44 }, // Conectar con la etiqueta Bug interno
+            { id: 43 }, // Conectar con la etiqueta Integración de sistemas
+            { id: 44 }, // Conectar con la etiqueta SQL
+            { id: 45 }, // Conectar con la etiqueta API
+            { id: 46 }, // Conectar con la etiqueta Soporte a aplicaciones
+            { id: 47 }, // Conectar con la etiqueta Optimización de rendimiento
+          ],
+        },
+      },
+    });
+
+    // MAPEO MUCHOS A MUCHOS ENTRE CATEGORIAS Y ESPECIALIDADES
+
+    // Actualizar la Categoría 1 Hardware creada con sus especialidades
+    await prisma.categoria.update({
+      where: { id: 1 },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 1 }, // Conectar con la especialidad de Técnico en reparación de equipos electrónicos
+            { id: 2 }, // Conectar con la especialidad de Técnico en mantenimiento de hardware
+            { id: 3 }, // Conectar con la especialidad de Técnico en instalación de redes
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 2 Redes y Conectividad creada con sus especialidades
+    await prisma.categoria.update({
+      where: { id: 2 },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 4 }, // Conectar con la especialidad de Técnico en redes y conectividad
+            { id: 5 }, // Conectar con la especialidad de Técnico en seguridad informática
+            { id: 6 }, // Conectar con la especialidad de Técnico en administración de sistemas
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 3 Soporte a usuario final creada con sus especialidades
+    await prisma.categoria.update({
+      where: { id: 3 },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 7 }, // Conectar con la especialidad de Técnico en administración de sistemas
+            { id: 8 }, // Conectar con la especialidad de Técnico en soporte de aplicaciones empresariales
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 4 Aplicaciones y sistemas internos creada con sus especialidades
+    await prisma.categoria.update({
+      where: { id: 4 },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 9 }, // Conectar con la especialidad de Desarrollador de software
+            { id: 10 }, // Conectar con la especialidad de Técnico en bases de datos
+          ],
+        },
+      },
+    });
 
   } catch (error) {
     throw error;

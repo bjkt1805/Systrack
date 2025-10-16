@@ -1,24 +1,18 @@
 export const SLA = [
   {
-    nombre: "Hardware",
+    nombre: "SLA 1",
     maxMinutosRespuesta: 240,      // 4 horas
     maxMinutosResolucion: 1440,    // 24 horas
     activo: true,
   },
   {
-    nombre: "Redes y Conectividad",
+    nombre: "SLA 2",
     maxMinutosRespuesta: 60,       // 1 hora
     maxMinutosResolucion: 360,     // 6 horas
     activo: true,
   },
   {
-    nombre: "Soporte a Usuario Final",
-    maxMinutosRespuesta: 60,       // 1 hora
-    maxMinutosResolucion: 360,     // 6 horas
-    activo: true,
-  },
-  {
-    nombre: "Aplicaciones y Sistemas Internos",
+    nombre: "SLA 3",
     maxMinutosRespuesta: 60,       // 1 hora
     maxMinutosResolucion: 720,     // 12 horas
     activo: true,

@@ -50,8 +50,8 @@ export const especialidades = [
         descripcion: "Especialista en la gestión y mantenimiento de bases de datos.",
     },
     // Soporte de aplicaciones empresariales
-    {
-        nombre: "Soporte de aplicaciones empresariales",
-        descripcion: "Especialista en la implementación y soporte de aplicaciones empresariales.",
-    },
+    // {
+    //     nombre: "Soporte de aplicaciones empresariales",
+    //     descripcion: "Especialista en la implementación y soporte de aplicaciones empresariales.",
+    // },
 ];

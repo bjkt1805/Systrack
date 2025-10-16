@@ -1,0 +1,53 @@
+<!-- https://material.angular.dev/components/menu/overview -->
+<!--https://fonts.google.com/icons-->
+<mat-toolbar class="header primary-gradient">
+    <!-- Logo -->
+    <button mat-icon-button class="example-header-image" matTooltip="App
+Videojuegos"></button>
+    <!-- Menú principal -->
+    <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon" matTooltip="Menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Mantenimientos" [matMenuTriggerFor]="menu2">
+        <mat-icon>save_as</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Reportes" [matMenuTriggerFor]="menu4">
+        <mat-icon>monitoring</mat-icon>
+    </button>
+    <!-- Menús desplegables -->
+    <mat-menu #menu1="matMenu">
+        <button mat-menu-item>Inicio</button>
+        <button mat-menu-item>Acerca de</button>
+        <button mat-menu-item>Videojuego</button>
+    </mat-menu>
+    <mat-menu #menu2="matMenu">
+        <button mat-menu-item>Videojuegos</button>
+    </mat-menu>
+    <mat-menu #menu4="matMenu">
+        <button mat-menu-item>Videojuegos x Genero</button>
+        <button mat-menu-item>Ordenes x Mes</button>
+        <button mat-menu-item>Videojuegos vendidos x Mes</button>
+    </mat-menu>
+    <!-- Spacer -->
+    <div class="example-spacer"></div>
+    <!-- Carrito y usuario -->
+    <div class="user-section">
+        <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
+            <mat-icon>shopping_cart</mat-icon>
+        </button>
+        <span class="small-text user-email">Email</span>
+        <button mat-icon-button [matMenuTriggerFor]="menu3">
+            <mat-icon>person</mat-icon>
+        </button>
+        <mat-menu #menu3="matMenu">
+            <button mat-menu-item>
+                <mat-icon>person_add</mat-icon>
+                <span>Login</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>person_remove</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </div>
+</mat-toolbar>

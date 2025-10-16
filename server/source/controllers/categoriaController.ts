@@ -1,11 +1,11 @@
-import { PrismaClient, Rol, EstadoTecnico } from "../../generated/prisma";
+import { PrismaClient} from "../../generated/prisma";
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/custom.error";
 
 export class CategoriaController {
   prisma = new PrismaClient();
 
-  // OBTENER TODOS LOS TÉCNICOS (FILTRADOS POR ROL DE TÉCNICO)
+  // OBTENER TODAS LAS CATEGORIAS
   // TAMBIÉN SE INCLUYE PAGINACIÓN
   get = async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -56,13 +56,20 @@ export class CategoriaController {
         // skip: (pagina - 1) * tamanoPagina,
         // take: tamanoPagina,
 
-        // select para traer máximo 3 campos
+        // Select específico de campos a retornar (incluye el SLA relacionado)
         select: {
-          // id: true,
           nombre: true,
           descripcion: true,
-          slaId: true,
+          sla: {
+            select: {
+              id: true,
+              nombre: true,
+              maxMinutosRespuesta: true,
+              maxMinutosResolucion: true,
+            },
+          },
         },
+
       });
       response.json(listado);
     } catch (error) {
@@ -90,7 +97,7 @@ export class CategoriaController {
       const categoria = await this.prisma.categoria.findUnique({
         where: { id }, // Filtro por id
         include: {
-          etiquetas: true, // Incluye la lista de etiquetas asociadas
+          etiquetas: { orderBy: { id: "asc" } }, // Incluye la lista de etiquetas asociadas (ordenadas por id ascendente)
           especialidades: true, // Incluye la lista de especialidades asociadas
           sla: {
             // Incluye información del SLA relacionado

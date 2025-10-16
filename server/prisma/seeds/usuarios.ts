@@ -1,4 +1,5 @@
 import { EstadoTecnico, Prisma, Rol } from "../../generated/prisma";
+import { especialidades } from "./especialidades";
 
 export const usuarios = [
   // -- ADMIN --
@@ -20,7 +21,7 @@ export const usuarios = [
     nombreUsuario: "tecnico1",
     correo: "usuario-tecnico1@prueba.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
-    rol: Rol.ADMIN,
+    rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,
   },
@@ -33,7 +34,7 @@ export const usuarios = [
     cargaTrabajo: 0,
   },
 
-  // -- CLIENTES -- (si no pones `rol`, toma el default CLIENTE)
+  // -- CLIENTES -- (si no se pone `rol`, toma el default CLIENTE)
   {
     nombreUsuario: "cliente1",
     correo: "cliente1@prueba.com",
