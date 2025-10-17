@@ -2,8 +2,8 @@
 <!--https://fonts.google.com/icons-->
 <mat-toolbar class="header primary-gradient">
     <!-- Logo -->
-    <button mat-icon-button class="example-header-image" matTooltip="App
-Videojuegos"></button>
+    <button mat-icon-button class="example-header-image" matTooltip="App Systrack"></button>
+
     <!-- Menú principal -->
     <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon" matTooltip="Menu">
         <mat-icon>menu</mat-icon>
@@ -14,6 +14,7 @@ Videojuegos"></button>
     <button mat-icon-button matTooltip="Reportes" [matMenuTriggerFor]="menu4">
         <mat-icon>monitoring</mat-icon>
     </button>
+
     <!-- Menús desplegables -->
     <mat-menu #menu1="matMenu">
         <button mat-menu-item>Inicio</button>
@@ -28,8 +29,10 @@ Videojuegos"></button>
         <button mat-menu-item>Ordenes x Mes</button>
         <button mat-menu-item>Videojuegos vendidos x Mes</button>
     </mat-menu>
+
     <!-- Spacer -->
     <div class="example-spacer"></div>
+    
     <!-- Carrito y usuario -->
     <div class="user-section">
         <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">

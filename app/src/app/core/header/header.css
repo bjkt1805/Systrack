@@ -1,17 +1,22 @@
+
+/* Estilos para el header */
 .header {
     position: fixed;
     top: 0;
     width: 100%;
+    height: 15%;
     z-index: 1000;
     display: flex;
     align-items: center;
     padding: 0 24px;
 }
 
+/* Estilos para el espaciador */
 .example-spacer {
     flex: 1 1 auto;
 }
 
+/* Estilos para la sección de usuario */
 .user-section {
     display: flex;
     align-items: center;
@@ -24,11 +29,12 @@
     }
 }
 
+/* Estilos para la imagen del header */
 .example-header-image {
-    background-image: url("/images/gamepad.png");
+    background-image: url("/images/systrackLogo.png");
     background-size: cover;
-    height: 40px;
-    width: 40px;
+    height: 60px;
+    width: 60px;
     border-radius: 50%;
     margin-right: 16px;
     flex-shrink: 0;
@@ -39,6 +45,7 @@
     }
 }
 
+/* Estilos para los botones de íconos */
 button.mat-icon-button {
     border-radius: 12px;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -49,10 +56,12 @@ button.mat-icon-button {
     }
 }
 
+/* Estilos para textos pequeños */
 .small-text {
     font-size: var(--mat-sys-body-small);
 }
 
+/* Estilos para el menú desplegable */
 mat-menu {
     .mat-menu-content {
         background-color: var(--mat-sys-surface);
@@ -61,6 +70,7 @@ mat-menu {
     }
 }
 
+/* Estilos para la insignia de notificaciones */
 mat-badge {
     .mat-badge-content {
         font-size: 0.75rem;
@@ -70,5 +80,10 @@ mat-badge {
         color: var(--mat-sys-on-secondary);
         transition: all 0.3s ease;
     }
+}
+
+/* Color de los íconos en el header */
+mat-icon, button {
+    color: var(--mat-sys-on-primary);
 }
 

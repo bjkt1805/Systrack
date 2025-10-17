@@ -1,35 +1,167 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+//Importar tema creado
+@use '../src/app/styles/theme-colors' as colors;
+@use 'sass:map';
 
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+// Función helper para acceder a colores de la paleta
+@function c($palette, $shade) {
+  @return map.get($palette, $shade);
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
+html {
   color-scheme: light;
+  //aplicar tema
+  @include mat.theme ((color: (primary: colors.$primary-palette,
+          secondary: colors.$secondary-palette,
+          tertiary: colors.$tertiary-palette,
+        ),
+        typography: Arial,
+        density: 0,
+      ));
+  
+  // Material Component Overrides
+  /*https://v19.material.angular.dev/components/toolbar/styling*/
+  @include mat.toolbar-overrides((container-background-color: c(colors.$primary-palette, 40),
+    ));
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  .primary-gradient {
+    background: linear-gradient(90deg, #{c(colors.$primary-palette, 20)}, #{c(colors.$primary-palette, 70)});
 
-  // Reset the user agent margin.
-  margin: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+
+    // Contenido sobre el gradiente
+    >* {
+      position: relative;
+      z-index: 1;
+    }
+
+  }
+
+
+  @include mat.menu-overrides((container-color: c(colors.$primary-palette, 50),
+    ));
+
+  @include mat.select-overrides((panel-background-color: rgba(0, 0, 0, 0.7),
+    ));
+
+  @include mat.tooltip-overrides((container-color: rgba(0, 0, 0, 0.6),
+      supporting-text-color: white));
+
+  @include mat.dialog-overrides((container-color: black,
+      subhead-color: c(colors.$primary-palette, 80),
+      subhead-size: 1.5em,
+      supporting-text-color: white,
+      headline-padding: 0.5em,
+      supporting-text-line-height: 1.5em,
+      content-padding: 1em));
+
+  @include mat.snack-bar-overrides((button-color: black));
+
+  @include mat.form-field-overrides((error-text-color: #e74c3c,
+      filled-error-active-indicator-color: #cb4335,
+      container-text-size: 1em,
+    ));
+
+  // Cards
+  .bg-primary-card {
+    background: linear-gradient(90deg, #{c(colors.$primary-palette, 50)}, #{c(colors.$primary-palette, 70)});
+  }
+
+  .bg-secondary-card {
+    background: linear-gradient(90deg, #{c(colors.$secondary-palette, 50)}, #{c(colors.$secondary-palette, 70)});
+  }
+
+  .bg-tertiary-card {
+    background: linear-gradient(90deg, #{c(colors.$tertiary-palette, 50)}, #{c(colors.$tertiary-palette, 70)});
+  }
+
+  // Badges
+  .number-cart {
+    @include mat.badge-overrides((background-color: c(colors.$secondary-palette, 50),
+        line-height: 1em,
+        container-shape: 10px,
+        container-padding: 0.2em));
+  }
+
+  // Chips
+  @each $type, $palette in (primary: colors.$primary-palette, secondary: colors.$secondary-palette, tertiary: colors.$tertiary-palette) {
+    .chip-#{$type} {
+      @include mat.chips-overrides((elevated-container-color: c($palette, 60),
+          hover-state-layer-color: c($palette, 40),
+          label-text-color: white,
+          outline-color: white,
+        ));
+    }
+  }
+
+  // Icon colors
+  @each $type, $palette in (primary: colors.$primary-palette, secondary: colors.$secondary-palette, tertiary: colors.$tertiary-palette) {
+    .ico-#{$type} {
+      @include mat.icon-overrides((color: c($palette, 70)));
+    }
+  }
+
+  // backgrounds
+  @each $type, $palette in (primary: colors.$primary-palette, secondary: colors.$secondary-palette, tertiary: colors.$tertiary-palette) {
+    .bg-#{$type} {
+      background-color: c($palette, 20);
+    }
+
+    .btn-#{$type} {
+      background-color: rgba(map.get($palette, 40), 0.25); // vidrio
+      color: var(--mat-sys-on-surface);
+      border-radius: 24px;
+      padding: 0.6em 1.8em;
+      font-weight: 600;
+      border: 1px solid rgba(map.get($palette, 60), 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(map.get($palette, 50), 0.3);
+
+      transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        background-color: rgba(map.get($palette, 60), 0.35);
+        transform: scale(1.05);
+        box-shadow: 0 6px 25px rgba(map.get($palette, 60), 0.35);
+      }
+
+      &:active {
+        transform: scale(0.98);
+        box-shadow: 0 3px 15px rgba(map.get($palette, 50), 0.25);
+      }
+    }
+
+    .#{$type}-title {
+      font-weight: bold;
+      background-color: rgba(map.get($palette, 50), 0.6);
+      color: var(--mat-sys-on-surface);
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 0.5em 1em;
+      text-align: center;
+      backdrop-filter: blur(6px);
+
+      box-shadow: 0 3px 12px rgba(map.get($palette, 50), 0.25);
+    }
+  }
+
+  // Card header
+  .card-header-secondary {
+    background-color: c(colors.$secondary-palette, 60);
+    color: white;
+    padding-bottom: 0.5em;
+  }
+
+  // Active link
+  .active-link {
+    background-color: c(colors.$primary-palette, 10);
+    color: c(colors.$secondary-palette, 90);
+  }
+
+  // Tables
+  .tabla {
+    @include mat.table-overrides((row-item-outline-color: c(colors.$tertiary-palette, 95),
+        row-item-label-text-color: white));
+  }
 }
