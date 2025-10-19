@@ -1,18 +1,42 @@
-<!-- Componente de tarjeta de bienvenida -->  
-<mat-card appearance="outlined">
+<!-- inicio.html -->
+<section class="hero">
+    <div class="bg-blobs" aria-hidden="true">
+        <span class="blob b1"></span>
+        <span class="blob b2"></span>
+        <span class="blob b3"></span>
+    </div>
 
-    <!-- Encabezado de la tarjeta -->
-    <mat-card-header class="primary-title" style="text-align: center;">
-        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-        <mat-card-title >Systrack</mat-card-title>
-        <mat-card-subtitle>Tu aliado tecnológico</mat-card-subtitle>
-    </mat-card-header>
+    <mat-card class="welcome-card mat-elevation-z8" appearance="outlined">
+        <mat-card-header class="primary-title">
+            <!-- <div class="logo-ring">
+                <img src="/images/systrackLogo.png" alt="Systrack logo" />
+            </div> -->
+            <div>
+                <mat-card-title>Systrack</mat-card-title>
+                <mat-card-subtitle>Tu aliado tecnológico para la gestión de soporte técnico</mat-card-subtitle>
+            </div>
+        </mat-card-header>
 
-    <!-- Imagen de la tarjeta -->
-    <img mat-card-image src="/images/systrackLogo.png" style="width: 30%; height: 20%; align-self: center; padding-top: 2%" />
+        <mat-divider></mat-divider>
 
-    <!-- Contenido de la tarjeta -->
-    <mat-card-content class="secondary-title">
-        <p class="text">Aplicación Angular para consumo de API NodeJS</p>
-    </mat-card-content>
-</mat-card>
+        <!-- <img mat-card-image src="/images/systrackLogo.png" alt="Systrack banner" class="hero-image" loading="eager"
+            decoding="async" /> -->
+
+        <mat-card-content class="secondary-title">
+            <p class="text">
+                Aplicación Angular para consumo de API NodeJS
+            </p>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            <button mat-raised-button color="primary" class="cta" matRipple>
+                <mat-icon>rocket_launch</mat-icon>
+                Empezar
+            </button>
+            <button mat-stroked-button color="accent" class="cta-ghost" matRipple routerLink="/acerca-de">
+                <mat-icon>info</mat-icon>
+                Acerca de
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</section>

@@ -1,0 +1,99 @@
+<!-- Revisar si hay datos antes de mostrar el detalle del técnico -->
+
+@if (datos()) {
+<br>
+<mat-card class="tech-card" appearance="outlined" style="margin-top: 10px;">
+
+    <!-- Encabezado del card con avatar (OPCIONAL) -->
+    <mat-card-header class="tech-card__header">
+
+        <!-- Avatar del técnico (OPCIONAL) -->
+        <div class="tech-card__avatar">
+            <img [src]="'http://localhost:3000/images/'" alt="Foto del técnico"
+                onerror="this.style.visibility='hidden'" />
+        </div>
+
+        <!-- Título y subtítulo del card -->
+        <div class="tech-card__title">
+            <mat-card-title class="tech-card__name">
+                {{ datos()?.nombreUsuario }}
+            </mat-card-title>
+            <mat-card-subtitle class="tech-card__subtitle">
+
+                <span If="datos()?.correo">{{ datos()?.correo }}</span>
+                <span class="dot" If="datos()?.correo && datos()?.estadoTecnico"></span>
+                <span class="status" [class.status--ok]="datos()?.estadoTecnico === 'DISPONIBLE'"
+                    [class.status--off]="datos()?.estadoTecnico !== 'DISPONIBLE'">
+                    {{ datos()?.estadoTecnico || '—' }}
+                </span>
+            </mat-card-subtitle>
+        </div>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="tech-card__content">
+        <!-- Imagen grande opcional (si deseas mantenerla) -->
+        <img mat-card-image class="tech-card__hero" [src]="'http://localhost:3000/images/'" alt="" loading="lazy"
+            decoding="async" />
+
+        <!-- Panel de información -->
+        <section class="tech-info">
+
+            <!-- Contenedor del nombre completo -->
+            <div class="info-row">
+                <span class="info-label">Nombre completo</span>
+                <span class="info-value">{{ datos()?.nombreUsuario }}</span>
+            </div>
+
+            <!-- Contenedor del correo electrónico -->
+            <div class="info-row" *ngIf="datos()?.correo">
+                <span class="info-label">Correo</span>
+                <span class="info-value">{{ datos()?.correo }}</span>
+            </div>
+
+            <!-- Contenedor de las especialidades del técnico -->
+            <div class="info-row">
+                <span class="info-label">Especialidades</span>
+                <div class="chips">
+                    <mat-chip-listbox aria-label="Especialidades">
+                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
+                        @for (item of datos()?.especialidades; track item.id) {
+                        <mat-chip-option class="chip-tertiary"> {{item.nombre}}
+                        </mat-chip-option>
+                        }
+                    </mat-chip-listbox>
+                </div>
+            </div>
+
+            <!-- Contenedor de carga de trabajo del técnico -->
+            <div class="info-row">
+                <span class="info-label">Carga de trabajo</span>
+                <span class="info-value">{{ datos()?.cargaTrabajo }}</span>
+            </div>
+        </section>
+    </mat-card-content>
+
+    <!-- Acciones del card -->
+    <mat-card-actions class="tech-card__actions">
+
+        <!-- Botón de regresar (llamando al signal)-->
+        <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Regresar
+        </button>
+    </mat-card-actions>
+</mat-card>
+}
+@else {
+<mat-card class="tech-card tech-card--empty" appearance="outlined">
+    <mat-card-content class="empty">
+        <mat-icon>person_search</mat-icon>
+        <p class="mat-body text">Técnico no encontrado</p>
+        <button mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Regresar
+        </button>
+    </mat-card-content>
+</mat-card>
+}

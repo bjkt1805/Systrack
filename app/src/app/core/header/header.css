@@ -8,12 +8,20 @@
     z-index: 1000;
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Distribuye espacio entre logo, menú y usuario */
     padding: 0 24px;
 }
 
 /* Estilos para el espaciador */
 .example-spacer {
     flex: 1 1 auto;
+}
+
+/* MENÚ PRINCIPAL */
+.menu-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 100px; /* espacio uniforme entre botones */
 }
 
 /* Estilos para la sección de usuario */

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
 import { RouterModule } from '@angular/router';
-import {MatIconModule} from '@angular/material/icon'; 
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button'; 
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import {MatMenuModule} from '@angular/material/menu'; 
-import {MatBadgeModule} from '@angular/material/badge' 
+import {MatBadgeModule} from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [Header, Footer],
@@ -16,9 +18,11 @@ import {MatBadgeModule} from '@angular/material/badge'
     RouterModule,
     MatToolbarModule,
     MatIconModule,
+    MatTooltipModule,
     MatButtonModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDividerModule
   ],
   exports: [Header, Footer],
 })

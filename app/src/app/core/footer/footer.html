@@ -1,6 +1,50 @@
-<mat-toolbar layout-align="start center" class="footer primary-gradient">
-    <mat-toolbar-row>
-        <p>ISW-811 Aplicaciones Web Utilizando Software Libre</p>
-        <p>{{ today | date : "yyyy" }}</p>
-    </mat-toolbar-row>
+<!-- <mat-toolbar layout-align="start center" class="footer primary-gradient"> -->
+
+<!-- Se le quitó el fondo degradado al footer-->
+<!-- footer.component.html -->
+<mat-toolbar class="footer" role="contentinfo" color="primary">
+  <div class="footer__container">
+    <!-- Columna 1: Información del negocio -->
+    <div class="footer__block">
+      <h6 class="footer__title">Systrack</h6>
+      <p class="footer__text">
+        Dirección: San Juan, Santa Bárbara, Heredia, Costa Rica
+      </p>
+      <p class="footer__text">
+        Teléfono:
+        <a href="tel:+50672969719" class="footer__link">+506 72969719</a>
+      </p>
+    </div>
+
+    <!-- Columna 2: Redes sociales -->
+    <div class="footer__block">
+      <h6 class="footer__subtitle">Síguenos</h6>
+      <div class="footer__social">
+        <a class="footer__icon" href="https://www.facebook.com" target="_blank" aria-label="Facebook" matTooltip="Facebook">
+          <mat-icon>facebook</mat-icon>
+        </a>
+        <a class="footer__icon" href="https://www.instagram.com" target="_blank" aria-label="Instagram" matTooltip="Instagram">
+          <mat-icon>photo_camera</mat-icon>
+        </a>
+        <a class="footer__icon" href="https://www.twitter.com" target="_blank" aria-label="X" matTooltip="X">
+          <mat-icon>alternate_email</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <!-- Columna 3: Créditos y enlaces -->
+    <div class="footer__block footer__block--right">
+      <p class="footer__legal">
+        © {{ today | date: 'yyyy' }}, Systrack. Todos los derechos reservados.
+      </p>
+      <p class="footer__links">
+        <a class="footer__link" routerLink="/contacto">Contacto</a>
+    </p>
+    <p class="footer__signature">Bryan Kellerman
+        <span class="sep" aria-hidden="true">| </span>Warner Salazar
+    </p>
+
+    </div>
+  </div>
+
 </mat-toolbar>

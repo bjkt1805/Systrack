@@ -62,7 +62,7 @@ const main = async () => {
 
     // Actualizar el Técnico 1 creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "tecnico1" },
+      where: { nombreUsuario: "Andrés González" },
       data: {
         especialidades: {
           connect: [
@@ -76,7 +76,63 @@ const main = async () => {
 
     // Actualizar el Técnico 2 creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "tecnico2" },
+      where: { nombreUsuario: "Pedro Carrillo" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 4 }, // Conectar con la especialidad de Administrador de redes
+            { id: 5 }, // Conectar con la especialidad de Electrónica básica
+            { id: 6 }, // Conectar con la especialidad de Administrador de sistemas
+          ],
+        },
+      },
+    });
+
+        // Actualizar el Técnico 3 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "Andrea López" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 1 }, // Conectar con la especialidad de Redes
+            { id: 2 }, // Conectar con la especialidad de Mantenimiento preventivo y correctivo
+            { id: 3 }, // Conectar con la especialidad de Soporte en infraestructura
+          ],
+        },
+      },
+    });
+
+    // Actualizar el Técnico 4 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "Juan Martínez" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 4 }, // Conectar con la especialidad de Administrador de redes
+            { id: 5 }, // Conectar con la especialidad de Electrónica básica
+            { id: 6 }, // Conectar con la especialidad de Administrador de sistemas
+          ],
+        },
+      },
+    });
+
+        // Actualizar el Técnico 5 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "Felipe Ramírez" },
+      data: {
+        especialidades: {
+          connect: [
+            { id: 1 }, // Conectar con la especialidad de Redes
+            { id: 2 }, // Conectar con la especialidad de Mantenimiento preventivo y correctivo
+            { id: 3 }, // Conectar con la especialidad de Soporte en infraestructura
+          ],
+        },
+      },
+    });
+
+    // Actualizar el Técnico 6 creado con sus especialidades
+    await prisma.usuario.update({
+      where: { nombreUsuario: "Alberto Sánchez" },
       data: {
         especialidades: {
           connect: [

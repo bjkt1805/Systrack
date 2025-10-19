@@ -1,9 +1,17 @@
-<!--Selector del encabezado Header definido en el modulo Core-->
+<!--Selector del Header definido en el modulo Core-->
 <app-header></app-header>
+
+<!-- Contenedor para el cuerpo de la aplicación -->
 <div class="body-container">
+
+  <!-- Contenedor para los mensajes de notificación (utilizado por cualquier componente)-->
+  <ngx-sonner-toaster></ngx-sonner-toaster>
+
   <!-- router-outlet: marcador de posición que Angular se llena dinámicamente según el
-estado actual del enrutador -->
+   estado actual del enrutador -->
   <router-outlet />
+
 </div>
+
 <!-- Selector Footer definido en el módulo Core -->
 <app-footer></app-footer>

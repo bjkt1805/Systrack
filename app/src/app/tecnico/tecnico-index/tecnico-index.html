@@ -1,0 +1,76 @@
+<div class="grid-container">
+    <mat-card appearance="outlined" class="filter" style="margin-top: 10px;">
+        <!-- Encabezado de Técnicos -->
+        <mat-card-header>
+            <h1 class="mat-h1">Técnicos</h1>
+        </mat-card-header>
+
+        <!-- Filtro de búsqueda-->
+        <!-- <mat-card-content>
+            <mat-form-field class="full-width">
+                <mat-label>Nombre de técnico</mat-label>
+                <input matInput />
+                <mat-hint> /20</mat-hint>
+                <button mat-icon-button matSuffix color="primary">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <mat-label>Especialidades</mat-label>
+                <mat-select multiple>
+                    <mat-option></mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card-content> -->
+    </mat-card>
+
+    <!-- Lista de técnicos. Revisar si hay más de uno para listarlos en la vista -->
+    @if(datos().length > 0){
+    <div class="tecnico-list">
+
+        <!-- Recorrer la lista de técnicos para mostrarlos en la vista -->
+        @for (item of datos(); track item.id) {
+        <div class="tecnico-card" style="width: 150%;">
+            <mat-card appearance="outlined">
+                <mat-card-header class="secondary-title title" style="margin-bottom: 10px;">
+                    <mat-card-title style="font-size: 16px;">
+                        <b>{{item.nombreUsuario}}</b> 
+                    </mat-card-title>
+                </mat-card-header>
+
+                <!-- Mostrar información del técnico -->
+                <mat-card-content class="user-info">
+                    <div class="info-item" style="font-size: 13px;">
+                        <span class="info-label">Email: </span>
+                        <span class="info-value">{{ item.correo }}</span>
+                    </div>
+                    <div class="info-item" style="font-size: 14px;">
+                        <span class="info-label">Estado:</span>
+                        <span class="status-box"
+                            [ngClass]="item.estadoTecnico === 'DISPONIBLE' ? 'status-activo' : 'status-inactivo'">
+                            {{ item.estadoTecnico }}
+                        </span>
+                    </div>
+                </mat-card-content>
+
+                <!-- Imagen del técnico (DISCUTIR SI SE INCLUYE)-->
+                <!-- <img mat-card-image [src]="'http://localhost:3000/images/'" [alt]="" /> -->
+
+                <!-- Footer con botón de detalle -->
+                <mat-card-footer class="footer">
+                    <button matMiniFab matTooltip="Detalle del técnico" aria-label="Detalle Técnico"
+                        (click)="detalle(item.id)">
+                        <mat-icon class="mat-18">info</mat-icon>
+                    </button>
+                </mat-card-footer>
+
+            </mat-card>
+        </div>
+        }
+
+    </div>
+    }@else {
+    <p>No hay técnicos disponibles.</p>
+    }
+
+</div>

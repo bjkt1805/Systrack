@@ -17,6 +17,6 @@ export const categoria = [
   {
     nombre: "Aplicaciones y Sistemas Internos",
     descripcion: "Fallos en ERP, errores en sistema de facturación, actualización de software interno, problemas de base de datos. Desarrollador de software, administrador de bases de datos, soporte de aplicaciones empresariales.",
-    slaId: 4, // Tiempo máximo de respuesta: 1 hora, resolución: 12 horas
+    slaId: 3, // Tiempo máximo de respuesta: 1 hora, resolución: 12 horas
   },
 ];

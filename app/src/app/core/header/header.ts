@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -8,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class Header {
 
+  constructor(private router: Router) {}
+  // Para regresar a la vista de inicio
+  irInicio(): void {
+    this.router.navigate(['/']);
+  }
 }

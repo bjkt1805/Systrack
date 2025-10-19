@@ -1,48 +1,75 @@
 <!-- https://material.angular.dev/components/menu/overview -->
 <!--https://fonts.google.com/icons-->
-<mat-toolbar class="header primary-gradient">
-    <!-- Logo -->
-    <button mat-icon-button class="example-header-image" matTooltip="App Systrack"></button>
 
-    <!-- Menú principal -->
-    <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon" matTooltip="Menu">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <button mat-icon-button matTooltip="Mantenimientos" [matMenuTriggerFor]="menu2">
-        <mat-icon>save_as</mat-icon>
-    </button>
-    <button mat-icon-button matTooltip="Reportes" [matMenuTriggerFor]="menu4">
-        <mat-icon>monitoring</mat-icon>
-    </button>
+<!-- <mat-toolbar class="header primary-gradient"> -->
+
+<!-- Se le quitó el fondo degradado al header-->
+<mat-toolbar class="header">
+    <!-- Logo -->
+    <button mat-icon-button (click)="irInicio()" class="example-header-image" matTooltip="Inicio"></button>
+
+    <div class="menu-section">
+
+        <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon" matTooltip="Listados" style="font-size: 16px;">
+            <!-- <mat-icon>menu</mat-icon> -->
+            Listados
+        </button>
+        <button mat-icon-button matTooltip="Mantenimientos" [matMenuTriggerFor]="menu2" style="font-size: 16px;">
+            <!-- <mat-icon>save_as</mat-icon> -->
+            Mantenimientos
+        </button>
+        <button mat-icon-button matTooltip="Procesos" [matMenuTriggerFor]="menu3" style="font-size: 16px;">
+            <!-- <mat-icon>save_as</mat-icon> -->
+            Procesos
+        </button>
+        <button mat-icon-button matTooltip="Reportes" [matMenuTriggerFor]="menu4" style="font-size: 16px;">
+            <!-- <mat-icon>monitoring</mat-icon> -->
+            Reportes
+        </button>
+    </div>
+
 
     <!-- Menús desplegables -->
+
+    <!-- Menú desplegable de Listados-->
     <mat-menu #menu1="matMenu">
-        <button mat-menu-item>Inicio</button>
-        <button mat-menu-item>Acerca de</button>
-        <button mat-menu-item>Videojuego</button>
+        <button mat-menu-item [routerLink]="['/tecnico']">Técnicos</button>
+        <button mat-menu-item [routerLink]="['/categoria']">Categorías</button>
+        <button mat-menu-item [routerLink]="['/ticket']">Tickets</button>
     </mat-menu>
+
+    <!-- Menú desplegable de Mantenimientos-->
     <mat-menu #menu2="matMenu">
         <button mat-menu-item>Videojuegos</button>
     </mat-menu>
+
+    <!-- Menú desplegable de Procesos-->
+    <mat-menu #menu3="matMenu">
+        <button mat-menu-item>Proceso 1</button>
+        <button mat-menu-item>Proceso 2</button>
+        <button mat-menu-item>Proceso 3</button>
+    </mat-menu>
+
+    <!-- Menú desplegable de Reportes-->
     <mat-menu #menu4="matMenu">
         <button mat-menu-item>Videojuegos x Genero</button>
         <button mat-menu-item>Ordenes x Mes</button>
         <button mat-menu-item>Videojuegos vendidos x Mes</button>
     </mat-menu>
 
-    <!-- Spacer -->
-    <div class="example-spacer"></div>
-    
-    <!-- Carrito y usuario -->
+    <!-- Spacer
+    <div class="example-spacer"></div> -->
+
+    <!-- Usuario -->
     <div class="user-section">
-        <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
+        <!-- <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
             <mat-icon>shopping_cart</mat-icon>
-        </button>
-        <span class="small-text user-email">Email</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu3">
+        </button> -->
+        <!-- <span class="small-text user-email">Email</span> -->
+        <button mat-icon-button [matMenuTriggerFor]="menu5" matTooltip="Usuario">
             <mat-icon>person</mat-icon>
         </button>
-        <mat-menu #menu3="matMenu">
+        <mat-menu #menu5="matMenu">
             <button mat-menu-item>
                 <mat-icon>person_add</mat-icon>
                 <span>Login</span>

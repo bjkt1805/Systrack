@@ -64,7 +64,7 @@ export class TecnicoController {
 
         // select para traer máximo 3 campos
         select: {
-          // id: true,
+          id: true,
           nombreUsuario: true,
           correo: true,
           estadoTecnico: true,

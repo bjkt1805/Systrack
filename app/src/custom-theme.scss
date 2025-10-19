@@ -15,13 +15,13 @@ html {
           secondary: colors.$secondary-palette,
           tertiary: colors.$tertiary-palette,
         ),
-        typography: Arial,
+        typography: Open Sans,
         density: 0,
       ));
   
   // Material Component Overrides
   /*https://v19.material.angular.dev/components/toolbar/styling*/
-  @include mat.toolbar-overrides((container-background-color: c(colors.$primary-palette, 40),
+  @include mat.toolbar-overrides((container-background-color: c(colors.$primary-palette, 20),
     ));
 
   .primary-gradient {
@@ -39,7 +39,7 @@ html {
   }
 
 
-  @include mat.menu-overrides((container-color: c(colors.$primary-palette, 50),
+  @include mat.menu-overrides((container-color: c(colors.$primary-palette, 20),
     ));
 
   @include mat.select-overrides((panel-background-color: rgba(0, 0, 0, 0.7),
