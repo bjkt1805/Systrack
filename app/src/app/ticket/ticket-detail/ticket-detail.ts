@@ -45,6 +45,19 @@ export class TicketDetail {
     });
   }
 
+  // Fecha de creación del ticket en formato DD/MM/AAAA
+  fechaCreacionFormateada(): string {
+    const fecha = new Date(this.datos()?.creadoAt || '');
+
+    // Formatear la fecha a DD/MM/AAAA
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+
+    // Retornar la fecha formateada
+    return `${dia}/${mes}/${anio}`;
+  }
+
   // Para regresar a la vista de lista de tickets
   goBack(): void {
     this.router.navigate(['/ticket/']);
