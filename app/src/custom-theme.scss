@@ -12,13 +12,13 @@ html {
   color-scheme: light;
   //aplicar tema
   @include mat.theme ((color: (primary: colors.$primary-palette,
-          secondary: colors.$secondary-palette,
-          tertiary: colors.$tertiary-palette,
-        ),
-        typography: Open Sans,
-        density: 0,
-      ));
-  
+        secondary: colors.$secondary-palette,
+        tertiary: colors.$tertiary-palette,
+      ),
+      typography: Open Sans,
+      density: 0,
+    ));
+
   // Material Component Overrides
   /*https://v19.material.angular.dev/components/toolbar/styling*/
   @include mat.toolbar-overrides((container-background-color: c(colors.$primary-palette, 20),
@@ -164,4 +164,32 @@ html {
     @include mat.table-overrides((row-item-outline-color: c(colors.$tertiary-palette, 95),
         row-item-label-text-color: white));
   }
+
+  /* === Corrige color de texto dentro del overlay del mat-select (selector de ítems por página) === */
+  .mat-mdc-select-panel {
+    background: color-mix(in srgb, var(--mat-sys-surface) 96%, white 4%);
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 25%, transparent);
+    border-radius: 12px !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  /* Texto blanco (o claro) en las opciones */
+  .mat-mdc-option {
+    color: #fff !important;
+    /* ← fuerza texto blanco para los elementos dentro del mat-select (ítemes por página)*/
+  }
+
+  /* Hover y seleccionado más visibles */
+  .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  .mat-mdc-option.mdc-list-item--activated {
+    background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent) !important;
+    color: #fff !important;
+  }
+
+  /* Divider de opciones */
+  .mat-mdc-select-panel .mdc-list-divider {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+
 }

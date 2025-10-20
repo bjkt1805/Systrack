@@ -11,6 +11,7 @@ export interface TicketModel {
   codigo: string; // p.ej. "INC-2025-0001"
   titulo: string;
   descripcion: string;
+  
   estado: EstadoTicket; // default PENDIENTE
   prioridad: Prioridad; // default MEDIA
 

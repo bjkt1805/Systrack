@@ -14,9 +14,7 @@ export class TecnicoDetail {
   // Signal para almacenar los datos del técnico
   datos = signal<UsuarioModel | null>(null);
 
-  // Inyectar servicios
-
-  // Para llamar al detalle del técnico
+  // Inyectar servicio para llamar al detalle del técnico
   private tecnicoService = inject(TecnicoService);
 
   // Para obtener el parámetro de la ruta 

@@ -5,50 +5,13 @@ import { AppError } from "../errors/custom.error";
 export class TicketController {
   prisma = new PrismaClient();
 
-  // OBTENER TODOS LOS TÉCNICOS (FILTRADOS POR ROL DE TÉCNICO)
+  // OBTENER TODOS LOS TICKETS
   // TAMBIÉN SE INCLUYE PAGINACIÓN
   get = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      // Parámetro de consulta
-      const consulta = (request.query.consulta as string) ?? "";
-
-      // Parámetro de paginación
-      const pagina = Math.max(
-        parseInt((request.query.pagina as string) ?? "1", 10),
-        1
-      );
-
-      // Parámetro de tamaño de página
-      const tamanoPagina = Math.min(
-        Math.max(
-          parseInt((request.query.tamanoPagina as string) ?? "20", 10),
-          1
-        ),
-        100
-      );
-
-      // Construcción del where para traer el listado de tickets
-      const where = {
-        // Si existe el parámetro 'consulta', agrega un filtro OR
-        ...(consulta
-          ? {
-              // El filtro OR busca coincidencias en 'nombre' o 'descripcion'
-              OR: [
-                // Coincidencia parcial en el campo 'nombre'
-                { nombre: { contains: consulta } },
-                // Coincidencia parcial en el campo 'descripcion'
-                { descripcion: { contains: consulta } },
-              ],
-            }
-          : // Si no hay consulta, no se agrega ningún filtro
-            {}),
-      };
 
       //Select * from ticket where (nombre like '%consulta%' OR descripcion like '%consulta%') = order by descripcion asc limit 20 offset 0;
       const listado = await this.prisma.ticket.findMany({
-        // incluir el where construido arriba
-        where,
-
         // ordenar por id de forma ascendente
         orderBy: { id: "asc" },
 
@@ -92,10 +55,17 @@ export class TicketController {
           codigo: true,
           titulo: true,
           descripcion: true,
+          creadoAt: true,
           estado: true,
           prioridad: true,
           solicitante: true,
-          categoria: true,
+          categoria: {
+            select: {
+              id: true,
+              nombre: true,
+              sla: true,
+            },
+          },
           usuarioAsignado: true,
           fechaLimiteRespuesta: true,
           fechaLimiteResolucion: true,

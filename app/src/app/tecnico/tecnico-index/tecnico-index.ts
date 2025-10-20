@@ -25,7 +25,7 @@ export class TecnicoIndex {
   // Listar todos los técnicos del API
   listTecnicos() {
     this.tecnicoService.get().subscribe((respuesta: UsuarioModel[]) => {
-      console.log(respuesta);
+      console.log("Lista de técnicos: ", respuesta);
       this.datos.set(respuesta);
     });
   }

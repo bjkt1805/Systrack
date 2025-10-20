@@ -38,6 +38,6 @@ export enum EstadoNotificacion {
 
 export enum EstadoTecnico {
   DISPONIBLE = 'DISPONIBLE',
-  NO_DISPONIBLE = 'NO_DISPONIBLE',
+  NO_DISPONIBLE = 'NO DISPONIBLE',
   DESCONECTADO = 'DESCONECTADO',
 }
