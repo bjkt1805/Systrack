@@ -1,0 +1,48 @@
+<div class="grid-container">
+    <mat-card appearance="outlined" class="filter" style="margin-top: 10px;">
+        <!-- Encabezado de Categorías -->
+        <mat-card-header>
+            <h1 class="mat-h1">Categorías</h1>
+        </mat-card-header>
+    </mat-card>
+
+    <!-- Lista de categorías. Revisar si hay más de uno para listarlos en la vista -->
+    @if(datos().length > 0){
+    <div class="categoria-list">
+
+        <!-- Recorrer la lista de categorías para mostrarlos en la vista -->
+        @for (item of datos(); track item.id) {
+        <div class="categoria-card" style="width: 150%;">
+            <mat-card appearance="outlined">
+                <mat-card-header class="secondary-title title" style="margin-bottom: 10px;">
+                    <mat-card-title style="font-size: 16px;">
+                        <b>{{item.nombre}}</b> 
+                    </mat-card-title>
+                </mat-card-header>
+
+                <!-- Mostrar información del técnico -->
+                <mat-card-content class="user-info">
+                    <div class="info-item" style="font-size: 13px;">
+                        <span class="info-label">Descripción: </span>
+                        <span class="info-value">{{ item.descripcion }}</span>
+                    </div>
+                </mat-card-content>
+
+                <!-- Footer con botón de detalle -->
+                <mat-card-footer class="footer">
+                    <button matMiniFab matTooltip="Ver detalles" aria-label="Detalle Técnico"
+                        (click)="detalle(item.id)">
+                        <mat-icon class="mat-18">info</mat-icon>
+                    </button>
+                </mat-card-footer>
+
+            </mat-card>
+        </div>
+        }
+
+    </div>
+    }@else {
+    <p>No hay técnicos disponibles.</p>
+    }
+
+</div>

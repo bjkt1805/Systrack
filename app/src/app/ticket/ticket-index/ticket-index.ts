@@ -7,7 +7,7 @@ import { TicketModel } from '../../share/models/TicketModel';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 // import { TicketDiag } from '../ticket-diag/ticket-diag';
 import { TicketService } from '../../share/services/api/ticket.service';
-import { TicketDiag } from '../ticket-image-view-dialog/ticket-image-view-dialog';
+//import { TicketDiag } from '../ticket-image-view-dialog/ticket-image-view-dialog';
   
 @Component({
   selector: 'app-ticket-index',
