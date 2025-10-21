@@ -1,0 +1,10 @@
+.img-dialog {
+  max-width: min(92vw, 980px);
+}
+
+.img-dialog img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+}

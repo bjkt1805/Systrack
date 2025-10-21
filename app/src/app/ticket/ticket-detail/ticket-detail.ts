@@ -1,9 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TecnicoService } from '../../share/services/api/tecnico.service';
-import { UsuarioModel } from '../../share/models/UsuarioModel';
 import { TicketModel } from '../../share/models/TicketModel';
 import { TicketService } from '../../share/services/api/ticket.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TicketImageViewDialog } from '../ticket-image-view-dialog/ticket-image-view-dialog';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -24,6 +24,9 @@ export class TicketDetail {
 
   // Para redireccionar
   private router = inject(Router);
+
+  // Para mostrar un dialog con las imagenes del historial del ticket
+  private imageDialog = inject (MatDialog);
 
   constructor() {
 
@@ -191,6 +194,58 @@ export class TicketDetail {
   // Para regresar a la vista de lista de tickets
   goBack(): void {
     this.router.navigate(['/ticket/']);
+  }
+
+  // Signal computado para ordenar las entradas del historial por fecha (de más reciente a más antigua)
+  historialOrdenado = computed(() => {
+
+    // Obtener el historial del ticket. Si no existe, retornar un array vacío
+    const historial = this.datos()?.historiales || [];
+
+    // Retornar el historial ordenado por fecha (de más reciente a más antigua)
+    return historial.slice().sort((a, b) => {
+
+      // Obtener la fecha de creación como timestamp para comparar
+      const fechaA = new Date(a.creadoAt).getTime();
+      const fechaB = new Date(b.creadoAt).getTime();
+
+      // Retornar la diferencia para ordenar (de más reciente a más antigua)
+      return fechaB - fechaA;
+    });
+  })
+
+  // Método para obtener las imágenes asociadas al historial del ticket 
+  // Tipado fuerte para la imagen
+  getImagenSrc(imagen: { url?: string; nombreArchivo?: string; path?: string } | null | undefined): string {
+    
+    // Si la imagen es nula o indefinida, retornar cadena vacía
+    if (!imagen) return '';
+
+    // Priorizar la URL directa si está disponible
+    if (typeof imagen.url === 'string' && imagen.url.trim()) {
+      return imagen.url;
+    }
+
+    // Construir la URL basada en nombreArchivo o path
+    if (typeof imagen.nombreArchivo === 'string' && imagen.nombreArchivo.trim()) {
+      return `http://localhost:3000/images/${imagen.nombreArchivo}`;
+    }
+
+    // Usar el path si está disponible
+    if (typeof imagen.path === 'string' && imagen.path.trim()) {
+      return `http://localhost:3000/${imagen.path}`;
+    }
+
+    // Si no hay información válida, retornar cadena vacía
+    return '';
+  }
+
+  // Método para obtener las imágenes asociadas al historial del ticket 
+  // Tipado fuerte para la imagen
+  openImage(img: { url?: string; nombreArchivo?: string; path?: string } | null | undefined) {
+    const src = this.getImagenSrc(img);
+    if (!src) return;
+    this.imageDialog.open(TicketImageViewDialog, { data: { src }, panelClass: 'img-dialog-panel' });
   }
 
 }

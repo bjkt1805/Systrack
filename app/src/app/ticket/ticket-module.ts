@@ -6,6 +6,7 @@ import { TicketAdmin } from './ticket-admin/ticket-admin';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -20,7 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { TicketDetail } from './ticket-detail/ticket-detail';
-import { TicketDiag } from './ticket-diag/ticket-diag';
+import { TicketImageViewDialog } from './ticket-image-view-dialog/ticket-image-view-dialog';
 import { TicketIndex } from './ticket-index/ticket-index';
 
 
@@ -29,7 +30,7 @@ import { TicketIndex } from './ticket-index/ticket-index';
     TicketIndex,
     TicketDetail,
     TicketAdmin,
-    TicketDiag
+    TicketImageViewDialog
   ],
   imports: [
     CommonModule,
@@ -50,6 +51,7 @@ import { TicketIndex } from './ticket-index/ticket-index';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
+    MatExpansionModule
   ]
 })
 export class TicketModule { }

@@ -5,6 +5,8 @@ import { categoria } from "./seeds/categoria";
 import { SLA } from "./seeds/SLA";
 import { ticket } from "./seeds/ticket";
 import { etiquetas } from "./seeds/etiquetas";
+import { historialTicket } from "./seeds/historialTicket";
+import { imagenTicket } from "./seeds/imagenTicket";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -38,7 +40,7 @@ const main = async () => {
     await prisma.sLA.createMany({
       data: SLA,
 
-      // Respetar campo unique (email)
+      // Respetar campo unique
       skipDuplicates: true,
     });
 
@@ -46,7 +48,7 @@ const main = async () => {
     await prisma.categoria.createMany({
       data: categoria,
 
-      // Respetar campo unique (email)
+      // Respetar campo unique
       skipDuplicates: true,
     });
 
@@ -54,7 +56,23 @@ const main = async () => {
     await prisma.ticket.createMany({
       data: ticket,
 
-      // Respetar campo unique (email)
+      // Respetar campo unique
+      skipDuplicates: true,
+    });
+
+    // Historial Ticket - createMany (crear varios registros sin registrar relaciones)
+    await prisma.historialTicket.createMany({
+      data: historialTicket,
+
+      // Respetar campo unique
+      skipDuplicates: true,
+    });
+
+    // Imagen Ticket - createMany (crear varios registros sin registrar relaciones)
+    await prisma.imagenTicket.createMany({
+      data: imagenTicket,
+
+      // Respetar campo unique
       skipDuplicates: true,
     });
 
@@ -88,7 +106,7 @@ const main = async () => {
       },
     });
 
-        // Actualizar el Técnico 3 (id de usuario 5) creado con sus especialidades
+    // Actualizar el Técnico 3 (id de usuario 5) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 5 },
       data: {
@@ -293,6 +311,30 @@ const main = async () => {
             { id: 9 }, // Conectar con la especialidad de Desarrollador de software
             { id: 10 }, // Conectar con la especialidad de Técnico en bases de datos
           ],
+        },
+      },
+    });
+
+    // MAPEO 1:1 ENTRE IMAGEN TICKET E HISTORIAL TICKET (ASIGNAR IMAGEN AL HISTORIAL CORRESPONDIENTE)
+
+    // Actualizar Imagen Ticket 1 creado con su historial
+    await prisma.imagenTicket.update({
+      where: { id: 1 },
+      data: {
+        historial: {
+          connect: { id: 1 }, // Conectar con el historialTicket id 1
+        },
+      },
+    });
+
+    // MAPEO 1:1 ENTRE HISTORIAL TICKET Y TICKET (ASIGNAR HISTORIAL AL TICKET CORRESPONDIENTE)
+
+    // Actualizar el Ticket 1 creado con su historial
+    await prisma.ticket.update({
+      where: { id: 1 },
+      data: {
+        historiales: {
+          connect: { id: 1 }, // Conectar con el historialTicket id 1
         },
       },
     });

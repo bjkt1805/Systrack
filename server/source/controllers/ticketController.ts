@@ -75,7 +75,15 @@ export class TicketController {
           cumplioRespuesta : true,
           cumplioResolucion : true,
           // Incluye el historial de estados, observaciones y evidencias del ticket
-          historiales: true,
+          historiales: { 
+            select: { 
+              id: true, 
+              deEstado: true, 
+              aEstado: true, 
+              cambiadoPor: true, 
+              imagenes: true } 
+          },
+
           // Incluye la valoración del ticket (puntaje y comentario)
           valoracion: true,
         },
