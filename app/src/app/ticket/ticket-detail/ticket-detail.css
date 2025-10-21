@@ -1,5 +1,5 @@
 /* CARD base */
-.tech-card {
+.ticket-card {
   margin: 16px auto;
   width: min(980px, 92vw);
   border-radius: 16px;
@@ -9,13 +9,13 @@
   background: color-mix(in srgb, var(--mat-sys-surface) 92%, white 8%);
 }
 
-.tech-card:hover {
+.ticket-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 18px 44px rgba(0,0,0,.22);
 }
 
 /* HEADER con gradiente suave */
-.tech-card__header {
+.ticket-card__header {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
@@ -29,37 +29,14 @@
     );
 }
 
-/* Avatar redondo con anillo */
-.tech-card__avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  position: relative;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle at 30% 30%,
-              color-mix(in srgb, var(--mat-sys-primary) 30%, transparent),
-              transparent 60%),
-              var(--mat-sys-surface);
-  border: 2px solid color-mix(in srgb, var(--mat-sys-primary) 45%, transparent);
-  box-shadow: inset 0 0 0 5px color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
-  overflow: hidden;
-}
-
-.tech-card__avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* Títulos */
-.tech-card__title { display: grid; gap: 2px; }
-.tech-card__name {
+.ticket-card__title { display: grid; gap: 2px; }
+.ticket-card__name {
   margin: 0;
   font-weight: 800;
   letter-spacing: .2px;
 }
-.tech-card__subtitle {
+.ticket-card__subtitle {
   margin: 0;
   opacity: .9;
   display: inline-flex;
@@ -70,24 +47,15 @@
 .dot {
   width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: .6;
 }
-.status {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: .8rem;
-  font-weight: 700;
-  color: white;
-}
-.status--ok  { background: #2e7d32; } /* verde */
-.status--off { background: #c62828; } /* rojo */
 
 /* CONTENIDO */
-.tech-card__content {
+.ticket-card__content {
   display: grid;
   gap: 18px;
   padding: 16px 18px 8px;
 }
 
-.tech-card__hero {
+.ticket-card__hero {
   width: 100%;
   max-height: 320px;
   object-fit: cover;
@@ -96,7 +64,7 @@
 }
 
 /* Panel de info */
-.tech-info {
+.ticket-info {
   display: grid;
   gap: 10px;
 }
@@ -116,11 +84,13 @@
 .info-label {
   font-weight: 700;
   opacity: .85;
+  /* width: max-content; */
 }
 
 .info-value {
   font-weight: 600;
   color: color-mix(in srgb, var(--mat-sys-primary) 92%, black 8%);
+
 }
 
 /* Badge de estado inline */
@@ -135,41 +105,35 @@
 .info-badge.ok  { background: #2e7d32; }
 .info-badge.off { background: #c62828; }
 
-/* Chips de especialidades */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-
-mat-chip-listbox {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  --_bg: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
-  background: var(--_bg);
-  border-radius: 999px !important;
-  font-weight: 700;
-  letter-spacing: .2px;
-}
 
 /* ACCIONES */
-.tech-card__actions {
+.ticket-card__actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 8px 18px 16px;
 }
 
-.btn-back mat-icon { margin-right: 6px; }
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-top: 5%;
+}
+
+.btn-back mat-icon {
+  margin-right: 6px;
+}
 
 /* EMPTY STATE */
-.tech-card--empty .empty {
+.ticket-card--empty .empty {
   display: grid;
   justify-items: center;
   gap: 8px;
   padding: 28px 16px;
 }
-.tech-card--empty .empty mat-icon {
+.ticket-card--empty .empty mat-icon {
   font-size: 40px;
   width: 40px; height: 40px;
   opacity: .6;
@@ -177,11 +141,11 @@ mat-chip-listbox {
 
 /* RESPONSIVE */
 @media (min-width: 760px) {
-  .tech-card__content {
+  .ticket-card__content {
     grid-template-columns: 1fr 1.2fr;
     align-items: start;
   }
-  .tech-card__hero { display: block; }
+  .ticket-card__hero { display: block; }
 }
 
 @media (max-width: 480px) {
@@ -190,5 +154,30 @@ mat-chip-listbox {
 
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
-  .tech-card { transition: none !important; }
+  .ticket-card { transition: none !important; }
+}
+
+/* Contenedor de las dos columnas internas (general / SLA) */
+.ticket-info-grid {
+  display: grid;
+  gap: 5%;
+}
+
+.ticket-info--sla {
+  width: 125%;
+}
+
+/* En desktop, dos columnas iguales; en móvil apila */
+@media (min-width: 760px) {
+  .ticket-info-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* En pantallas muy pequeñas, cada info-row sea 1 columna */
+@media (max-width: 480px) {
+  .ticket-info-grid .info-row {
+    grid-template-columns: 1fr; /* una columna */
+  }
 }

@@ -1,5 +1,7 @@
 import { EstadoTicket, Prioridad } from "../../generated/prisma";
 
+
+// Los solicitantes de los tiquetes solo pueden ser usuarios con rol CLIENTE
 export const ticket = [
   {
     codigo: "INC-2025-0001",
@@ -7,7 +9,7 @@ export const ticket = [
     descripcion: "El equipo no responde al botón de encendido.",
     estado: EstadoTicket.PENDIENTE,
     prioridad: Prioridad.ALTA,
-    solicitanteId: 1,
+    solicitanteId: 9,
     categoriaId: 1,
     usuarioAsignadoId: 2,
     fechaLimiteRespuesta: new Date("2025-10-13T12:00:00Z"),
@@ -25,7 +27,7 @@ export const ticket = [
     descripcion: "No puedo conectarme a la VPN de la empresa.",
     estado: EstadoTicket.ASIGNADO,
     prioridad: Prioridad.MEDIA,
-    solicitanteId: 2,
+    solicitanteId: 10,
     categoriaId: 2,
     usuarioAsignadoId: 3,
     fechaLimiteRespuesta: new Date("2025-10-13T10:00:00Z"),
@@ -43,7 +45,7 @@ export const ticket = [
     descripcion: "No se puede emitir facturas desde el ERP.",
     estado: EstadoTicket.EN_PROCESO,
     prioridad: Prioridad.URGENTE,
-    solicitanteId: 3,
+    solicitanteId: 11,
     categoriaId: 4,
     usuarioAsignadoId: 4,
     fechaLimiteRespuesta: new Date("2025-10-13T09:00:00Z"),
@@ -61,7 +63,7 @@ export const ticket = [
     descripcion: "La impresora no imprime documentos.",
     estado: EstadoTicket.RESUELTO,
     prioridad: Prioridad.BAJA,
-    solicitanteId: 4,
+    solicitanteId: 12,
     categoriaId: 1,
     usuarioAsignadoId: 2,
     fechaLimiteRespuesta: new Date("2025-10-14T08:00:00Z"),
@@ -79,7 +81,7 @@ export const ticket = [
     descripcion: "Solicito restablecer mi contraseña de correo.",
     estado: EstadoTicket.CERRADO,
     prioridad: Prioridad.MEDIA,
-    solicitanteId: 5,
+    solicitanteId: 13,
     categoriaId: 3,
     usuarioAsignadoId: 3,
     fechaLimiteRespuesta: new Date("2025-10-15T09:00:00Z"),
@@ -97,7 +99,7 @@ export const ticket = [
     descripcion: "No hay conexión a internet en la oficina.",
     estado: EstadoTicket.PENDIENTE,
     prioridad: Prioridad.URGENTE,
-    solicitanteId: 2,
+    solicitanteId: 14,
     categoriaId: 2,
     usuarioAsignadoId: 4,
     fechaLimiteRespuesta: new Date("2025-10-16T08:00:00Z"),
@@ -115,7 +117,7 @@ export const ticket = [
     descripcion: "Solicito actualización de sistema interno.",
     estado: EstadoTicket.ASIGNADO,
     prioridad: Prioridad.BAJA,
-    solicitanteId: 3,
+    solicitanteId: 15,
     categoriaId: 4,
     usuarioAsignadoId: 2,
     fechaLimiteRespuesta: new Date("2025-10-17T10:00:00Z"),

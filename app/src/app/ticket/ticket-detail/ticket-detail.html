@@ -2,70 +2,137 @@
 
 @if (datos()) {
 <br>
-<mat-card class="tech-card" appearance="outlined" style="margin-top: 10px;">
+<mat-card class="ticket-card" appearance="outlined" style="margin-top: 10px;">
 
     <!-- Encabezado del card con avatar (OPCIONAL) -->
-    <mat-card-header class="tech-card__header">
+    <mat-card-header class="ticket-card__header">
 
         <!-- Título y subtítulo del card -->
-        <div class="tech-card__title">
-            <mat-card-title class="tech-card__name">
+        <div class="ticket-card__title">
+            <mat-card-title class="ticket-card__name">
                 {{ datos()?.codigo }} - {{ datos()?.titulo }}
             </mat-card-title>
-            <mat-card-subtitle class="tech-card__subtitle">
-
-                <span If="datos()?.correo">{{ datos()?.descripcion }}</span>
+            <mat-card-subtitle class="ticket-card__subtitle">
+                <span>{{ datos()?.descripcion }}</span>
             </mat-card-subtitle>
         </div>
     </mat-card-header>
 
-    <mat-divider></mat-divider>
+    <mat-card-content class="ticket-card__content">
 
-    <mat-card-content class="tech-card__content">
-        <!-- Imagen grande opcional (si deseas mantenerla) -->
-        <img mat-card-image class="tech-card__hero" [src]="'http://localhost:3000/images/'" alt="" loading="lazy"
-            decoding="async" />
+        <!-- Contenedor para la información del ticket -->
+        <div class="ticket-info-grid">
 
-        <!-- Panel de información -->
-        <section class="tech-info">
+            <!-- Columna izquierda: datos generales -->
+            <section class="ticket-info ticket-info--main">
 
-            <!-- Contenedor de la fecha de creación -->
-            <div class="info-row">
-                <span class="info-label">Fecha de creación</span>
-                <span class="info-value">{{ fechaCreacionFormateada() }}</span>
-            </div>
+                <!-- Contenedor de la fecha de creación -->
+                <div class="info-row">
+                    <span class="info-label">Fecha de creación</span>
+                    <span class="info-value">{{ fechaCreacionFormateada() }}</span>
+                </div>
 
-            <!-- Contenedor del estado del ticket -->
-            <div class="info-row">
-                <span class="info-label">Estado</span>
-                <span class="info-value">{{ datos()?.estado }}</span>
-            </div>
+                <!-- Contenedor del estado del ticket -->
+                <div class="info-row">
+                    <span class="info-label">Estado</span>
+                    <span class="info-value">{{ datos()?.estado }}</span>
+                </div>
 
-            <!-- Contenedor de la prioridad del ticket -->
-            <div class="info-row">
-                <span class="info-label">Prioridad</span>
-                <span class="info-value">{{ datos()?.prioridad }}</span>
-            </div>
+                <!-- Contenedor de la prioridad del ticket -->
+                <div class="info-row">
+                    <span class="info-label">Prioridad</span>
+                    <span class="info-value">{{ datos()?.prioridad }}</span>
+                </div>
 
-            <!-- Contenedor del usuario solicitante -->
-            <div class="info-row">
-                <span class="info-label">Solicitante</span>
-                <!-- <span class="info-value">{{ datos()?.solicitante?.nombreUsuario }} - {{ datos()?.solicitante?.correo }}</span> -->
-                <span class="info-value">{{ datos()?.solicitante?.correo }}</span>
+                <!-- Contenedor del usuario solicitante -->
+                <div class="info-row">
+                    <span class="info-label">Solicitante</span>
+                    <!-- <span class="info-value">{{ datos()?.solicitante?.nombreUsuario }} - {{ datos()?.solicitante?.correo }}</span> -->
+                    <span class="info-value">{{ datos()?.solicitante?.correo }}</span>
 
-            </div>
+                </div>
 
-             <!-- Contenedor de la categoría -->
-            <div class="info-row">
-                <span class="info-label">Categoría</span>
-                <span class="info-value">{{ datos()?.categoria?.nombre }}</span>
-            </div>
+                <!-- Contenedor de la categoría -->
+                <div class="info-row">
+                    <span class="info-label">Categoría</span>
+                    <span class="info-value">{{ datos()?.categoria?.nombre }}</span>
+                </div>
 
-        </section>
+                <!-- Contenedor del usuario asignado -->
+                <div class="info-row">
+                    <span class="info-label">Técnico asignado</span>
+                    <span class="info-value">{{ datos()?.usuarioAsignado?.nombreUsuario }}</span>
+                </div>
+
+            </section>
+
+            <section class="ticket-info ticket-info--sla">
+                <!-- ===== SLA / Métricas derivadas ===== -->
+
+                <!-- Contenedor de límite de respuesta-->
+                <div class="info-row">
+                    <span class="info-label">SLA de Respuesta (expiración)</span>
+
+                    <!-- Fecha límite de respuesta formateada en corto -->
+                    <span class="info-value">
+                        {{ fechaLimiteRespuesta() ? (fechaLimiteRespuesta() | date:'short') : '—' }}
+                    </span>
+                </div>
+
+                <!-- Contenedor de resolución -->
+                <div class="info-row">
+                    <span class="info-label">SLA de Resolución (expiración)</span>
+
+                    <!-- Fecha límite de resolución formateada en corto -->
+                    <span class="info-value">
+                        {{ fechaLimiteResolucion() ? (fechaLimiteResolucion() | date:'short') : '—' }}
+                    </span>
+                </div>
+
+                <!-- Contenedor de días de resolución (solo si el ticket está cerrado o resuelto) -->
+                <div class="info-row">
+                    <span class="info-label">Días de resolución</span>
+                    <!-- Operador ternario para mostrar el valor o un guion si es nulo-->
+                    <span class="info-value">
+                        {{ diasResolucion() !== null ? diasResolucion() : '—' }}
+                    </span>
+                </div>
+
+                <!-- (Opcional) Contenedor de días hasta "resolución" (si existe resueltoAt antes del cierre) -->
+                @if (diasHastaResuelto() !== null) {
+                <div class="info-row">
+                    <span class="info-label">Días hasta resolución</span>
+                    <span class="info-value">{{ diasHastaResuelto() }}</span>
+                </div>
+                }
+
+                <!-- Contenedor de Cumplimiento de respuesta -->
+                <div class="info-row">
+                    <span class="info-label">Cumplimiento de respuesta</span>
+                    <span class="info-value">
+                        @if (cumplioRespuesta() === null) { Pendiente }
+                        @else if (cumplioRespuesta()) { ✅ Cumplido }
+                        @else { ❌ Incumplido }
+                    </span>
+                </div>
+
+                <!-- Cumplimiento de resolución -->
+                <div class="info-row">
+                    <span class="info-label">Cumplimiento de resolución</span>
+                    <!-- Código para mostrar el cumplimiento de resolución -->
+                    <span class="info-value">
+                        @if (cumplioResolucion() === null) { Pendiente }
+                        @else if (cumplioResolucion()) { ✅ Cumplido }
+                        @else { ❌ Incumplido }
+                    </span>
+                </div>
+            </section>
+        </div>
+
     </mat-card-content>
 
     <!-- Acciones del card -->
-    <mat-card-actions class="tech-card__actions">
+    <mat-card-actions class="ticket-card__actions">
 
         <!-- Botón de regresar (llamando al signal)-->
         <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
@@ -76,7 +143,7 @@
 </mat-card>
 }
 @else {
-<mat-card class="tech-card tech-card--empty" appearance="outlined">
+<mat-card class="ticket-card ticket-card--empty" appearance="outlined">
     <mat-card-content class="empty">
         <mat-icon>person_search</mat-icon>
         <p class="mat-body text">Técnico no encontrado</p>

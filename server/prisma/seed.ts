@@ -60,9 +60,9 @@ const main = async () => {
 
     // MAPEO MUCHOS A MUCHOS ENTRE TÉCNICOS Y ESPECIALIDADES
 
-    // Actualizar el Técnico 1 creado con sus especialidades
+    // Actualizar el Técnico 1 (id de usuario 3) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Andrés González" },
+      where: { id: 3 },
       data: {
         especialidades: {
           connect: [
@@ -74,9 +74,9 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 2 creado con sus especialidades
+    // Actualizar el Técnico 2 (id de usuario 4) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Pedro Carrillo" },
+      where: { id: 4 },
       data: {
         especialidades: {
           connect: [
@@ -88,9 +88,9 @@ const main = async () => {
       },
     });
 
-        // Actualizar el Técnico 3 creado con sus especialidades
+        // Actualizar el Técnico 3 (id de usuario 5) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Andrea López" },
+      where: { id: 5 },
       data: {
         especialidades: {
           connect: [
@@ -102,9 +102,9 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 4 creado con sus especialidades
+    // Actualizar el Técnico 4 (id de usuario 6) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Juan Martínez" },
+      where: { id: 6 },
       data: {
         especialidades: {
           connect: [
@@ -116,9 +116,9 @@ const main = async () => {
       },
     });
 
-        // Actualizar el Técnico 5 creado con sus especialidades
+    // Actualizar el Técnico 5 (id de usuario 7) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Felipe Ramírez" },
+      where: { id: 7 },
       data: {
         especialidades: {
           connect: [
@@ -130,9 +130,9 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 6 creado con sus especialidades
+    // Actualizar el Técnico 6 (id de usuario 8) creado con sus especialidades
     await prisma.usuario.update({
-      where: { nombreUsuario: "Alberto Sánchez" },
+      where: { id: 8 },
       data: {
         especialidades: {
           connect: [

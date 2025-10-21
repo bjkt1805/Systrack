@@ -9,6 +9,8 @@ import { ValoracionServicioModel } from "./ValoracionServicioModel";
 export interface UsuarioModel {
   id: number;
   nombreUsuario: string;
+  nombreCompleto: string;
+  telefono?: string | null;
   correo: string;
   contrasenaHash: string;
   rol: Rol; // default CLIENTE en backend

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { UsuarioModel } from '../../share/models/UsuarioModel';
@@ -57,6 +57,136 @@ export class TicketDetail {
     // Retornar la fecha formateada
     return `${dia}/${mes}/${anio}`;
   }
+
+  // Función privada utilitaria para convertir cadenas de fecha a objetos Date
+  private toDate(dateValue: string | Date | null | undefined): Date | null {
+    if (!dateValue) return null;
+    const date = new Date(dateValue);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  // SIGNALS COMPUTADOS PARA OBTENER FECHAS COMO OBJETOS Date
+
+  // Signal computado de fecha de creación
+  creadoAt = computed(() => this.toDate(this.datos()?.creadoAt));
+
+  // Signal computado de fechaLimiteRespuesta
+  fechaLimiteRespuesta = computed(() => this.toDate(this.datos()?.fechaLimiteRespuesta));
+
+  // Signal computado de fechaLimiteResolucion
+  fechaLimiteResolucion = computed(() => this.toDate(this.datos()?.fechaLimiteResolucion));
+
+  // Signal computado de respondidoAt
+  respondidoAt = computed(() => this.toDate(this.datos()?.respondidoAt));
+
+  // Signal computado de resueltoAt
+  resueltoAt = computed(() => this.toDate(this.datos()?.resueltoAt));
+
+  // Signal computado de cerradoAt
+  cerradoAt = computed(() => this.toDate(this.datos()?.cerradoAt));
+
+
+  // ====================================
+  // SIGNALS COMPUTADOS PARA CALCULAR 
+  // LOS SIGUIENTES CAMPOS DERIVADOS: 
+  // - DIAS DE RESOLUCION (SOLO SI EL TICKET ESTÁ RESUELTO O CERRADO)
+  // - DIAS HASTA LA RESOLUCIÓN (SI EL TICKET NO ESTÁ RESUELTO)
+  // - CUMPLIMIENTO DE RESPUESTA
+  // - CUMPLIMIENTO DE RESOLUCIÓN
+  // ====================================
+
+  // Días de resolución - solo si el ticket está resuelto o cerrado
+  diasResolucion = computed(() => {
+
+    // Obtener el valor de cerradoAt y creadoAt (desde el signal "datos" que devuelve el objeto del ticket)
+    const cierre = this.cerradoAt();
+    const creado = this.creadoAt();
+
+    // Si no existen las fechas, retornar null
+    if (!cierre || !creado) return null;
+
+    // Calcular la diferencia en milisegundos y convertir a días para mostrarlo como diasResolucion
+    const diffMs = cierre.getTime() - creado.getTime();
+
+    // Retornar la diferencia en días (redondeada hacia abajo)
+    return Math.max(0, Math.floor(diffMs / 86_400_000));
+  });
+
+
+  // (OPCIONAL) Días hasta “resuelto” antes del cierre (mostrar con otra etiqueta)
+  diasHastaResuelto = computed(() => {
+
+    // Obtener el valor de resueltoAt y creadoAt (desde el signal "datos" que devuelve el objeto del ticket)
+    const resuelto = this.resueltoAt();
+    const creado = this.creadoAt();
+
+    // Si no existen las fechas, retornar null
+    if (!resuelto || !creado) return null;
+
+    // Calcular la diferencia en milisegundos y convertir a días para mostrarlo como diasHastaResuelto
+    const diffMs = resuelto.getTime() - creado.getTime();
+
+    // Retornar la diferencia en días (redondeada hacia abajo)
+    return Math.max(0, Math.floor(diffMs / 86_400_000));
+  });
+
+  // Cumplimiento de respuesta (signal computed fuertemente tipado )
+  cumplioRespuesta = computed<null | boolean>(() => {
+
+    // Obtener el valor de cumplioRespuesta desde la base de datos
+    const cumplioRespuesta = this.datos()?.cumplioRespuesta;
+
+    // Si el valor existe en la base de datos, retornarlo directamente
+    if (cumplioRespuesta !== null && cumplioRespuesta !== undefined) return cumplioRespuesta;
+
+    // Si el valor de cumplioRespuesta no está en la base de datos, calcularlo
+
+    // Obtener la fecha de cierre del ticket
+    const cierre = this.cerradoAt();
+
+    // Si el ticket no tiene fecha de cierre, retornar null
+    if (!cierre) return null;
+
+    // Obtener la fecha de respuesta y la fecha límite de respuesta
+    const respondido = this.respondidoAt();
+    const limite = this.fechaLimiteRespuesta();
+
+    // Si no hay fecha límite => incumplido (retornar false)
+    if (!limite) return false;
+
+    // Retornar true/false según el cálculo de cumplimiento
+    return !!respondido && respondido.getTime() <= limite.getTime();
+  });
+
+  // Cumplimiento de resolución (signal computed fuertemente tipado )
+  cumplioResolucion = computed<null | boolean>(() => {
+
+    // Obtener el valor de cumplioResolucion desde la base de datos
+    const cumplioResolucion = this.datos()?.cumplioResolucion;
+
+    // Si el valor existe en la base de datos, retornarlo directamente
+    if (cumplioResolucion !== null && cumplioResolucion !== undefined) return cumplioResolucion;
+
+    // Si el valor de cumplioResolucion no está en la base de datos, calcularlo
+
+    // Obtener la fecha de cierre del ticket
+    const cierre = this.cerradoAt();
+
+    // Si el ticket no tiene fecha de cierre, retornar null
+    if (!cierre) return null;
+
+    // Si la fecha de resolución es null, devolver la fecha de cierre como último recurso
+    const resuelto = this.resueltoAt() ?? cierre; 
+
+    // Obtener la fecha límite de resolución
+    const limite = this.fechaLimiteResolucion();
+
+    // Si no hay fecha límite => incumplido (retornar false)
+    if (!limite) return false;
+
+    // Retornar true/false según el cálculo de cumplimiento
+    return resuelto.getTime() <= limite.getTime();
+  });
 
   // Para regresar a la vista de lista de tickets
   goBack(): void {

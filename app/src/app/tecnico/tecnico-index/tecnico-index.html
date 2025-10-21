@@ -1,8 +1,8 @@
 <div class="grid-container">
-    <mat-card appearance="outlined" class="filter" style="margin-top: 10px;">
+    <mat-card class="header-card" appearance="outlined" style="margin-top: 10px;">
         <!-- Encabezado de Técnicos -->
         <mat-card-header>
-            <h1 class="mat-h1">Técnicos</h1>
+            <mat-card-title class="header-card-title">Listado de Técnicos</mat-card-title>
         </mat-card-header>
 
         <!-- Filtro de búsqueda-->
@@ -34,7 +34,7 @@
             <mat-card appearance="outlined">
                 <mat-card-header class="secondary-title title" style="margin-bottom: 10px;">
                     <mat-card-title style="font-size: 16px;">
-                        <b>{{item.nombreUsuario}}</b> 
+                        <b>{{item.nombreCompleto}}</b> 
                     </mat-card-title>
                 </mat-card-header>
 
@@ -44,6 +44,7 @@
                         <span class="info-label">Email: </span>
                         <span class="info-value">{{ item.correo }}</span>
                     </div>
+                    <br>
                     <div class="info-item" style="font-size: 14px;">
                         <span class="info-label">Estado:</span>
                         <span class="status-box"

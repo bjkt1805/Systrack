@@ -1,3 +1,37 @@
+.title{
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:
+    radial-gradient(1200px 600px at -10% -50%,
+      color-mix(in srgb, var(--mat-sys-primary) 14%, transparent), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--mat-sys-primary) 10%, transparent),
+      transparent);
+}
+
+.header-card {
+  width: 100%;
+  margin:24px auto;
+  border-radius:18px;
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 600px at -10% -50%,
+      color-mix(in srgb, var(--mat-sys-primary) 14%, transparent), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--mat-sys-primary) 10%, transparent),
+      transparent);
+  padding-bottom: 16px;
+}
+
+.header-card-title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
 .grid-container {
     display: flex;
     flex-direction: column;

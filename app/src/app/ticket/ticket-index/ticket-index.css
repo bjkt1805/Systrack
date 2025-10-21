@@ -26,11 +26,12 @@
       color-mix(in srgb, var(--mat-sys-primary) 10%, transparent),
       transparent);
 }
-.title{
-  margin:0;
-  font-size:clamp(20px,2.2vw,26px);
-  font-weight:800;
-  letter-spacing:.3px;
+
+.title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 800;
+  letter-spacing: .3px;
   color: var(--mat-sys-on-surface);
 }
 
