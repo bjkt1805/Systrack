@@ -77,11 +77,14 @@ export class TicketController {
           // Incluye el historial de estados, observaciones y evidencias del ticket
           historiales: { 
             select: { 
-              id: true, 
-              deEstado: true, 
-              aEstado: true, 
+              id: true,
+              creadoAt: true,
               cambiadoPor: true, 
-              imagenes: true } 
+              deEstado: true, 
+              aEstado: true,
+              nota: true,
+              imagenes: true 
+            } 
           },
 
           // Incluye la valoración del ticket (puntaje y comentario)

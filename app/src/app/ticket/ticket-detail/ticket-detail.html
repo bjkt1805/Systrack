@@ -144,40 +144,49 @@
 
 @if (historialOrdenado().length > 0) {
 <section class="ticket-history">
-    <h3 class="section-title">Historial</h3>
+    <h3 class="section-title">Historial del ticket</h3>
 
+    <!-- Acordeón para el historial cambios del tiquete-->
     <mat-accordion class="history-list">
-        @for (item of historialOrdenado(); track item.id) {}
-        <mat-expansion-panel>
+        @for (item of historialOrdenado(); track item.id) {
+        <mat-expansion-panel style="margin-bottom: 2%">
+            <h4>{{item.creadoAt | date:'short'}}</h4>
+
             <mat-expansion-panel-header>
                 <div class="history-header">
                     <div class="bullet"></div>
                     <div class="header-main">
                         <div class="title">
-                            <!-- {{ item.deEstado }} → <b>{{ item.aEstado }}</b> -->
+                            {{ item.deEstado }} → <b>{{ item.aEstado }}</b>
                         </div>
-                        <!-- <div class="meta">
-                            <span *ngIf="h?.creadoAt">{{ h.creadoAt | date:'short' }}</span>
-                            <span class="dot" *ngIf="h?.cambiadoPor?.nombreUsuario"></span>
-                            <span *ngIf="h?.cambiadoPor?.nombreUsuario">{{ h.cambiadoPor.nombreUsuario }}</span>
-                        </div> -->
+                        <div class="meta">
+                            <span>Modificado por: {{ item.cambiadoPor.nombreUsuario }}</span>
+                        </div>
                     </div>
                 </div>
             </mat-expansion-panel-header>
 
             <div class="history-body">
-                <!-- <p class="comment" *ngIf="h?.comentario || h?.observacion">
-                    {{ h?.comentario || h?.observacion }}
-                </p> -->
+                <p class="comment">
+                    <B>Comentario: </B>{{ item?.nota}}
+                </p>
 
-                <!-- <div class="images-grid" *ngIf="h?.imagenes?.length">
-                    <button type="button" class="img-thumb" *ngFor="let img of h.imagenes; trackBy: trackById"
-                        (click)="openImage(img)">
-                        <img [src]="getImagenSrc(img)" alt="evidencia" loading="lazy" decoding="async" />
-                    </button>
-                </div> -->
+                @if (item.imagenes && item.imagenes.length > 0) {
+                <div class="images-grid">
+                    <p> <b>Imágenes adjuntas: </b></p>
+                    @for (img of item.imagenes; track img.id) {
+                    <figure class="image-figure">
+                        <button type="button" class="img-thumb" (click)="openImage(img)">
+                            <img [src]="baseImageUrl + img.url" [alt]="img.url" />
+                        </button>
+                        <figcaption class="image-description">{{ img.url }}</figcaption>
+                    </figure>
+                    }
+                </div>
+                }
             </div>
         </mat-expansion-panel>
+    }
     </mat-accordion>
 </section>
 

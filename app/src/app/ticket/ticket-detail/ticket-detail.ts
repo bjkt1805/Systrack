@@ -26,7 +26,7 @@ export class TicketDetail {
   private router = inject(Router);
 
   // Para mostrar un dialog con las imagenes del historial del ticket
-  private imageDialog = inject (MatDialog);
+  private imageDialog = inject(MatDialog);
 
   constructor() {
 
@@ -179,12 +179,12 @@ export class TicketDetail {
     if (!cierre) return null;
 
     // Si la fecha de resolución es null, devolver la fecha de cierre como último recurso
-    const resuelto = this.resueltoAt() ?? cierre; 
+    const resuelto = this.resueltoAt() ?? cierre;
 
     // Obtener la fecha límite de resolución
     const limite = this.fechaLimiteResolucion();
 
-    // Si no hay fecha límite => incumplido (retornar false)
+    // Si no hay fecha límite de resolución => incumplido (retornar false)
     if (!limite) return false;
 
     // Retornar true/false según el cálculo de cumplimiento
@@ -214,38 +214,24 @@ export class TicketDetail {
     });
   })
 
-  // Método para obtener las imágenes asociadas al historial del ticket 
-  // Tipado fuerte para la imagen
-  getImagenSrc(imagen: { url?: string; nombreArchivo?: string; path?: string } | null | undefined): string {
-    
-    // Si la imagen es nula o indefinida, retornar cadena vacía
-    if (!imagen) return '';
-
-    // Priorizar la URL directa si está disponible
-    if (typeof imagen.url === 'string' && imagen.url.trim()) {
-      return imagen.url;
-    }
-
-    // Construir la URL basada en nombreArchivo o path
-    if (typeof imagen.nombreArchivo === 'string' && imagen.nombreArchivo.trim()) {
-      return `http://localhost:3000/images/${imagen.nombreArchivo}`;
-    }
-
-    // Usar el path si está disponible
-    if (typeof imagen.path === 'string' && imagen.path.trim()) {
-      return `http://localhost:3000/${imagen.path}`;
-    }
-
-    // Si no hay información válida, retornar cadena vacía
-    return '';
+  // Metodo simple para obtener el URL base de las imágenes
+  get baseImageUrl(): string {
+    return 'http://localhost:3000/images/';
   }
 
   // Método para obtener las imágenes asociadas al historial del ticket 
   // Tipado fuerte para la imagen
-  openImage(img: { url?: string; nombreArchivo?: string; path?: string } | null | undefined) {
-    const src = this.getImagenSrc(img);
-    if (!src) return;
-    this.imageDialog.open(TicketImageViewDialog, { data: { src }, panelClass: 'img-dialog-panel' });
+  openImage(img: { url?: string } | null | undefined) {
+    
+    // Si no hay url de imagen, salir del método (no abrir el dialog)
+    if (!img?.url) return;
+
+    // Obtener la URL completa de la imagen y abrir el dialog
+    const src = `http://localhost:3000/images/${img.url}`;
+    this.imageDialog.open(TicketImageViewDialog, {
+      data: { src },
+      panelClass: 'img-dialog-panel'
+    });
   }
 
 }

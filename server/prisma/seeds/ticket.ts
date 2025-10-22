@@ -3,6 +3,8 @@ import { EstadoTicket, Prioridad } from "../../generated/prisma";
 
 // Los solicitantes de los tiquetes solo pueden ser usuarios con rol CLIENTE
 export const ticket = [
+
+  // Ticket id : 1
   {
     codigo: "INC-2025-0001",
     titulo: "Laptop no enciende",
@@ -11,7 +13,7 @@ export const ticket = [
     prioridad: Prioridad.ALTA,
     solicitanteId: 9,
     categoriaId: 1,
-    usuarioAsignadoId: 2,
+    usuarioAsignadoId: null,
     fechaLimiteRespuesta: new Date("2025-10-13T12:00:00Z"),
     fechaLimiteResolucion: new Date("2025-10-14T12:00:00Z"),
     respondidoAt: null,
@@ -21,6 +23,8 @@ export const ticket = [
     cumplioRespuesta: null,
     cumplioResolucion: null,
   },
+
+  // Ticket id : 2
   {
     codigo: "INC-2025-0002",
     titulo: "Sin acceso a VPN",
@@ -39,6 +43,8 @@ export const ticket = [
     cumplioRespuesta: true,
     cumplioResolucion: null,
   },
+
+  // Ticket id : 3
   {
     codigo: "INC-2025-0003",
     titulo: "Error en sistema de facturación",
@@ -57,6 +63,8 @@ export const ticket = [
     cumplioRespuesta: true,
     cumplioResolucion: null,
   },
+
+  // Ticket id : 4
   {
     codigo: "INC-2025-0004",
     titulo: "Problema con impresora",
@@ -65,7 +73,7 @@ export const ticket = [
     prioridad: Prioridad.BAJA,
     solicitanteId: 12,
     categoriaId: 1,
-    usuarioAsignadoId: 2,
+    usuarioAsignadoId: 5,
     fechaLimiteRespuesta: new Date("2025-10-14T08:00:00Z"),
     fechaLimiteResolucion: new Date("2025-10-14T18:00:00Z"),
     respondidoAt: new Date("2025-10-14T08:30:00Z"),
@@ -75,6 +83,8 @@ export const ticket = [
     cumplioRespuesta: true,
     cumplioResolucion: true,
   },
+
+  // Ticket id : 5
   {
     codigo: "INC-2025-0005",
     titulo: "Restablecimiento de contraseña",
@@ -93,6 +103,8 @@ export const ticket = [
     cumplioRespuesta: true,
     cumplioResolucion: true,
   },
+
+  // Ticket id : 6
   {
     codigo: "INC-2025-0006",
     titulo: "Problema de red",
@@ -101,7 +113,7 @@ export const ticket = [
     prioridad: Prioridad.URGENTE,
     solicitanteId: 14,
     categoriaId: 2,
-    usuarioAsignadoId: 4,
+    usuarioAsignadoId: null,
     fechaLimiteRespuesta: new Date("2025-10-16T08:00:00Z"),
     fechaLimiteResolucion: new Date("2025-10-16T14:00:00Z"),
     respondidoAt: null,
@@ -111,6 +123,8 @@ export const ticket = [
     cumplioRespuesta: null,
     cumplioResolucion: null,
   },
+
+  // Ticket id : 7
   {
     codigo: "INC-2025-0007",
     titulo: "Actualización de software",
@@ -119,7 +133,7 @@ export const ticket = [
     prioridad: Prioridad.BAJA,
     solicitanteId: 15,
     categoriaId: 4,
-    usuarioAsignadoId: 2,
+    usuarioAsignadoId: 5,
     fechaLimiteRespuesta: new Date("2025-10-17T10:00:00Z"),
     fechaLimiteResolucion: new Date("2025-10-17T18:00:00Z"),
     respondidoAt: null,
