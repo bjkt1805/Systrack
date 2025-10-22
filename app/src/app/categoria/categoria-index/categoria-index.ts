@@ -20,7 +20,7 @@ export class CategoriaIndex {
   //Respuesta del API
   datos = signal<CategoriaModel[]>([]);
 
-  constructor(private vjService: CategoriaService,
+  constructor(private CategoriaService: CategoriaService,
     private router:Router
   ){
     this.listCategorias()
@@ -28,13 +28,17 @@ export class CategoriaIndex {
 
   // Listar todos los categorias del API
   listCategorias() {
-    this.vjService.get().subscribe((respuesta: CategoriaModel[]) => {
-      console.log(respuesta);
+    this.CategoriaService.get().subscribe((respuesta: CategoriaModel[]) => {
+      console.log('Lista de categorías: ', respuesta);
       this.datos.set(respuesta);
     });
   }
   // Navegar al detalle de una categoria
   detalle(id: number) {
+    if (id == null || id === undefined) {
+      console.warn('detalle(): id inválido', id);
+      return;
+    }
     this.router.navigate(['/categoria', id]);
   }
 }

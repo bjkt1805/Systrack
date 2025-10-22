@@ -20,7 +20,7 @@
                     </mat-card-title>
                 </mat-card-header>
 
-                <!-- Mostrar información del técnico -->
+                <!-- Mostrar información de categoria -->
                 <mat-card-content class="user-info">
                     <div class="info-item" style="font-size: 13px;">
                         <span class="info-label">Descripción: </span>
@@ -30,7 +30,7 @@
 
                 <!-- Footer con botón de detalle -->
                 <mat-card-footer class="footer">
-                    <button matMiniFab matTooltip="Ver detalles" aria-label="Detalle Técnico"
+                    <button matMiniFab matTooltip="Ver detalles" aria-label="Detalle Categoría"
                         (click)="detalle(item.id)">
                         <mat-icon class="mat-18">info</mat-icon>
                     </button>
@@ -42,7 +42,7 @@
 
     </div>
     }@else {
-    <p>No hay técnicos disponibles.</p>
+    <p>No hay categorias disponibles.</p>
     }
 
 </div>

@@ -12,9 +12,6 @@
             <mat-card-title class="tech-card__name">
                 {{ datos()?.nombre }}
             </mat-card-title>
-            <mat-card-subtitle class="tech-card__subtitle">
-                <span If="datos()?.descripcion">{{ datos()?.descripcion }}</span>
-            </mat-card-subtitle>
         </div>
     </mat-card-header>
 
@@ -24,9 +21,9 @@
         <!-- Panel de información -->
         <section class="tech-info">
 
-            <!-- Contenedor del nombre completo -->
+            <!-- Contenedor del nombre-->
             <div class="info-row">
-                <span class="info-label">Nombre completo</span>
+                <span class="info-label">Nombre</span>
                 <span class="info-value">{{ datos()?.nombre }}</span>
             </div>
 
@@ -53,7 +50,7 @@
 <mat-card class="tech-card tech-card--empty" appearance="outlined">
     <mat-card-content class="empty">
         <mat-icon>person_search</mat-icon>
-        <p class="mat-body text">Técnico no encontrado</p>
+        <p class="mat-body text">Categoría no encontrada</p>
         <button mat-stroked-button color="primary" (click)="goBack()">
             <mat-icon>arrow_back</mat-icon>
             Regresar

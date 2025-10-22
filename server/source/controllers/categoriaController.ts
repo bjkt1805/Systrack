@@ -58,6 +58,7 @@ export class CategoriaController {
 
         // Select específico de campos a retornar (incluye el SLA relacionado)
         select: {
+          id: true,
           nombre: true,
           descripcion: true,
           sla: {

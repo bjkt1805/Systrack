@@ -23,25 +23,30 @@ export class CategoriaDetail {
   // Para redireccionar
   private router = inject(Router);
 
-  constructor() {
-
-    // Para obtener el id/parámetro de la ruta
-    // Parsear el id a número
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    // Validación básica del id y enviarlo como parámetro al método obtenerCategoria
-    /*if (!isNaN(id)) {
-      this.obtenerCategoria(id);
-    }*/
+  constructor(
+  ) {
+    // Obtener el ID desde la ruta
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('ID recibido:', id);
+    
+    if (id) {
+      this.loadCategoria(Number(id));
+    }
   }
 
-  // Obtener categoría y actualizar la Signal
-  /*obtenerCategoria(id: number) {
-    this.categoriaService.getById(id).subscribe((data: UsuarioModel) => {
-      console.log(data);
-      this.datos.set(data); // Actualiza la Signal
+  // Cargar los datos de la categoría desde el API
+  loadCategoria(id: number) {
+    this.categoriaService.getById(id).subscribe({
+      next: (respuesta: CategoriaModel) => {
+        console.log('Categoría cargada:', respuesta);
+        this.datos.set(respuesta);
+      },
+      error: (error) => {
+        console.error('Error al cargar categoría:', error);
+        this.datos.set(null);
+      }
     });
-  }*/
+  }
 
   // Para regresar a la vista de lista de técnicos
   goBack(): void {
