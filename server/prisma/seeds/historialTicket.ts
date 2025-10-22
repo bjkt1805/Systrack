@@ -50,7 +50,7 @@ export const historialTicket = [
   // Historial 6 para el ticket 3 (de ASIGNADO a EN_PROCESO)
   {
     ticketId: 3,
-    cambiadoPorId: 4,
+    cambiadoPorId: 5,
     deEstado: EstadoTicket.ASIGNADO,
     aEstado: EstadoTicket.EN_PROCESO,
     nota: "El técnico asignado está trabajando en el ticket",
@@ -77,7 +77,7 @@ export const historialTicket = [
   // Historial 9 para el ticket 4 (de ASIGNADO a EN_PROCESO)
   {
     ticketId: 4,
-    cambiadoPorId: 5,
+    cambiadoPorId: 3,
     deEstado: EstadoTicket.ASIGNADO,
     aEstado: EstadoTicket.EN_PROCESO,
     nota: "El técnico asignado está trabajando en el ticket",
@@ -86,7 +86,7 @@ export const historialTicket = [
   // Historial 10 para el ticket 4 (de EN_PROCESO a RESUELTO)
   {
     ticketId: 4,
-    cambiadoPorId: 5,
+    cambiadoPorId: 3,
     deEstado: EstadoTicket.EN_PROCESO,
     aEstado: EstadoTicket.RESUELTO,
     nota: "Se reconfiguró el GPO de impresora para permitir impresión desde aplicaciones de Office",
@@ -113,7 +113,7 @@ export const historialTicket = [
   // Historial 13 para el ticket 5 (de ASIGNADO a EN_PROCESO)
   {
     ticketId: 5,
-    cambiadoPorId: 3,
+    cambiadoPorId: 5,
     deEstado: EstadoTicket.ASIGNADO,
     aEstado: EstadoTicket.EN_PROCESO,
     nota: "El técnico asignado está trabajando en el ticket",
@@ -122,7 +122,7 @@ export const historialTicket = [
   // Historial 14 para el ticket 5 (de EN_PROCESO a RESUELTO)
   {
     ticketId: 5,
-    cambiadoPorId: 3,
+    cambiadoPorId: 5,
     deEstado: EstadoTicket.EN_PROCESO,
     aEstado: EstadoTicket.RESUELTO,
     nota: "Se restableció la contraseña y se envió al usuario de forma segura",

@@ -78,13 +78,13 @@ const main = async () => {
 
     // MAPEO MUCHOS A MUCHOS ENTRE TÉCNICOS Y ESPECIALIDADES
 
-    // Actualizar el Técnico 1 (id de usuario 3) creado con sus especialidades
+    // Actualizar el Técnico 1 - andres.gonzalez (id de usuario 3) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 3 },
       data: {
         especialidades: {
           connect: [
-            { id: 1 }, // Conectar con la especialidad de Redes
+            { id: 1 }, // Conectar con la especialidad de Técnico en reparación de equipos electrónicos
             { id: 2 }, // Conectar con la especialidad de Mantenimiento preventivo y correctivo
             { id: 3 }, // Conectar con la especialidad de Soporte en infraestructura
           ],
@@ -92,7 +92,7 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 2 (id de usuario 4) creado con sus especialidades
+    // Actualizar el Técnico 2 - pedro.carrillo (id de usuario 4) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 4 },
       data: {
@@ -106,35 +106,33 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 3 (id de usuario 5) creado con sus especialidades
+    // Actualizar el Técnico 3 - andrea.lopez (id de usuario 5) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 5 },
       data: {
         especialidades: {
           connect: [
-            { id: 1 }, // Conectar con la especialidad de Redes
-            { id: 2 }, // Conectar con la especialidad de Mantenimiento preventivo y correctivo
-            { id: 3 }, // Conectar con la especialidad de Soporte en infraestructura
+            { id: 7 }, // Conectar con la especialidad de Administrador de sistemas
+            { id: 8 }, // Conectar con la especialidad de Especialista en soporte de aplicaciones empresariales
           ],
         },
       },
     });
 
-    // Actualizar el Técnico 4 (id de usuario 6) creado con sus especialidades
+    // Actualizar el Técnico 4 - juan.martinez (id de usuario 6) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 6 },
       data: {
         especialidades: {
           connect: [
-            { id: 4 }, // Conectar con la especialidad de Administrador de redes
-            { id: 5 }, // Conectar con la especialidad de Electrónica básica
-            { id: 6 }, // Conectar con la especialidad de Administrador de sistemas
+            { id: 9 }, // Conectar con la especialidad de Desarrollador de software
+            { id: 10 }, // Conectar con la especialidad de Administrador de bases de datos
           ],
         },
       },
     });
 
-    // Actualizar el Técnico 5 (id de usuario 7) creado con sus especialidades
+    // Actualizar el Técnico 5 - felipe.ramirez (id de usuario 7) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 7 },
       data: {
@@ -148,7 +146,7 @@ const main = async () => {
       },
     });
 
-    // Actualizar el Técnico 6 (id de usuario 8) creado con sus especialidades
+    // Actualizar el Técnico 6 - alberto.sanchez (id de usuario 8) creado con sus especialidades
     await prisma.usuario.update({
       where: { id: 8 },
       data: {
@@ -164,7 +162,7 @@ const main = async () => {
 
     // MAPEO MUCHOS A MUCHOS ENTRE CATEGORIAS Y ETIQUETAS
 
-    // Actualizar la Categoría 1 creada con sus etiquetas
+    // Actualizar la Categoría 1 (Hardware) creada con sus etiquetas
     await prisma.categoria.update({
       where: { id: 1 },
       data: {
@@ -188,7 +186,7 @@ const main = async () => {
       },
     });
 
-    // Actualizar la Categoría 2 creada con sus etiquetas
+    // Actualizar la Categoría 2 (Redes y Conectividad) creada con sus etiquetas
     await prisma.categoria.update({
       where: { id: 2 },
       data: {
@@ -212,7 +210,7 @@ const main = async () => {
       },
     });
 
-    // Actualizar la Categoría 3 creada con sus etiquetas
+    // Actualizar la Categoría 3 (Soporte a Usuario Final)creada con sus etiquetas
     await prisma.categoria.update({
       where: { id: 3 },
       data: {
@@ -236,7 +234,7 @@ const main = async () => {
       },
     });
 
-    // Actualizar la Categoría 4 creada con sus etiquetas
+    // Actualizar la Categoría 4 (Aplicaciones y Sistemas Internos) creada con sus etiquetas
     await prisma.categoria.update({
       where: { id: 4 },
       data: {

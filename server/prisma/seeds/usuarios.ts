@@ -3,6 +3,8 @@ import { especialidades } from "./especialidades";
 
 export const usuarios = [
   // -- ADMIN --
+
+  // id: 1
   {
     nombreUsuario: "bkellerman",
     nombreCompleto: "Brian Kellerman",
@@ -11,6 +13,8 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.ADMIN,
   },
+
+  // id: 2
   {
     nombreUsuario: "warner.salazar",
     nombreCompleto: "Warner Salazar",
@@ -21,6 +25,8 @@ export const usuarios = [
   },
 
   // -- TÉCNICOS --
+
+  // id: 3
   {
     nombreUsuario: "andres.gonzalez",
     nombreCompleto: "Andrés González",
@@ -31,6 +37,8 @@ export const usuarios = [
     estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,
   },
+
+  // id: 4
   {
     nombreUsuario: "pedro.carrillo",
     nombreCompleto: "Pedro Carrillo",
@@ -38,9 +46,11 @@ export const usuarios = [
     correo: "pedro-tecnico2@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
-    estadoTecnico: EstadoTecnico.NO_DISPONIBLE,
+    estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,
   },
+
+  // id: 5
   {
     nombreUsuario: "andrea.lopez",
     nombreCompleto: "Andrea López",
@@ -51,6 +61,8 @@ export const usuarios = [
     estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,
   },
+
+  // id: 6
   {
     nombreUsuario: "juan.martinez",
     nombreCompleto: "Juan Martínez",
@@ -58,9 +70,11 @@ export const usuarios = [
     correo: "juan-tecnico4@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
-    estadoTecnico: EstadoTecnico.NO_DISPONIBLE,
+    estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,
   },
+
+  // id: 7
   {
     nombreUsuario: "felipe.ramirez",
     nombreCompleto: "Felipe Ramírez",
@@ -68,9 +82,11 @@ export const usuarios = [
     correo: "felipe-tecnico5@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
-    estadoTecnico: EstadoTecnico.DISPONIBLE,
+    estadoTecnico: EstadoTecnico.NO_DISPONIBLE,
     cargaTrabajo: 0,
   },
+
+  // id: 8
   {
     nombreUsuario: "alberto.sanchez",
     nombreCompleto: "Alberto Sánchez",
@@ -83,6 +99,8 @@ export const usuarios = [
   },
 
   // -- CLIENTES -- (si no se pone `rol`, toma el default CLIENTE)
+
+  // id: 9
   {
     nombreUsuario: "maria.gonzalez",
     nombreCompleto: "María González",
@@ -90,6 +108,8 @@ export const usuarios = [
     correo: "mgonzalez@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 10
   {
     nombreUsuario: "andres.mora",
     nombreCompleto: "Andrés Mora",
@@ -97,6 +117,8 @@ export const usuarios = [
     correo: "andresmora@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 11
   {
     nombreUsuario: "carolina.vega",
     nombreCompleto: "Carolina Vega",
@@ -104,6 +126,8 @@ export const usuarios = [
     correo: "carolinavega@outlook.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 12
   {
     nombreUsuario: "diego.rojas",
     nombreCompleto: "Diego Rojas",
@@ -111,6 +135,8 @@ export const usuarios = [
     correo: "diegorojas@hotmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 13
   {
     nombreUsuario: "sofia.castro",
     nombreCompleto: "Sofía Castro",
@@ -118,6 +144,8 @@ export const usuarios = [
     correo: "sofia.castro@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 14
   {
     nombreUsuario: "ricardo.solis",
     nombreCompleto: "Ricardo Solís",
@@ -125,6 +153,8 @@ export const usuarios = [
     correo: "rsolis@icloud.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 15
   {
     nombreUsuario: "laura.martinez",
     nombreCompleto: "Laura Martínez",
@@ -132,6 +162,8 @@ export const usuarios = [
     correo: "laura.martinez@yahoo.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 16
   {
     nombreUsuario: "felipe.araya",
     nombreCompleto: "Felipe Araya",
@@ -139,6 +171,8 @@ export const usuarios = [
     correo: "felipe.araya@correo.cr",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 17
   {
     nombreUsuario: "paola.salas",
     nombreCompleto: "Paola Salas",
@@ -146,6 +180,8 @@ export const usuarios = [
     correo: "paola.salas@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 18
   {
     nombreUsuario: "esteban.lopez",
     nombreCompleto: "Esteban López",
@@ -153,6 +189,8 @@ export const usuarios = [
     correo: "estebanlopez@outlook.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
+
+  // id: 19
   {
     nombreUsuario: "valeria.chacon",
     nombreCompleto: "Valeria Chacón",
