@@ -25,7 +25,6 @@ export class TicketIndex implements OnInit{
 
   // Inyectar Router y ActivatedRoute
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   // Signal para ticket
   tickets = signal<TicketModel[]>([]);
@@ -45,9 +44,6 @@ export class TicketIndex implements OnInit{
   // Columnas a utilizar en la tabla
   displayedColumns = ['titulo', 'descripcion', 'estado', 'prioridad', 'acciones'];
   
-  // // Inyectar MatDialog para los diálogos
-  // readonly dialog = inject(MatDialog);
-
   // ngOnInit para inicializar el paginador y sus labels en español
   // junto con la carga de usuarios desde el servicio y luego asignarlos a la signal
 
@@ -58,13 +54,6 @@ export class TicketIndex implements OnInit{
 
     // Llamar al método para configurar el paginador
     this.configurarPaginador();
-
-    //Label paginator
-    this.paginator._intl.itemsPerPageLabel = 'Items';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.firstPageLabel = 'Inicio';
-    this.paginator._intl.lastPageLabel = 'Fin';
   }
 
   configurarPaginador(): void {
@@ -73,14 +62,14 @@ export class TicketIndex implements OnInit{
     this.paginator._intl.previousPageLabel = 'Anterior';
     this.paginator._intl.firstPageLabel = 'Inicio';
     this.paginator._intl.lastPageLabel = 'Fin';
-    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-      if (length === 0) {
-        return `0 de ${length}`;
-      }
-      const startIndex = page * pageSize;
-      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-      return `${startIndex + 1} - ${endIndex} de ${length}`;
-    };
+    // this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+    //   if (length === 0) {
+    //     return `0 de ${length}`;
+    //   }
+    //   const startIndex = page * pageSize;
+    //   const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+    //   return `${startIndex + 1} - ${endIndex} de ${length}`;
+    // };
   }
  
   // Método para cargar usuarios desde el servicio y asignarlos a la signal
