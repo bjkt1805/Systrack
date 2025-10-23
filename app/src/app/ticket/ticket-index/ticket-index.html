@@ -15,6 +15,28 @@
 
   <!-- Contenido del card con la tabla de tickets -->
   <mat-card-content>
+
+    <!-- Filtro de usuario -->
+    <div class="filtro-usuario">
+      <mat-form-field appearance="outline">
+        <mat-label>Seleccionar Usuario</mat-label>
+
+        <!-- Select para elegir un usuario -->
+        <mat-select [value]="usuarioId()" (selectionChange)="onUsuarioChange($event.value)">
+          @for (usuario of usuarios(); track usuario.id) {
+          <mat-option [value]="usuario.id">
+            {{ usuario.nombreUsuario }} ({{ usuario.rol }})
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    
+      <button mat-raised-button color="warn" (click)="limpiarFiltro()" [disabled]="!usuarioId()">
+        <mat-icon>clear</mat-icon>
+        Limpiar
+      </button>
+    </div>
+
     <div class="tabla-container">
       <table mat-table [dataSource]="dataSource" class="tabla" matSort aria-label="Listado de Tickets">
 

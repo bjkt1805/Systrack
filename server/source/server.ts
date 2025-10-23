@@ -15,8 +15,10 @@ const app: Express=express()
 dotenv.config();
 // Puerto que escucha por defecto 300 o definido .env
 const port = process.env.PORT || 3000;
+
 // Middleware CORS para aceptar llamadas en el servidor
 app.use(cors());
+
 // Middleware para loggear las llamadas al servidor
 app.use(morgan('dev'));
 
@@ -38,6 +40,7 @@ app.use(ErrorMiddleware.handleError);
 app.use("/images",express.static(
   path.join(path.resolve(),"assets/uploads")))
 
+// Iniciar el servidor 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
   console.log('Presione CTRL-C para detenerlo\n');

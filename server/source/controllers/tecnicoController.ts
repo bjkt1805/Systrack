@@ -9,6 +9,7 @@ export class TecnicoController {
   // TAMBIÉN SE INCLUYE PAGINACIÓN
   get = async (request: Request, response: Response, next: NextFunction) => {
     try {
+      
       // Parámetro de consulta
       const consulta = (request.query.consulta as string) ?? "";
 

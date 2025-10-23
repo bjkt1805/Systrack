@@ -105,7 +105,7 @@ export class TicketDetail {
     const cierre = this.cerradoAt();
     const creado = this.creadoAt();
 
-    // Si no existen las fechas, retornar null
+    // Si no existen las fechas (creadoAt o cerradoAt), retornar null
     if (!cierre || !creado) return null;
 
     // Calcular la diferencia en milisegundos y convertir a días para mostrarlo como diasResolucion
