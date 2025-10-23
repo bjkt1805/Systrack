@@ -1,0 +1,11 @@
+2025-10-22 17:37:05.033 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findMany()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:14:48
+
+  11 try {
+  12 
+  13   //Select * from ticket where (nombre like 'onsulta%' OR descripcion like '%consulta%') = order by descripcion asc limit 20 offset 0;
+→ 14   const listado = await this.prisma.ticket.findMany(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
