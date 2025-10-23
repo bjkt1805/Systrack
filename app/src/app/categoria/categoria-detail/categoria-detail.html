@@ -14,7 +14,6 @@
             </mat-card-title>
         </div>
     </mat-card-header>
-
     <mat-divider></mat-divider>
 
     <mat-card-content class="tech-card__content">
@@ -31,6 +30,18 @@
             <div class="info-row" *ngIf="datos()?.descripcion">
                 <span class="info-label">Descripción</span>
                 <span class="info-value">{{ datos()?.descripcion }}</span>
+            </div>
+
+            <!-- Contenedor del etiquetas -->
+            <div class="info-row" *ngIf="datos()?.etiquetas">
+                <span class="info-label">Etiquetas</span>
+                <span class="info-value">{{ datos()?.etiquetas }}</span>
+            </div>
+
+            <!-- Contenedor del especialidades -->
+            <div class="info-row" *ngIf="datos()?.especialidades">
+                <span class="info-label">Especialidades</span>
+                <span class="info-value">{{ datos()?.especialidades }}</span>
             </div>
         </section>
     </mat-card-content>

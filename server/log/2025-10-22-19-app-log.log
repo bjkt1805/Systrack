@@ -1,0 +1,108 @@
+2025-10-22 19:19:44.359 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:50:47
+
+  47 }
+  48 
+  49 // Busca la categoría por su 'id' en la BD
+→ 50 const ticket = await this.prisma.ticket.findUnique(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:00.384 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:09.147 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:09.794 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:11.640 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:12.015 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:21.162 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:50:47
+
+  47 }
+  48 
+  49 // Busca la categoría por su 'id' en la BD
+→ 50 const ticket = await this.prisma.ticket.findUnique(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:33.253 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:36.782 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+/Users/warner/Systrack/server/source/controllers/tecnicoController.ts:111:49
+
+  108 }
+  109 
+  110 // Busca el técnico por su 'id' en la DB
+→ 111 const tecnico = await this.prisma.usuario.findFirst(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:52.304 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:50:47
+
+  47 }
+  48 
+  49 // Busca la categoría por su 'id' en la BD
+→ 50 const ticket = await this.prisma.ticket.findUnique(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:20:55.932 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:50:47
+
+  47 }
+  48 
+  49 // Busca la categoría por su 'id' en la BD
+→ 50 const ticket = await this.prisma.ticket.findUnique(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-22 19:31:53.748 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:50:47
+
+  47 }
+  48 
+  49 // Busca la categoría por su 'id' en la BD
+→ 50 const ticket = await this.prisma.ticket.findUnique(
+The column `systrack.Usuario.foto` does not exist in the current database.
