@@ -29,7 +29,6 @@ model Usuario {
   nombreCompleto  String
   telefono        String?
   correo          String    @unique
-  foto           String?
   contrasenaHash  String
   rol             Rol       @default(CLIENTE)
   ultimoIngresoAt DateTime?
