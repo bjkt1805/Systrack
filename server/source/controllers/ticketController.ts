@@ -1,4 +1,4 @@
-import { PrismaClient, EstadoTicket, Prioridad } from "../../generated/prisma";
+import { PrismaClient, EstadoTicket, Prioridad, Prisma } from "../../generated/prisma";
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/custom.error";
 
@@ -25,6 +25,91 @@ export class TicketController {
         },
       });
       response.json(listado);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // OBTENER TICKETS ASIGNADOS A UN USUARIO
+  getTicketsByUsuario = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+
+      const { id } = request.params;
+      const { rol, pagina = "1", limite = "5" } = request.query;
+
+      const usuarioId = parseInt(id);
+      const paginaNum = parseInt(pagina as string);
+      const limiteNum = parseInt(limite as string);
+      const skip = (paginaNum - 1) * limiteNum;
+
+      if (isNaN(usuarioId)) {
+        return next(AppError.badRequest("ID de usuario inválido"));
+      }
+
+      // Construir filtro según el rol
+      // usando una variable whereClause de tipo Prisma.TicketWhereInput
+      let whereClause: Prisma.TicketWhereInput = {};
+
+      if (rol === 'CLIENTE') {
+
+        // Cliente: solo tickets creados por él
+        whereClause.solicitanteId = usuarioId;
+      } else if (rol === 'TECNICO') {
+
+        // Técnico: solo tickets asignados a él
+        whereClause.usuarioAsignadoId = usuarioId;
+      }
+      // ADMINISTRADOR: sin filtro (todos los tickets)
+
+      // Obtener tickets con paginación
+      const [tickets, total] = await Promise.all([
+        this.prisma.ticket.findMany({
+          where: whereClause,
+          skip: skip,
+          take: limiteNum,
+          orderBy: {
+            creadoAt: "desc",
+          },
+
+          // Incluir en la respuesta los datos básicos del solicitante y del usuario asignado
+          include: {
+            solicitante: {
+              select: {
+                id: true,
+                nombreUsuario: true,
+                nombreCompleto: true,
+              }
+            },
+            usuarioAsignado: {
+              select: {
+                id: true,
+                nombreUsuario: true,
+                nombreCompleto: true,
+              }
+            }
+          }
+        }),
+
+        // Contar total de tickets para paginación
+        // Select count(*) from ticket where ...
+        // e incluir la clausula whereClause que contiene 
+        // el filtro por solicitanteId o usuarioAsignadoId según el rol
+        this.prisma.ticket.count({
+          where: whereClause,
+        })
+      ]);
+
+      // Respuesta con formato esperado por el frontend
+      response.json({
+        tickets,
+        total,
+        pagina: paginaNum,
+        porPagina: limiteNum
+      });
     } catch (error) {
       next(error);
     }
@@ -69,22 +154,22 @@ export class TicketController {
           usuarioAsignado: true,
           fechaLimiteRespuesta: true,
           fechaLimiteResolucion: true,
-          respondidoAt : true,
-          resueltoAt : true,
-          cerradoAt : true,
-          cumplioRespuesta : true,
-          cumplioResolucion : true,
+          respondidoAt: true,
+          resueltoAt: true,
+          cerradoAt: true,
+          cumplioRespuesta: true,
+          cumplioResolucion: true,
           // Incluye el historial de estados, observaciones y evidencias del ticket
-          historiales: { 
-            select: { 
+          historiales: {
+            select: {
               id: true,
               creadoAt: true,
-              cambiadoPor: true, 
-              deEstado: true, 
+              cambiadoPor: true,
+              deEstado: true,
               aEstado: true,
               nota: true,
-              imagenes: true 
-            } 
+              imagenes: true
+            }
           },
 
           // Incluye la valoración del ticket (puntaje y comentario)
@@ -105,54 +190,54 @@ export class TicketController {
   };
 
   // BUSCAR TICKET POR ROL DE USUARIO
-  search = async (request: Request, response: Response, next: NextFunction) => {
-    try {
-      // Obtiene los parámetros de búsqueda y usuario desde la query
-      const { termino, userId, userRol } = request.query;
+  // search = async (request: Request, response: Response, next: NextFunction) => {
+  //   try {
+  //     // Obtiene los parámetros de búsqueda y usuario desde la query
+  //     const { termino, userId, userRol } = request.query;
 
-      // Valida que el término de búsqueda sea un string no vacío
-      if (typeof termino !== "string" || termino.trim() === "") {
-        return next(
-          AppError.badRequest("El criterio de búsqueda es requerido")
-        );
-      }
+  //     // Valida que el término de búsqueda sea un string no vacío
+  //     if (typeof termino !== "string" || termino.trim() === "") {
+  //       return next(
+  //         AppError.badRequest("El criterio de búsqueda es requerido")
+  //       );
+  //     }
 
-      // Valida que existan los datos de usuario y rol
-      if (!userId || !userRol) {
-        return next(AppError.badRequest("Faltan datos de usuario"));
-      }
+  //     // Valida que existan los datos de usuario y rol
+  //     if (!userId || !userRol) {
+  //       return next(AppError.badRequest("Faltan datos de usuario"));
+  //     }
 
-      // Construye el filtro base para buscar por título
-      let where: any = {
-        titulo: { contains: termino as string },
-      };
+  //     // Construye el filtro base para buscar por título
+  //     let where: any = {
+  //       titulo: { contains: termino as string },
+  //     };
 
-      // Filtra los tickets según el rol del usuario
-      if (userRol === "ADMINISTRADOR") {
-        // Administrador: no se agrega filtro extra, ve todos los tickets
-      } else if (userRol === "CLIENTE") {
-        // Cliente: solo ve los tickets que él mismo registró
-        where.solicitanteId = parseInt(userId as string, 10);
-      } else if (userRol === "TECNICO") {
-        // Técnico: solo ve los tickets asignados a él
-        where.usuarioAsignadoId = parseInt(userId as string, 10);
-      }
+  //     // Filtra los tickets según el rol del usuario
+  //     if (userRol === "ADMINISTRADOR") {
+  //       // Administrador: no se agrega filtro extra, ve todos los tickets
+  //     } else if (userRol === "CLIENTE") {
+  //       // Cliente: solo ve los tickets que él mismo registró
+  //       where.solicitanteId = parseInt(userId as string, 10);
+  //     } else if (userRol === "TECNICO") {
+  //       // Técnico: solo ve los tickets asignados a él
+  //       where.usuarioAsignadoId = parseInt(userId as string, 10);
+  //     }
 
-      // Busca los tickets en la base de datos según el filtro construido
-      const tickets = await this.prisma.ticket.findMany({ where });
+  //     // Busca los tickets en la base de datos según el filtro construido
+  //     const tickets = await this.prisma.ticket.findMany({ where });
 
-      // Si hay resultados, responde con el listado de tickets
-      if (tickets.length > 0) {
-        response.status(200).json(tickets);
-      } else {
-        // Si no hay resultados, responde con error de no encontrado
-        next(AppError.notFound("No existen tickets para el criterio y rol"));
-      }
-    } catch (error: any) {
-      // Si ocurre un error, lo pasa al manejador de errores
-      next(error);
-    }
-  };
+  //     // Si hay resultados, responde con el listado de tickets
+  //     if (tickets.length > 0) {
+  //       response.status(200).json(tickets);
+  //     } else {
+  //       // Si no hay resultados, responde con error de no encontrado
+  //       next(AppError.notFound("No existen tickets para el criterio y rol"));
+  //     }
+  //   } catch (error: any) {
+  //     // Si ocurre un error, lo pasa al manejador de errores
+  //     next(error);
+  //   }
+  // };
 
   //CREAR TICKET
   create = async (request: Request, response: Response, next: NextFunction) => {

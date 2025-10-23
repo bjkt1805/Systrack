@@ -25,7 +25,7 @@
         <mat-select [value]="usuarioId()" (selectionChange)="onUsuarioChange($event.value)">
           @for (usuario of usuarios(); track usuario.id) {
           <mat-option [value]="usuario.id">
-            {{ usuario.nombreUsuario }} ({{ usuario.rol }})
+            {{ usuario.nombreCompleto }} ({{ usuario.rol }})
           </mat-option>
           }
         </mat-select>
@@ -105,12 +105,13 @@
       </table>
     </div>
 
-    <!-- Paginador de la tabla -->
+    <!-- Paginador de la tabla (utiliza (page) para la paginación)-->
     <mat-paginator #paginator
       [length]="dataSource.data.length"
       [pageIndex]="0"
       [pageSize]="5"
       [pageSizeOptions]="[3,5,10]"
+      (page)="onPageChange($event)"
       showFirstLastButtons>
     </mat-paginator>
   

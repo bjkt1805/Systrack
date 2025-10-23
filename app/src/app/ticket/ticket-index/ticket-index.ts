@@ -1,14 +1,11 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
-import {  MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TicketModel } from '../../share/models/TicketModel';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-// import { TicketDiag } from '../ticket-diag/ticket-diag';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
-//import { TicketDiag } from '../ticket-image-view-dialog/ticket-image-view-dialog';
   
 @Component({
   selector: 'app-ticket-index',
@@ -34,7 +31,7 @@ export class TicketIndex implements OnInit{
   tickets = signal<TicketModel[]>([]);
 
   // Signal para usuarios
-  usuarios = signal<{ id: number; nombreUsuario: string; rol: string }[]>([]);
+  usuarios = signal<{ id: number; nombreCompleto: string; rol: string }[]>([]);
 
   // Signal para el ID del usuario seleccionado
   usuarioId = signal<number | null>(null);
@@ -59,12 +56,31 @@ export class TicketIndex implements OnInit{
     // Cargar usuarios desde el servicio
     this.cargarUsuarios();
 
+    // Llamar al método para configurar el paginador
+    this.configurarPaginador();
+
     //Label paginator
     this.paginator._intl.itemsPerPageLabel = 'Items';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
     this.paginator._intl.firstPageLabel = 'Inicio';
     this.paginator._intl.lastPageLabel = 'Fin';
+  }
+
+  configurarPaginador(): void {
+    this.paginator._intl.itemsPerPageLabel = 'Items por página:';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.paginator._intl.firstPageLabel = 'Inicio';
+    this.paginator._intl.lastPageLabel = 'Fin';
+    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      if (length === 0) {
+        return `0 de ${length}`;
+      }
+      const startIndex = page * pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+      return `${startIndex + 1} - ${endIndex} de ${length}`;
+    };
   }
  
   // Método para cargar usuarios desde el servicio y asignarlos a la signal
@@ -100,6 +116,13 @@ export class TicketIndex implements OnInit{
 
     // Resetear el paginador a la primera página (index = 0) y cargar de nuevo los tickets 
     this.paginator.pageIndex = 0;
+    this.listTickets();
+  }
+
+  // Método que se ejecuta cuando cambia la página en el paginador
+  onPageChange(event: PageEvent): void {
+    // El paginador ya actualiza automáticamente pageIndex y pageSize
+    // y también llama a listTickets()
     this.listTickets();
   }
 
@@ -147,6 +170,7 @@ export class TicketIndex implements OnInit{
     this.usuarioRol.set(null);
     this.dataSource.data = [];
     this.paginator.pageIndex = 0;
+    this.paginator.length = 0;
   }
 
   // Navegar al detalle de un ticket
