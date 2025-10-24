@@ -5,8 +5,8 @@ import { TicketModel } from '../../models/TicketModel';
 import { environment } from '../../../../environments/environment.development';
 import { Observable } from 'rxjs/internal/Observable';
 
-// Interfaz para la respuesta paginada de tickets
-export interface TicketsPaginados {
+// Interfaz para la respuesta de listado de tickets por usuario
+export interface TicketsByUsuario {
   tickets: TicketModel[];
   total: number;
   pagina: number;
@@ -35,15 +35,10 @@ export class TicketService extends BaseAPI<TicketModel> {
      * 
      * Ejemplo: GET http://localhost:3000/ticket/usuario/5?rol=CLIENTE&pagina=1&limite=5
      */
-    getTicketsByUsuario(
-      usuarioId: number,
-      rol: string,
-      pagina: number = 1,
-      limite: number = 5
-    ): Observable<TicketsPaginados> {
-      const params = `?rol=${rol}&pagina=${pagina}&limite=${limite}`;
-      return this.http.get<TicketsPaginados>(
-        `${this.urlAPI}/${environment.endPointTicket}/usuario/${usuarioId}${params}`
+    getTicketsByUsuario(usuarioId: number, rol: string, pagina: number, limite: number): Observable<TicketsByUsuario> {
+
+      return this.http.get<TicketsByUsuario>(
+        `${this.urlAPI}/${environment.endPointTicket}/usuario/${usuarioId}?rol=${rol}&pagina=${pagina}&limite=${limite}`
       );
     }
 }

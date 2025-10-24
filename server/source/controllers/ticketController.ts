@@ -38,14 +38,21 @@ export class TicketController {
   ) => {
     try {
 
+      // Parámetro de ruta (ID de usuario)
       const { id } = request.params;
-      const { rol, pagina = "1", limite = "5" } = request.query;
 
+      // Parámetros de consulta (rol, página, límite)
+      const { rol, pagina = "1", limite = "20" } = request.query;
+
+      // Parsear los parámetros de ruta y consulta
       const usuarioId = parseInt(id);
       const paginaNum = parseInt(pagina as string);
       const limiteNum = parseInt(limite as string);
+
+      // Calcular el offset (desplazamiento) para la paginación
       const skip = (paginaNum - 1) * limiteNum;
 
+      // Validar que el ID de usuario sea un número válido
       if (isNaN(usuarioId)) {
         return next(AppError.badRequest("ID de usuario inválido"));
       }
@@ -54,10 +61,15 @@ export class TicketController {
       // usando una variable whereClause de tipo Prisma.TicketWhereInput
       let whereClause: Prisma.TicketWhereInput = {};
 
+      // Si el cliente tiene el rol CLIENTE, configurar el whereClause para utilizar 
+      // el solicitanteId como filtro
       if (rol === 'CLIENTE') {
 
         // Cliente: solo tickets creados por él
         whereClause.solicitanteId = usuarioId;
+
+        // Si el cliente tiene el rol TÉCNICO, configurar el whereClause para utilizar
+        // el usuarioAsignadoId como filtro
       } else if (rol === 'TECNICO') {
 
         // Técnico: solo tickets asignados a él
@@ -115,7 +127,7 @@ export class TicketController {
     }
   };
 
-  // OBTENER UNA TICKET A TRAVÉS DE SU ID
+  // OBTENER UN TICKET A TRAVÉS DE SU ID
   getById = async (
     request: Request,
     response: Response,

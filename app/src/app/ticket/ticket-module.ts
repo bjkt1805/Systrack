@@ -20,6 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TicketDetail } from './ticket-detail/ticket-detail';
 import { TicketImageViewDialog } from './ticket-image-view-dialog/ticket-image-view-dialog';
 import { TicketIndex } from './ticket-index/ticket-index';
@@ -51,7 +52,8 @@ import { TicketIndex } from './ticket-index/ticket-index';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatExpansionModule
+    MatExpansionModule, 
+    MatProgressSpinnerModule
   ]
 })
 export class TicketModule { }

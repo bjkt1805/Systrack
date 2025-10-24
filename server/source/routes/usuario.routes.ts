@@ -10,12 +10,9 @@ export class UsuarioRoutes {
 
         //GET localhost:3000/usuario/
         router.get('/', controller.get)
-
-        //GET localhost:3000/tecnico/search?clave=valor
-        // router.get('/search',controller.search)
         
-        //GET localhost:3000/tecnico/3
-        // router.get('/:id',controller.getById) 
+        //GET localhost:3000/usuario/3
+        router.get('/:id',controller.getById)
 
         return router
     }

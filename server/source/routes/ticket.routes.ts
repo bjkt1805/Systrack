@@ -11,7 +11,7 @@ export class TicketRoutes {
         //GET localhost:3000/ticket/
         router.get('/', controller.get)
 
-        //GET localhost:3000/ticket/usuario/5?rol=CLIENTE&pagina=1&limite=5
+        //GET localhost:3000/ticket/usuario/:id
         router.get('/usuario/:id', controller.getTicketsByUsuario);
 
         //GET localhost:3000/ticket/search?clave=valor -- Eje: http://localhost:3000/ticket/search?termino=laptop&userId=1&userRol=ADMINISTRADOR

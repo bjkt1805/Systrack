@@ -3,7 +3,7 @@
   <!-- Header del card -->
   <mat-card-header class="tickets-header">
     <mat-card-title class="title">Listado de Tickets</mat-card-title>
-    
+
     <!-- Subtítulo con el botón de agregar ticket -->
     <!-- <mat-card-subtitle>
       <button mat-mini-fab matTooltip="Crear Ticket" class="btn-primary" (click)="crearTicket()">
@@ -16,27 +16,40 @@
   <!-- Contenido del card con la tabla de tickets -->
   <mat-card-content>
 
-    <!-- Filtro de usuario -->
-    <div class="filtro-usuario">
-      <mat-form-field appearance="outline">
-        <mat-label>Seleccionar Usuario</mat-label>
-
-        <!-- Select para elegir un usuario -->
-        <mat-select [value]="usuarioId()" (selectionChange)="onUsuarioChange($event.value)">
-          @for (usuario of usuarios(); track usuario.id) {
-          <mat-option [value]="usuario.id">
-            {{ usuario.nombreCompleto }} ({{ usuario.rol }})
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    
-      <button mat-raised-button color="warn" (click)="limpiarFiltro()" [disabled]="!usuarioId()">
-        <mat-icon>clear</mat-icon>
-        Limpiar
-      </button>
+    <!-- Información del usuario logueado -->
+    <div class="info-usuario">
+      @if (cargandoUsuario()) {
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Cargando información del usuario...</span>
+      } @else if (errorUsuario()) {
+        <mat-chip color="warn">
+          <mat-icon>error</mat-icon>
+          {{ errorUsuario() }}
+        </mat-chip>
+      } @else if (usuarioLogueado()) {
+        <mat-chip-set>
+          <mat-chip>
+            <mat-icon>person</mat-icon>
+            ID: {{ usuarioLogueado().id }}
+          </mat-chip>
+          <mat-chip>
+            <mat-icon>badge</mat-icon>
+            {{ usuarioLogueado().nombreCompleto }}
+          </mat-chip>
+          <mat-chip>
+            <mat-icon>admin_panel_settings</mat-icon>
+            Rol: {{ usuarioLogueado().rol }}
+          </mat-chip>
+          <mat-chip>
+            <mat-icon>email</mat-icon>
+            {{ usuarioLogueado().correo }}
+          </mat-chip>
+        </mat-chip-set>
+      }
     </div>
 
+    
+    <!-- Tabla de tickets -->
     <div class="tabla-container">
       <table mat-table [dataSource]="dataSource" class="tabla" matSort aria-label="Listado de Tickets">
 
@@ -58,8 +71,7 @@
           <td mat-cell *matCellDef="let row">
 
             <!-- Uso de ngClass para agregar clases dinámicas a los badges del estado del tiquete -->
-            <span class="badge"
-                  [ngClass]="{
+            <span class="badge" [ngClass]="{
                     'badge--pending': row.estado === 'PENDIENTE',
                     'badge--assigned': row.estado === 'ASIGNADO',
                     'badge--progress': row.estado === 'EN_PROCESO',
@@ -75,10 +87,9 @@
         <ng-container matColumnDef="prioridad">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Prioridad</th>
           <td mat-cell *matCellDef="let row">
-            
+
             <!-- Uso de ngClass para agregar clases dinámicas a los badges del estado del tiquete -->
-            <span class="badge"
-                  [ngClass]="{
+            <span class="badge" [ngClass]="{
                     'badge--low': row.prioridad === 'BAJA',
                     'badge--medium': row.prioridad === 'MEDIA',
                     'badge--high': row.prioridad === 'ALTA',
@@ -106,14 +117,9 @@
     </div>
 
     <!-- Paginador de la tabla (utiliza (page) para la paginación)-->
-    <mat-paginator #paginator
-      [length]="paginator.length"
-      [pageIndex]="0"
-      [pageSize]="5"
-      [pageSizeOptions]="[3,5,10]"
-      (page)="onPageChange($event)"
-      showFirstLastButtons>
+    <mat-paginator #paginator [length]="paginator.length" [pageIndex]="0" [pageSize]="3" [pageSizeOptions]="[3,5,10]"
+      (page)="onPageChange($event)" showFirstLastButtons>
     </mat-paginator>
-  
+
   </mat-card-content>
 </mat-card>
