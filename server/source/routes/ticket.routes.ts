@@ -11,6 +11,9 @@ export class TicketRoutes {
         //GET localhost:3000/ticket/
         router.get('/', controller.get)
 
+        //GET localhost:3000/ticket/kanban?semana=2025-10-27
+        router.get('/kanban', controller.getKanban);
+
         //GET localhost:3000/ticket/usuario/:id
         router.get('/usuario/:id', controller.getTicketsByUsuario);
 

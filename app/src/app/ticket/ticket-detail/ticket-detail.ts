@@ -48,17 +48,37 @@ export class TicketDetail {
     });
   }
 
-  // Fecha de creación del ticket en formato DD/MM/AAAA
-  fechaCreacionFormateada(): string {
-    const fecha = new Date(this.datos()?.creadoAt || '');
+ /**
+  * Función para formatear una fecha en formato DD/MM/AAAA hh:mm AM/PM
+  * que recibe la fecha como parámetro 
+  * @param fecha 
+  * @returns 
+  */
+
+  // Fecha en formato DD/MM/AAAA hh:mm AM/PM
+  fechaFormateada(fecha: Date | null | undefined): string {
+
+    // Crear un objeto Date a partir del parámetro fecha
+    const fechaAFormatear = new Date(fecha || '');
+
+    // Si no hay fecha, retornar cadena vacía
+    if (!fechaAFormatear || isNaN(fechaAFormatear.getTime())) return '';
 
     // Formatear la fecha a DD/MM/AAAA
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    const anio = fecha.getFullYear();
+    const dia = String(fechaAFormatear.getDate()).padStart(2, '0');
+    const mes = String(fechaAFormatear.getMonth() + 1).padStart(2, '0');
+    const anio = fechaAFormatear.getFullYear();
 
-    // Retornar la fecha formateada
-    return `${dia}/${mes}/${anio}`;
+    // Formatear la hora a hh:mm AM/PM
+    let horas = fechaAFormatear.getHours();
+    const minutos = String(fechaAFormatear.getMinutes()).padStart(2, '0');
+    const ampm = horas >= 12 ? 'PM' : 'AM';
+    horas = horas % 12;
+    horas = horas ? horas : 12; // la hora '0' debe ser '12'
+    const horasFormateadas = String(horas).padStart(2, '0');
+
+    // Retornar la fecha y hora formateada
+    return `${dia}/${mes}/${anio} ${horasFormateadas}:${minutos} ${ampm}`;
   }
 
   // Función privada utilitaria para convertir cadenas de fecha a objetos Date

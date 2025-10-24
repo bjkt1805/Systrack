@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 
 // Exportar clase para listar técnicos
 export class TecnicoIndex {
+  
   // Signal - Respuesta del API
   datos = signal<UsuarioModel[]>([]);
 

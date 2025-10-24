@@ -33,15 +33,31 @@
             </div>
 
             <!-- Contenedor del etiquetas -->
-            <div class="info-row" *ngIf="datos()?.etiquetas">
+            <div class="info-row">
                 <span class="info-label">Etiquetas</span>
-                <span class="info-value">{{ datos()?.etiquetas }}</span>
+                <div class="chips">
+                    <mat-chip-listbox aria-label="Especialidades">
+                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
+                        @for (item of datos()?.etiquetas; track item.id) {
+                        <mat-chip-option class="chip-primary"> {{item.nombre}}
+                        </mat-chip-option>
+                        }
+                    </mat-chip-listbox>
+                </div>
             </div>
 
             <!-- Contenedor del especialidades -->
-            <div class="info-row" *ngIf="datos()?.especialidades">
+            <div class="info-row">
                 <span class="info-label">Especialidades</span>
-                <span class="info-value">{{ datos()?.especialidades }}</span>
+                <div class="chips">
+                    <mat-chip-listbox aria-label="Especialidades">
+                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
+                        @for (item of datos()?.especialidades; track item.id) {
+                        <mat-chip-option class="chip-secondary"> {{item.nombre}}
+                        </mat-chip-option>
+                        }
+                    </mat-chip-listbox>
+                </div>
             </div>
         </section>
     </mat-card-content>

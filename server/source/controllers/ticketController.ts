@@ -15,9 +15,10 @@ export class TicketController {
         // ordenar por id de forma ascendente
         orderBy: { id: "asc" },
 
-        // select para traer máximo 4 campos
+        // select para traer campos específicos
         select: {
           id: true,
+          codigo: true,
           titulo: true,
           descripcion: true,
           estado: true,
@@ -26,6 +27,88 @@ export class TicketController {
       });
       response.json(listado);
     } catch (error) {
+      next(error);
+    }
+  };
+
+  // OBTENER TODOS LOS TICKETS PARA MOSTRAR EN EL TABLERO KANBAN
+  // FILTRADO POR SEMANA ACTUAL O ESPECIFICADA
+  getKanban = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      // Parámetros de consulta opcionales para filtrar por semana
+      const { semana, incluirCategoria = 'true' } = request.query;
+
+      // Calcular rango de fechas para la semana
+      let fechaInicio: Date;
+      let fechaFin: Date;
+
+      if (semana) {
+        // Si se proporciona una fecha específica, calcular la semana de esa fecha
+        const fechaBase = new Date(semana as string);
+        fechaInicio = this.obtenerInicioSemana(fechaBase);
+        fechaFin = this.obtenerFinSemana(fechaBase);
+      } else {
+        // Por defecto, usar la semana actual
+        const hoy = new Date();
+        fechaInicio = this.obtenerInicioSemana(hoy);
+        fechaFin = this.obtenerFinSemana(hoy);
+      }
+
+      console.log(`Filtrando tickets de la semana: ${fechaInicio.toISOString()} a ${fechaFin.toISOString()}`);
+
+      // Construir filtro de fecha
+      const whereClause: Prisma.TicketWhereInput = {
+        creadoAt: {
+          gte: fechaInicio,  // Mayor o igual a lunes 00:00:00
+          lte: fechaFin      // Menor o igual a domingo 23:59:59
+        }
+      };
+
+      const listado = await this.prisma.ticket.findMany({
+        where: whereClause,
+        orderBy: { creadoAt: "asc" }, // Ordenar por fecha de creación
+        select: {
+          id: true,
+          codigo: true,
+          titulo: true,
+          descripcion: true,
+          estado: true,
+          prioridad: true,
+          creadoAt: true,
+          categoriaId: true,
+          fechaLimiteRespuesta: true,
+          fechaLimiteResolucion: true,
+          categoria: {
+            select: {
+              id: true,
+              nombre: true,
+              sla: {
+                select: {
+                  id: true,
+                  nombre: true,
+                  maxMinutosRespuesta: true,
+                  maxMinutosResolucion: true,
+                }
+              }
+            }
+          }
+        },
+      });
+
+      console.log(`Total de tickets en la semana: ${listado.length}`);
+
+      // Respuesta con información adicional
+      response.json({
+        tickets: listado,
+        semana: {
+          inicio: fechaInicio.toISOString(),
+          fin: fechaFin.toISOString(),
+        },
+        total: listado.length
+      });
+
+    } catch (error) {
+      console.error('Error en getKanban:', error);
       next(error);
     }
   };
@@ -266,4 +349,22 @@ export class TicketController {
       next(error);
     }
   };
+
+  // MÉTODOS HELPER PARA CÁLCULO DE SEMANA
+  private obtenerInicioSemana(fecha: Date): Date {
+    const dia = fecha.getDay();
+    const diff = fecha.getDate() - dia + (dia === 0 ? -6 : 1); // Lunes como inicio
+    const lunes = new Date(fecha);
+    lunes.setDate(diff);
+    lunes.setHours(0, 0, 0, 0); // 00:00:00
+    return lunes;
+  }
+
+  private obtenerFinSemana(fecha: Date): Date {
+    const inicioSemana = this.obtenerInicioSemana(fecha);
+    const domingo = new Date(inicioSemana);
+    domingo.setDate(inicioSemana.getDate() + 6); // Domingo
+    domingo.setHours(23, 59, 59, 999); // 23:59:59
+    return domingo;
+  }
 }

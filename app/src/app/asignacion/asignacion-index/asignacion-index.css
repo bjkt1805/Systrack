@@ -1,0 +1,368 @@
+/* ====== Contenedor Principal ====== */
+.asignacion-container {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--mat-sys-surface);
+  padding-top: 4%;
+  /* padding: 24px; */
+}
+
+/* ====== Header ====== */
+.header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 3%;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.btn-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-top: 1%;
+}
+
+/* ====== Loader ====== */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+/* ====== Tablero Kanban ====== */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 días de la semana */
+  gap: 12px;
+  width: 98%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+/* ====== Columnas ====== */
+.kanban-columna {
+  background: #CBC3E3;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+.columna-header {
+  padding: 16px;
+  background: var(--mat-sys-surface-container);
+  border-top: 4px solid;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.columna-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fecha-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fecha {
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+}
+
+/* Badge de estado en tarjeta */
+.ticket-estado {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.columna-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.badge-count {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.columna-content {
+  padding: 16px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ====== Tarjetas de Ticket ====== */
+.ticket-card {
+  background: var(--mat-sys-surface);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ticket-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Colores de urgencia */
+.ticket-card.urgencia-urgente {
+  border-left-color: #c62828;
+}
+
+.ticket-card.urgencia-alta {
+  border-left-color: #ef6c00;
+}
+
+.ticket-card.urgencia-media {
+  border-left-color: #f9a825;
+}
+
+.ticket-card.urgencia-baja {
+  border-left-color: #2e7d32;
+}
+
+/* ====== Header de Tarjeta ====== */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ticket-codigo {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+  font-family: 'Courier New', monospace;
+}
+
+.icono-categoria {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ====== Título ====== */
+.ticket-titulo {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  /* -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; */
+  overflow: hidden;
+}
+
+/* ====== Meta Info ====== */
+.ticket-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.chip mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.chip-categoria {
+  background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+  color: var(--mat-sys-primary);
+  font-size: 11px;
+}
+
+.chip-prioridad {
+  color: white;
+}
+
+.prioridad-urgente {
+  background: #c62828;
+}
+
+.prioridad-alta {
+  background: #ef6c00;
+}
+
+.prioridad-media {
+  background: #f9a825;
+}
+
+.prioridad-baja {
+  background: #2e7d32;
+}
+
+/* ====== SLA Info ====== */
+.sla-info {
+  margin-bottom: 12px;
+  /* padding: 1px; */
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 5%, transparent);
+  border-radius: 8px;
+}
+
+.sla-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sla-header mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.sla-progress {
+  width: 100%;
+  height: 6px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 20%, transparent);
+  border-radius: 3px;
+  border-style: solid;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+.progress-bar.urgencia-urgente {
+  background: #c62828;
+}
+
+.progress-bar.urgencia-alta {
+  background: #ef6c00;
+}
+
+.progress-bar.urgencia-media {
+  background: #f9a825;
+}
+
+.progress-bar.urgencia-baja {
+  background: #2e7d32;
+}
+
+/* ====== Acciones ====== */
+.card-acciones {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-surface-variant) 15%, transparent);
+}
+
+.card-acciones button {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.card-acciones button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ====== Estado Vacío ====== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.6;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ====== Responsivo ====== */
+
+/* Responsivo para 7 columnas */
+@media (max-width: 1400px) {
+  .kanban-board {
+    grid-template-columns: repeat(7, 1fr); /* 5 días en pantallas medianas */
+  }
+}
+
+@media (max-width: 900px) {
+  .kanban-board {
+    grid-template-columns: repeat(3, 1fr); /* 3 días en tablets */
+  }
+}
+
+@media (max-width: 600px) {
+  .kanban-board {
+    grid-template-columns: 1fr; /* 1 día en móviles */
+  }
+}

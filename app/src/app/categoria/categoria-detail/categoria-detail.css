@@ -160,7 +160,13 @@ mat-chip-listbox {
   padding: 8px 18px 16px;
 }
 
-.btn-back mat-icon { margin-right: 6px; }
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-top: 5%;
+}
 
 /* EMPTY STATE */
 .tech-card--empty .empty {

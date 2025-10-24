@@ -14,8 +14,9 @@ export const ticket = [
     solicitanteId: 9,
     categoriaId: 1,
     usuarioAsignadoId: null,
-    fechaLimiteRespuesta: new Date("2025-10-13T12:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-14T12:00:00Z"),
+    creadoAt: new Date("2025-10-20T08:00:00Z"),               // 02:00 hora de CR 
+    fechaLimiteRespuesta: new Date("2025-10-20T12:00:00Z"),   // 06:00 hora de CR (240 min = 4 horas)
+    fechaLimiteResolucion: new Date("2025-10-21T08:00:00Z"),  // 28:00 hora de CR (1440 min = 24 horas)
     respondidoAt: null,
     resueltoAt: null,
     cerradoAt: null,
@@ -34,9 +35,10 @@ export const ticket = [
     solicitanteId: 10,
     categoriaId: 2,
     usuarioAsignadoId: 4,
-    fechaLimiteRespuesta: new Date("2025-10-13T10:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-13T16:00:00Z"),
-    respondidoAt: new Date("2025-10-13T10:30:00Z"),
+    creadoAt: new Date("2025-10-21T08:00:00Z"),              // 02:00 hora de CR
+    fechaLimiteRespuesta: new Date("2025-10-21T09:00:00Z"),  // 02:00 hora de CR (60 min = 1 hora)
+    fechaLimiteResolucion: new Date("2025-10-21T14:00:00Z"), // 08:00 hora de CR (360 min = 6 horas)
+    respondidoAt: new Date("2025-10-21T08:30:00Z"),          // dentro del plazo = cumplió respuesta
     resueltoAt: null,
     cerradoAt: null,
     cerradoPorId: null,
@@ -54,9 +56,10 @@ export const ticket = [
     solicitanteId: 11,
     categoriaId: 4,
     usuarioAsignadoId: 5,
-    fechaLimiteRespuesta: new Date("2025-10-13T09:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-13T21:00:00Z"),
-    respondidoAt: new Date("2025-10-13T09:10:00Z"),
+    creadoAt: new Date("2025-10-21T08:10:00Z"),              // 02:10 hora de CR
+    fechaLimiteRespuesta: new Date("2025-10-21T09:10:00Z"),  // 03:10 hora de CR (60 min = 1 hora)
+    fechaLimiteResolucion: new Date("2025-10-21T20:10:00Z"), // 14:10 hora de CR (720 min = 12 horas)
+    respondidoAt: new Date("2025-10-21T09:10:00Z"),          // en el límite → cumple
     resueltoAt: null,
     cerradoAt: null,
     cerradoPorId: null,
@@ -74,10 +77,12 @@ export const ticket = [
     solicitanteId: 12,
     categoriaId: 1,
     usuarioAsignadoId: 3,
-    fechaLimiteRespuesta: new Date("2025-10-14T08:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-14T18:00:00Z"),
-    respondidoAt: new Date("2025-10-14T08:30:00Z"),
-    resueltoAt: new Date("2025-10-14T17:00:00Z"),
+    creadoAt: new Date("2025-10-22T12:20:00Z"),               // 06:20 hora de CR
+    fechaLimiteRespuesta: new Date("2025-10-22T16:20:00Z"),   // 10:20 hora de CR (240 min = 4 horas)
+    fechaLimiteResolucion: new Date("2025-10-23T12:20:00Z"),  // 06:20 hora de CR (1440 min = 24 horas)
+
+    respondidoAt: new Date("2025-10-22T08:30:00Z"),           // dentro del plazo
+    resueltoAt: new Date("2025-10-22T17:00:00Z"),             // antes del límite
     cerradoAt: null,
     cerradoPorId: null,
     cumplioRespuesta: true,
@@ -94,11 +99,13 @@ export const ticket = [
     solicitanteId: 13,
     categoriaId: 3,
     usuarioAsignadoId: 5,
-    fechaLimiteRespuesta: new Date("2025-10-15T09:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-15T15:00:00Z"),
-    respondidoAt: new Date("2025-10-15T09:10:00Z"),
-    resueltoAt: new Date("2025-10-15T14:00:00Z"),
-    cerradoAt: new Date("2025-10-15T15:30:00Z"),
+    creadoAt: new Date("2025-10-23T09:00:00Z"),               // 03:00 hora de CR
+    fechaLimiteRespuesta: new Date("2025-10-23T10:00:00Z"),   // 04:00 hora de CR (60 min = 1 hora)
+    fechaLimiteResolucion: new Date("2025-10-23T15:00:00Z"),  // 09:00 hora de CR (360 min = 6 horas)
+
+    respondidoAt: new Date("2025-10-23T09:10:00Z"),           // 03:10 hora de CR -> dentro del plazo
+    resueltoAt: new Date("2025-10-23T14:00:00Z"),             // 08:00 hora de CR -> dentro del plazo
+    cerradoAt: new Date("2025-10-23T15:30:00Z"),              // 09:30 hora de CR -> fuera del plazo
     cerradoPorId: 1,
     cumplioRespuesta: true,
     cumplioResolucion: true,
@@ -114,8 +121,9 @@ export const ticket = [
     solicitanteId: 14,
     categoriaId: 2,
     usuarioAsignadoId: null,
-    fechaLimiteRespuesta: new Date("2025-10-16T08:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-16T14:00:00Z"),
+    creadoAt: new Date("2025-10-25T17:29:21Z"),              // 11:29 hora de CR
+    fechaLimiteRespuesta: new Date("2025-10-25T18:29:21Z"),   // 12:29 hora de CR (60 min = 1 hora)
+    fechaLimiteResolucion: new Date("2025-10-25T23:29:21Z"),  // 17:29 hora de CR (360 min = 6 horas)
     respondidoAt: null,
     resueltoAt: null,
     cerradoAt: null,
@@ -134,8 +142,9 @@ export const ticket = [
     solicitanteId: 15,
     categoriaId: 4,
     usuarioAsignadoId: 5,
-    fechaLimiteRespuesta: new Date("2025-10-17T10:00:00Z"),
-    fechaLimiteResolucion: new Date("2025-10-17T18:00:00Z"),
+    creadoAt: new Date("2025-10-26T10:00:00Z"),
+    fechaLimiteRespuesta: new Date("2025-10-26T11:00:00Z"),   // 05:00 hora de CR (60 min = 1 hora)
+    fechaLimiteResolucion: new Date("2025-10-26T22:00:00Z"),  // 16:00 hora de CR (720 min = 12 horas)
     respondidoAt: null,
     resueltoAt: null,
     cerradoAt: null,
