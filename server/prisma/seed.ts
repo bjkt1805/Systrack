@@ -7,6 +7,7 @@ import { ticket } from "./seeds/ticket";
 import { etiquetas } from "./seeds/etiquetas";
 import { historialTicket } from "./seeds/historialTicket";
 import { imagenTicket } from "./seeds/imagenTicket";
+import { valoracionServicio } from "./seeds/valoracionServicio";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -72,6 +73,13 @@ const main = async () => {
     await prisma.imagenTicket.createMany({
       data: imagenTicket,
 
+      // Respetar campo unique
+      skipDuplicates: true,
+    });
+
+    // Valoración Servicio - createMany (crear varios registros sin registrar relaciones)
+    await prisma.valoracionServicio.createMany({
+      data: valoracionServicio,
       // Respetar campo unique
       skipDuplicates: true,
     });

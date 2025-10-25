@@ -59,6 +59,17 @@
                     </mat-chip-listbox>
                 </div>
             </div>
+
+            <!-- Contenedor del SLA -->
+            <div class="info-row" *ngIf="datos()?.sla">
+                <span class="info-label">SLA nombre</span>
+                <span class="info-value">{{ datos()?.sla?.nombre}}</span>
+                <span class="info-label">Maximo Minutos Respuesta</span>
+                <span class="info-value">{{ datos()?.sla?.maxMinutosRespuesta}}</span>
+                <span class="info-label">Maximo Minutos Resolucion</span>
+                <span class="info-value">{{ datos()?.sla?.maxMinutosResolucion}}</span>
+            </div>    
+
         </section>
     </mat-card-content>
     

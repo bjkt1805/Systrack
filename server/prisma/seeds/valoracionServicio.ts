@@ -1,8 +1,8 @@
 export const valoracionServicio = [
   {
-    id: 1,
-    ticketId: 1,
-    descripcion: "Servicio excepcional, superó mis expectativas.",
+    ticketId: 4,
+    comentario: "Servicio excepcional, superó mis expectativas.",
     puntaje: 5,
+    creadoPorId: 1,
   }
 ];
