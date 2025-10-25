@@ -1,1 +1,11 @@
 2025-10-25 14:23:05.287 error: 	warner--Tiquete no encontrado Tiquete no encontrado
+2025-10-25 14:52:55.316 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findMany()` invocation in
+/Users/warner/Systrack/server/source/controllers/usuarioController.ts:12:55
+
+   9 get = async (request: Request, response: Response, next: NextFunction) => {
+  10     try {
+  11         //Select * from usuario
+→ 12         const listado = await this.prisma.usuario.findMany(
+The column `systrack.Usuario.foto` does not exist in the current database.
+2025-10-25 14:52:57.866 error: 	warner--Tiquete no encontrado Tiquete no encontrado

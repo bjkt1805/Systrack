@@ -1,9 +1,13 @@
 -- CreateTable
 CREATE TABLE `Usuario` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombreUsuario` VARCHAR(191) NOT NULL,
+    `nombreCompleto` VARCHAR(191) NOT NULL,
+    `telefono` VARCHAR(191) NULL,
     `correo` VARCHAR(191) NOT NULL,
     `contrasenaHash` VARCHAR(191) NOT NULL,
     `rol` ENUM('ADMIN', 'TECNICO', 'CLIENTE') NOT NULL DEFAULT 'CLIENTE',
+    `foto` VARCHAR(191) NULL DEFAULT 'image-not-found.jpg',
     `ultimoIngresoAt` DATETIME(3) NULL,
     `activo` BOOLEAN NOT NULL DEFAULT true,
     `estadoTecnico` ENUM('DISPONIBLE', 'NO_DISPONIBLE', 'DESCONECTADO') NULL,
@@ -11,6 +15,7 @@ CREATE TABLE `Usuario` (
     `creadoAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updatedAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
 
+    UNIQUE INDEX `Usuario_nombreUsuario_key`(`nombreUsuario`),
     UNIQUE INDEX `Usuario_correo_key`(`correo`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -46,6 +46,7 @@ export class UsuarioController {
                     correo: true,
                     contrasenaHash: true,
                     rol: true,
+                    foto: true,
                     ultimoIngresoAt: true,
                     activo: true,
                     estadoTecnico: true,

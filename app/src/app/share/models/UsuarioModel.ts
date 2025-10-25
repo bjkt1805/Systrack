@@ -14,6 +14,7 @@ export interface UsuarioModel {
   correo: string;
   contrasenaHash: string;
   rol: Rol; // default CLIENTE en backend
+  foto: string | null; // default "image-not-found.jpg" en backend
   ultimoIngresoAt?: Date | null;
   activo: boolean; // default true
 

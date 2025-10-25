@@ -31,6 +31,7 @@ model Usuario {
   correo          String    @unique
   contrasenaHash  String
   rol             Rol       @default(CLIENTE)
+  foto            String?   @default("image-not-found.jpg")
   ultimoIngresoAt DateTime?
   activo          Boolean   @default(true)
 
