@@ -137,6 +137,7 @@ export class TecnicoController {
         correo: tecnico.correo,
         estadoTecnico: tecnico.estadoTecnico,
         especialidades: tecnico.especialidades,
+        foto: tecnico.foto,
         cargaTrabajo,
         disponible,
       });
