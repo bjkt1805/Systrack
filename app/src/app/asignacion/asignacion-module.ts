@@ -6,6 +6,7 @@ import { AsignacionIndex } from './asignacion-index/asignacion-index';
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from "@angular/material/chips";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AsignacionRoutingModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule
 ]
 })
 export class AsignacionModule { }

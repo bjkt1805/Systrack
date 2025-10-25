@@ -36,17 +36,24 @@ export class TicketController {
   getKanban = async (request: Request, response: Response, next: NextFunction) => {
     try {
       // Parámetros de consulta opcionales para filtrar por semana
-      const { semana, incluirCategoria = 'true' } = request.query;
+      const { semana } = request.query;
+
+      console.log(`[BACKEND] Parámetro semana recibido: `, semana);
 
       // Calcular rango de fechas para la semana
       let fechaInicio: Date;
       let fechaFin: Date;
 
       if (semana) {
-        // Si se proporciona una fecha específica, calcular la semana de esa fecha
+        // Si se proporciona una fecha específica, CALCULAR LA SEMANA de esa fecha
         const fechaBase = new Date(semana as string);
+
         fechaInicio = this.obtenerInicioSemana(fechaBase);
         fechaFin = this.obtenerFinSemana(fechaBase);
+
+        console.log(`[BACKEND] Fecha de inicio calculada: ${fechaInicio.toISOString()}`);
+        console.log(`[BACKEND] Fecha de fin calculada: ${fechaFin.toISOString()}`);
+
       } else {
         // Por defecto, usar la semana actual
         const hoy = new Date();
@@ -108,7 +115,7 @@ export class TicketController {
       });
 
     } catch (error) {
-      console.error('Error en getKanban:', error);
+      console.error('Error en método getKanban():', error);
       next(error);
     }
   };
@@ -350,15 +357,49 @@ export class TicketController {
     }
   };
 
-  // MÉTODOS HELPER PARA CÁLCULO DE SEMANA
-  private obtenerInicioSemana(fecha: Date): Date {
-    const dia = fecha.getDay();
-    const diff = fecha.getDate() - dia + (dia === 0 ? -6 : 1); // Lunes como inicio
-    const lunes = new Date(fecha);
-    lunes.setDate(diff);
-    lunes.setHours(0, 0, 0, 0); // 00:00:00
-    return lunes;
+// MÉTODOS PARA CÁLCULO DE SEMANA
+private obtenerInicioSemana(fecha: Date): Date {
+
+  // TRABAJAR en UTC para evitar conversiones de zona horaria
+  const año = fecha.getUTCFullYear();
+  const mes = fecha.getUTCMonth();
+  const dia = fecha.getUTCDate();
+
+  // CREAR fecha UTC explícita
+  const fechaUTC = new Date(Date.UTC(año, mes, dia, 0, 0, 0, 0));
+
+  console.log('[BACKEND] === DEBUG INICIO SEMANA ===');
+  console.log('[BACKEND] Fecha original:', fecha.toISOString());
+  console.log('[BACKEND] Fecha UTC creada:', fechaUTC.toISOString());
+  console.log('[BACKEND] getUTCDay():', fechaUTC.getUTCDay());
+  console.log('[BACKEND] getUTCDate():', fechaUTC.getUTCDate());
+
+  const diaSemana = fechaUTC.getUTCDay(); // 0 = domingo, 1 = lunes, etc.
+
+  // CÁLCULO para obtener el lunes (semana empieza en lunes)
+  let diasARestar = 0;
+
+  // Si es domingo, ir al lunes anterior (restar 6 días)
+  if (diaSemana === 0) {
+    diasARestar = 6;
+
+  // Para cualquier otro día, restar (día - 1) para llegar al lunes
+  } else {
+    
+    diasARestar = diaSemana - 1;
   }
+  
+  console.log('Días a restar para llegar al lunes:', diasARestar);
+  
+  // CREAR el lunes de esa semana en UTC
+  const lunes = new Date(Date.UTC(año, mes, dia - diasARestar, 0, 0, 0, 0));
+  
+  console.log('Lunes calculado:', lunes.toISOString());
+  console.log('Verificación - día de la semana del lunes:', lunes.getUTCDay()); // Debe ser 1
+  console.log('=== FIN DEBUG CORREGIDO ===');
+  
+  return lunes;
+}
 
   private obtenerFinSemana(fecha: Date): Date {
     const inicioSemana = this.obtenerInicioSemana(fecha);

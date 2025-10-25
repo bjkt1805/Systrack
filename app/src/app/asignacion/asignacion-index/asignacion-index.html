@@ -7,9 +7,10 @@
                 <mat-icon>dashboard</mat-icon>
                 Vista de Asignaciones
             </h1>
-            <p class="subtitle">Semana del 28 de Octubre - 01 de Noviembre, 2025</p>
+            <p class="subtitle">Semana del 27 de Octubre al 2 de Noviembre, 2025</p>
             <!-- Botón de recarga -->
-            <button mat-icon-button matTooltip="Recargar tickets" class="btn-refresh" (click)="recargarTickets()" [disabled]="cargando()">
+            <button mat-icon-button matTooltip="Recargar tickets" class="btn-refresh" (click)="recargarTickets()"
+                [disabled]="cargando()">
                 <mat-icon>refresh</mat-icon>
             </button>
 
@@ -18,114 +19,117 @@
 
     </div>
 
-  <!-- Loader -->
-  @if (cargando()) {
+    <!-- Loader -->
+    @if (cargando()) {
     <div class="loader-container">
-      <mat-spinner></mat-spinner>
-      <p>Cargando asignaciones...</p>
+        <mat-spinner></mat-spinner>
+        <p>Cargando asignaciones...</p>
     </div>
-  }
+    }
 
-  <!-- Error -->
-  @if (error()) {
+    <!-- Error -->
+    @if (error()) {
     <div class="error-container">
-      <mat-icon>error_outline</mat-icon>
-      <p>{{ error() }}</p>
-      <button mat-raised-button color="primary" (click)="recargarTickets()">
-        <mat-icon>refresh</mat-icon>
-        Reintentar
-      </button>
+        <mat-icon>error_outline</mat-icon>
+        <p>{{ error() }}</p>
+        <button mat-raised-button color="primary" (click)="recargarTickets()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+        </button>
     </div>
-  }
+    }
 
-  <!-- Tablero Kanban -->
-  @if (!cargando() && !error()) {
+    <!-- Tablero Kanban -->
+    @if (!cargando() && !error()) {
     <div class="kanban-board">
-      @for (columna of columnas; track columna.dia) {
+        @for (columna of columnas; track columna.dia) {
         <div class="kanban-columna">
-          
-          <!-- Header de columna -->
-          <div class="columna-header" [style.border-top-color]="columna.color">
-            <div class="columna-info">
-            <h3>{{ columna.titulo }}</h3>
 
-            <!-- Mostrar el total/count de los tiquetes por estado -->
-            <span matToolTip="Cantidad de tiquetes" class="badge-count">{{ getTotalPorDia(columna.dia) }}
-            </span>
+            <!-- Header de columna -->
+            <div class="columna-header" [style.border-top-color]="columna.color">
+                <div class="columna-info">
+                    <h3 style="font-size: 15px">{{ columna.titulo }} - {{ columna.fecha }}</h3>
+
+                    <!-- Mostrar el total/count de los tiquetes por estado -->
+                    <span matToolTip="Cantidad de tiquetes" class="badge-count">Cantidad de tiquetes: {{
+                        getTotalPorDia(columna.dia) }}
+                    </span>
+                </div>
             </div>
-          </div>
 
-          <!-- Tarjetas de tickets -->
-          <div class="columna-content">
-            @for (ticket of ticketsPorDia()[columna.dia]; track ticket.id) {
-              <div class="ticket-card" [class]="'urgencia-' + ticket.colorUrgencia">
-                
-                <!-- Header de tarjeta -->
-                <div class="card-header">
-                  <span class="ticket-codigo">{{ ticket.codigo }}</span>
-                </div>
+            <!-- Tarjetas de tickets -->
+            <div class="columna-content">
+                @for (ticket of ticketsPorDia()[columna.dia]; track ticket.id) {
+                <div class="ticket-card" [class]="'urgencia-' + ticket.colorUrgencia">
 
-                <!-- Título -->
-                <h4 class="ticket-titulo">{{ ticket.titulo }}</h4>
-
-                <!-- Categoría y Estado -->
-                <div class="ticket-meta">
-                  <span class="chip chip-categoria">
-                    <mat-icon>folder</mat-icon>
-                    {{ ticket.categoria }}
-                  </span>
-                  <span class="chip chip-prioridad" [class]="'prioridad-' + ticket.prioridad.toLowerCase()">
-                    {{ ticket.prioridad }}
-                  </span>
-                </div>
-
-                <!-- Tiempo restante SLA -->
-                <div class="sla-info">
-                  <div class="sla-header">
-                    <mat-icon>schedule</mat-icon>
-                    <span>SLA: {{ ticket.tiempoRestanteSLA }}</span>
-                  </div>
-                  <div class="sla-progress">
-                    <div class="progress-bar" 
-                         [style.width.%]="ticket.porcentajeSLA"
-                         [class]="'urgencia-' + ticket.colorUrgencia">
+                    <!-- Header de tarjeta -->
+                    <div class="card-header">
+                        <span class="ticket-codigo">{{ ticket.codigo }}</span>
                     </div>
-                  </div>
+
+                    <!-- Título -->
+                    <h4 class="ticket-titulo">{{ ticket.titulo }}</h4>
+
+                    <!-- Categoría, Prioridad y Estado -->
+                    <div class="ticket-meta">
+                        <span style="font-size: 10px; width: 100px;" class="chip chip-categoria">
+                            <mat-icon style="padding-right: 10%">{{ ticket.iconoCategoria }}</mat-icon>
+                            {{ ticket.categoria }}
+                        </span>
+                        <span style="font-size: 12px; font-weight: 500;"> Prioridad:</span>
+                        <span class="chip chip-prioridad" [class]="'prioridad-' + ticket.prioridad.toLowerCase()">{{ ticket.prioridad }}
+                        </span>
+                    </div>
+
+                    <!-- Tiempo restante SLA -->
+                    <div class="sla-info">
+                        <div class="sla-header">
+                            <mat-icon>schedule</mat-icon>
+                            <span>SLA: {{ ticket.tiempoRestanteSLA }}</span>
+                        </div>
+                        <div class="sla-progress">
+                            <div class="progress-bar" [style.width.%]="ticket.porcentajeSLA"
+                                [class]="'urgencia-' + ticket.colorUrgencia">
+                            </div>
+                        </div>
+                    </div>  
+
+                    <!-- Estado -->
+                    <div>
+                        <div>
+                            <mat-chip class="chip-tertiary">{{ ticket.estado }}</mat-chip>
+                        </div>
+                    </div>
+
+                    <!-- Acciones rápidas -->
+                    <div class="card-acciones">
+                        <button mat-icon-button matTooltip="Ver detalle" (click)="verDetalle(ticket.id)"
+                            color="primary">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Cambiar estado">
+                            <mat-icon>swap_horiz</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Agregar comentario">
+                            <mat-icon>comment</mat-icon>
+                        </button>
+                    </div>
+
                 </div>
+                }
 
-                <!-- Acciones rápidas -->
-                <div class="card-acciones">
-                  <button mat-icon-button 
-                          matTooltip="Ver detalle" 
-                          (click)="verDetalle(ticket.id)"
-                          color="primary">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-icon-button 
-                          matTooltip="Cambiar estado">
-                    <mat-icon>swap_horiz</mat-icon>
-                  </button>
-                  <button mat-icon-button 
-                          matTooltip="Agregar comentario">
-                    <mat-icon>comment</mat-icon>
-                  </button>
+                <!-- Mensaje si no hay tickets -->
+                @if (getTotalPorDia(columna.dia) === 0) {
+                <div class="empty-state">
+                    <mat-icon>inbox</mat-icon>
+                    <p>Sin tickets</p>
                 </div>
-
-              </div>
-            }
-
-            <!-- Mensaje si no hay tickets -->
-            @if (getTotalPorDia(columna.dia) === 0) {
-              <div class="empty-state">
-                <mat-icon>inbox</mat-icon>
-                <p>Sin tickets</p>
-              </div>
-            }
-          </div>
+                }
+            </div>
 
         </div>
-      }
+        }
     </div>
-  }
+    }
 
 </div>

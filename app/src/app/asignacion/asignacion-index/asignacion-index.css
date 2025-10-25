@@ -18,6 +18,8 @@
   padding-left: 3%;
 }
 
+
+
 .title {
   display: flex;
   align-items: center;
@@ -123,7 +125,7 @@
 }
 
 .columna-content {
-  padding: 16px;
+  padding: 12px;
   min-height: 200px;
   display: flex;
   flex-direction: column;

@@ -57,14 +57,27 @@ export class AsignacionIndex implements OnInit {
   ];
 
   // Computed signal para organizar los tickets por día de la semana
-ticketsPorDia = computed(() => {
-  // Asignar a la variable todosLosTickets el valor de la signal tickets
-  const todosLosTickets = this.tickets();
+  ticketsPorDia = computed(() => {
 
-  // ✅ AGREGAR: Verificar que sea un array
-  if (!Array.isArray(todosLosTickets)) {
-    console.warn('todosLosTickets no es un array:', todosLosTickets);
-    return {
+    // Asignar a la variable todosLosTickets el valor de la signal tickets
+    const todosLosTickets = this.tickets();
+
+    // Verificar que todosLosTickets es un array
+    if (!Array.isArray(todosLosTickets)) {
+      console.warn('todosLosTickets no es un array:', todosLosTickets);
+      return {
+        'lunes': [],
+        'martes': [],
+        'miercoles': [],
+        'jueves': [],
+        'viernes': [],
+        'sabado': [],
+        'domingo': []
+      };
+    }
+
+    // Objeto para organizar los tickets por dia de la semana
+    const organizados: { [key: string]: TicketKanban[] } = {
       'lunes': [],
       'martes': [],
       'miercoles': [],
@@ -73,35 +86,35 @@ ticketsPorDia = computed(() => {
       'sabado': [],
       'domingo': []
     };
-  }
 
-  // Objeto para organizar los tickets por estado
-  const organizados: { [key: string]: TicketKanban[] } = {
-    'lunes': [],
-    'martes': [],
-    'miercoles': [],
-    'jueves': [],
-    'viernes': [],    
-    'sabado': [],
-    'domingo': []
-  };
+    // Recorrer todos los tickets y asignarlos al arreglo correspondiente en el objeto organizados
+    todosLosTickets.forEach(ticket => {
+      try {
 
-  // Recorrer todos los tickets y asignarlos al arreglo correspondiente en el objeto organizados
-  todosLosTickets.forEach(ticket => {
-    try {
-      const ticketKanban = this.convertirATicketKanban(ticket);
-      const diaSemana = this.obtenerDiaSemana(ticket.creadoAt);
-      if (organizados[diaSemana]) {
-        organizados[diaSemana].push(ticketKanban);
+        // Para cada ticket en el array, convertirlo a TicketKanban por medio de convertirATicketKanban
+        const ticketKanban = this.convertirATicketKanban(ticket);
+
+        // Obtener el día de la semana del ticket a partir de su fecha de creación (obtenerDiaSemana extrae el dia)
+        const diaSemana = this.obtenerDiaSemana(ticket.creadoAt);
+
+        // Si el día de la semana es válido (ej: 'lunes'), agregar el ticket al arreglo correspondiente
+        // con el método push
+        if (organizados[diaSemana]) {
+          organizados[diaSemana].push(ticketKanban);
+        }
+
+      // Si hay error al procesar el ticket, mostrar en consola
+      } catch (error) {
+        console.error('[FRONTEND] Error al procesar ticket:', ticket, error);
       }
-    } catch (error) {
-      console.error('Error al procesar ticket:', ticket, error);
-    }
-  });
+    });
 
-  console.log('Tickets organizados por día:', organizados);
-  return organizados;
-});
+    // Mostrar el resultado de la organización en consola
+    console.log('[FRONTEND] Tickets organizados por día:', organizados);
+
+    // Retornar el objeto con los tickets organizados por día
+    return organizados;
+  });
 
   // Método OnInit para cargar los tickets correspondientes
   ngOnInit(): void {
@@ -114,30 +127,99 @@ ticketsPorDia = computed(() => {
     this.cargarTickets();
   }
 
-    /**
-   *Configurar las fechas de la semana actual
-   */
-  configurarFechasSemana(): void {
-    const hoy = new Date();
-    const inicioSemana = this.obtenerInicioSemana(hoy);
-    
-    this.columnas.forEach((columna, index) => {
-      const fecha = new Date(inicioSemana);
-      fecha.setDate(inicioSemana.getDate() + index);
-      columna.fecha = fecha.toLocaleDateString('es-ES', { 
-        day: '2-digit', 
-        month: '2-digit' 
-      });
-    });
+  // AGREGAR: Método para cambiar la semana
+  cambiarSemana(fecha: string): void {
+    this.fechaSemanaObjetivo = fecha;
+    this.configurarFechasSemanaPersonalizada(fecha);
+    this.cargarTickets();
   }
 
-    /**
-   * Obtener el lunes de la semana actual
-   */
+  /**
+ *Configurar las fechas de la semana actual
+ */
+  configurarFechasSemana(): void {
+    this.configurarFechasSemanaPersonalizada(this.fechaSemanaObjetivo);
+  }
+
+  /**
+ * Configurar fechas para una semana específica
+ */
+configurarFechasSemanaPersonalizada(fechaBase: string): void {
+  // Convertir la fechaBase a un objeto Date
+  const fecha = new Date(fechaBase);
+
+  // Obtener el inicio de la semana (lunes)
+  const inicioSemana = this.obtenerInicioSemana(fecha);
+
+  // Para cada columna, usar UTC
+  this.columnas.forEach((columna, index) => {
+
+    // USAR métodos UTC para crear la fecha de la columna (Ejemplo: Lunes 27-10)
+    const año = inicioSemana.getUTCFullYear();
+    const mes = inicioSemana.getUTCMonth();
+    const dia = inicioSemana.getUTCDate();
+    
+    // CREAR fecha en formato UTC para cada día de la semana
+    const fechaColumna = new Date(Date.UTC(año, mes, dia + index, 0, 0, 0, 0));
+    
+    // FORMATEAR usando métodos UTC
+    const diaFormateado = fechaColumna.getUTCDate().toString().padStart(2, '0');
+    const mesFormateado = (fechaColumna.getUTCMonth() + 1).toString().padStart(2, '0');
+    
+    columna.fecha = `${diaFormateado}/${mesFormateado}`;
+    
+    // AGREGAR log para verificar
+    console.log(`[FRONTEND] Columna ${columna.dia}: ${columna.fecha} (UTC: ${fechaColumna.toISOString()})`);
+  });
+
+  console.log('[FRONTEND] Fechas de columnas configuradas para la semana del:', fechaBase);
+}
+
+  /**
+ * Obtener el lunes de la semana actual
+ */
   obtenerInicioSemana(fecha: Date): Date {
-    const dia = fecha.getDay();
-    const diff = fecha.getDate() - dia + (dia === 0 ? -6 : 1); // Lunes como inicio
-    return new Date(fecha.setDate(diff));
+
+    // TRABAJAR en UTC para evitar conversiones de zona horaria
+    const año = fecha.getUTCFullYear();
+    const mes = fecha.getUTCMonth();
+    const dia = fecha.getUTCDate();
+
+    // CREAR fecha UTC explícita
+    const fechaUTC = new Date(Date.UTC(año, mes, dia, 0, 0, 0, 0));
+
+    console.log('[FRONTEND] === DEBUG INICIO SEMANA ===');
+    console.log('[FRONTEND] Fecha original:', fecha.toISOString());
+    console.log('[FRONTEND] Fecha UTC creada:', fechaUTC.toISOString());
+    console.log('[FRONTEND] getUTCDay():', fechaUTC.getUTCDay());
+    console.log('[FRONTEND] getUTCDate():', fechaUTC.getUTCDate());
+
+    const diaSemana = fechaUTC.getUTCDay(); // 0 = domingo, 1 = lunes, etc.
+
+    // CÁLCULO para obtener el lunes (semana empieza en lunes)
+    let diasARestar = 0;
+
+    // Si es domingo, ir al lunes anterior (restar 6 días)
+    if (diaSemana === 0) {
+
+      diasARestar = 6;
+
+    // Para cualquier otro día, restar (día - 1) para llegar al lunes
+    } else {
+
+      diasARestar = diaSemana - 1;
+    }
+
+    console.log('[FRONTEND] Días a restar para llegar al lunes:', diasARestar);
+
+    // CREAR el lunes de esa semana en UTC
+    const lunes = new Date(Date.UTC(año, mes, dia - diasARestar, 0, 0, 0, 0));
+
+    console.log('[FRONTEND] Lunes calculado:', lunes.toISOString());
+    console.log('[FRONTEND] Verificación - día de la semana del lunes:', lunes.getUTCDay()); // Debe ser 1
+    console.log('[FRONTEND] === FIN DEBUG  ===');
+
+    return lunes;
   }
 
   /**
@@ -149,54 +231,75 @@ ticketsPorDia = computed(() => {
     return dias[date.getDay()];
   }
 
+  // Propiedad para la fecha de la semana objetivo (del 27 de octubre al 1 de noviembre)
+  // tomando el 27 de octubre como la fecha inicial a enviar de Parámetro
+  // esta luego se cambiará con un signal o una constantes que recibirá la fecha 
+  // desde un dateTimePicker en el html. 
+  private fechaSemanaObjetivo: string = '2025-10-27';
+
   /**
    * Cargar los tickets desde el servicio
    */
   cargarTickets(): void {
-  // Asignar true a la signal de cargando
-  this.cargando.set(true);
+    // Asignar true a la signal de cargando
+    this.cargando.set(true);
 
-  // Asignar null a la signal de error
-  this.error.set(null);
+    // Asignar null a la signal de error
+    this.error.set(null);
 
-  // Obtener todos los tickets desde el servicio de tickets desde el API 
-  this.ticketService.getTicketsKanban().subscribe({
-    next: (response) => {
-      console.log('[FRONTEND] Respuesta completa del API:', response);
-      
-      // ✅ CORREGIR: Manejar la estructura de respuesta correcta
-      let ticketsArray: TicketModel[] = [];
-      
-      if (Array.isArray(response)) {
-        // Si la respuesta es directamente un array
-        ticketsArray = response;
-        console.log('[FRONTEND] Respuesta es array directo');
-      } else if (response && response.tickets && Array.isArray(response.tickets)) {
-        // Si la respuesta tiene estructura { tickets: [...] }
-        ticketsArray = response.tickets;
-        console.log('[FRONTEND] Respuesta tiene estructura con tickets:', response.tickets.length);
-      } else {
-        console.error('[FRONTEND] Estructura de respuesta inesperada:', response);
-        this.error.set('Error: Formato de respuesta inválido');
+    console.log(`[FRONTEND] Solicitando tickets para la semana del: ${this.fechaSemanaObjetivo}`);
+
+    // Obtener todos los tickets desde el servicio de tickets desde el API 
+    this.ticketService.getTicketsKanban(this.fechaSemanaObjetivo).subscribe({
+      next: (response) => {
+        console.log('[FRONTEND] Respuesta completa del API:', response);
+
+        // Manejar la estructura de respuesta correcta
+        let ticketsArray: TicketModel[] = [];
+
+        if (Array.isArray(response)) {
+          // Si la respuesta es directamente un array
+          ticketsArray = response;
+          console.log('[FRONTEND] La respuesta es un arreglo');
+
+        } else if (response && response.tickets && Array.isArray(response.tickets)) {
+
+          // Si la respuesta tiene estructura { tickets: [...] }
+          ticketsArray = response.tickets;
+          console.log('[FRONTEND] La respuesta tiene estructura con tickets:', response.tickets.length);
+
+          // Log de información de la semana
+          if (response.semana) {
+            console.log(`[FRONTEND] Semana obtenida del API: ${response.semana.inicio} a ${response.semana.fin}`, {
+              inicio: response.semana.inicio,
+              fin: response.semana.fin,
+              total: response.total
+            });
+          }
+
+
+        } else {
+          console.error('[FRONTEND] Estructura de respuesta inesperada:', response);
+          this.error.set('Error: Formato de respuesta inválido');
+          this.cargando.set(false);
+          return;
+        }
+
+        console.log('[FRONTEND] Array de tickets final:', ticketsArray);
+        // Asignar los tickets obtenidos a la signal tickets
+        this.tickets.set(ticketsArray);
+        // Asignar false a la signal de cargando
         this.cargando.set(false);
-        return;
+      },
+      error: (error) => {
+        console.error('[FRONTEND] Error al cargar tickets desde el API:', error);
+        // Asignar el mensaje de error a la signal de error
+        this.error.set('[FRONTEND] Error al cargar los tickets');
+        // Asignar false a la signal de cargando
+        this.cargando.set(false);
       }
-
-      console.log('[FRONTEND] Array de tickets final:', ticketsArray);
-      // Asignar los tickets obtenidos a la signal tickets
-      this.tickets.set(ticketsArray);
-      // Asignar false a la signal de cargando
-      this.cargando.set(false);
-    },
-    error: (error) => {
-      console.error('[FRONTEND] Error al cargar tickets desde el API:', error);
-      // Asignar el mensaje de error a la signal de error
-      this.error.set('[FRONTEND] Error al cargar los tickets');
-      // Asignar false a la signal de cargando
-      this.cargando.set(false);
-    }
-  });
-}
+    });
+  }
 
   /**
    * Convertir un TicketModel a TicketKanban
@@ -205,7 +308,7 @@ ticketsPorDia = computed(() => {
    */
 
   convertirATicketKanban(ticket: TicketModel): TicketKanban {
-    
+
     // Obtener la fecha de hoy
     const hoy = new Date();
 
@@ -271,9 +374,6 @@ ticketsPorDia = computed(() => {
 
     // Determinar icono según categoría
     const iconoCategoria = this.obtenerIconoCategoria(ticket.categoriaId);
-  
-    // Obtener nombre de categoría de forma segura
-    const nombreCategoria = (ticket as any).categoria?.nombre || `Categoría ${ticket.categoriaId}`;
 
     // Obtener el día de la semana del ticket
     const diaSemana = this.obtenerDiaSemana(ticket.creadoAt);
@@ -282,14 +382,14 @@ ticketsPorDia = computed(() => {
       id: ticket.id,
       codigo: ticket.codigo,
       titulo: ticket.titulo,
-      categoria: nombreCategoria, // ✅ CORREGIR: Usar la variable segura
+      categoria: ticket.categoria.nombre,
       estado: ticket.estado,
       prioridad: ticket.prioridad,
       fechaLimiteResolucion: fechaLimite,
       tiempoRestanteSLA,
       porcentajeSLA,
       colorUrgencia,
-      iconoCategoria, 
+      iconoCategoria,
       diaSemana,
     };
 
