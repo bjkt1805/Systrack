@@ -35,7 +35,8 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 0,
+    cargaTrabajo: 1,
+    foto: "tecnico1.jpg",
   },
 
   // id: 4
@@ -47,7 +48,7 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 0,
+    cargaTrabajo: 1,
   },
 
   // id: 5
@@ -59,7 +60,7 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 0,
+    cargaTrabajo: 1,
   },
 
   // id: 6
@@ -71,7 +72,7 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 0,
+    cargaTrabajo: 1,
   },
 
   // id: 7
