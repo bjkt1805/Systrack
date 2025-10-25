@@ -35,7 +35,7 @@ export const ticket = [
     solicitanteId: 10,
     categoriaId: 2,
     usuarioAsignadoId: 4,
-    creadoAt: new Date("2025-10-28T08:00:00Z"),              // 02:00 hora de CR
+    creadoAt: new Date("2025-10-27T08:00:00Z"),              // 02:00 hora de CR
     fechaLimiteRespuesta: new Date("2025-10-27T09:00:00Z"),  // 03:00 hora de CR (60 min = 1 hora)
     fechaLimiteResolucion: new Date("2025-10-27T14:00:00Z"), // 08:00 hora de CR (360 min = 6 horas)
     respondidoAt: new Date("2025-10-27T08:30:00Z"),          // dentro del plazo = cumplió respuesta
@@ -43,7 +43,7 @@ export const ticket = [
     cerradoAt: null,
     cerradoPorId: null,
     cumplioRespuesta: true,
-    cumplioResolucion: false,
+    cumplioResolucion: null,
   },
 
   // Ticket id : 3
