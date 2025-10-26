@@ -92,7 +92,7 @@
             <div class="info-block" *ngIf="item.etiquetas && item.etiquetas.length > 0">
               <span class="info-label">
                 <mat-icon>label</mat-icon>
-                Etiquetas ({{ item.etiquetas?.length }})
+                Etiquetas ({{ item.etiquetas.length }})
               </span>
               <div class="chips-container">
                 @for (etiqueta of item.etiquetas; track etiqueta.id) {
@@ -108,7 +108,7 @@
             <div class="info-block" *ngIf="item.especialidades && item.especialidades.length > 0">
               <span class="info-label">
                 <mat-icon>workspace_premium</mat-icon>
-                Especialidades ({{ item.especialidades?.length }})
+                Especialidades ({{ item.especialidades.length }})
               </span>
               <div class="chips-container">
                 @for (especialidad of item.especialidades; track especialidad.id) {

@@ -1,77 +1,104 @@
-<div class="grid-container">
-    <mat-card class="header-card" appearance="outlined" style="margin-top: 10px;">
-        <!-- Encabezado de Técnicos -->
-        <mat-card-header>
-            <mat-card-title class="header-card-title">Listado de Técnicos</mat-card-title>
-        </mat-card-header>
-
-        <!-- Filtro de búsqueda-->
-        <!-- <mat-card-content>
-            <mat-form-field class="full-width">
-                <mat-label>Nombre de técnico</mat-label>
-                <input matInput />
-                <mat-hint> /20</mat-hint>
-                <button mat-icon-button matSuffix color="primary">
-                    <mat-icon>search</mat-icon>
-                </button>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <mat-label>Especialidades</mat-label>
-                <mat-select multiple>
-                    <mat-option></mat-option>
-                </mat-select>
-            </mat-form-field>
-        </mat-card-content> -->
-    </mat-card>
-
-    <!-- Lista de técnicos. Revisar si hay más de uno para listarlos en la vista -->
-    @if(datos().length > 0){
-    <div class="tecnico-list">
-
-        <!-- Recorrer la lista de técnicos para mostrarlos en la vista -->
-        @for (item of datos(); track item.id) {
-        <div class="tecnico-card" style="width: 150%;">
-            <mat-card appearance="outlined">
-                <mat-card-header class="secondary-title title" style="margin-bottom: 10px;">
-                    <mat-card-title style="font-size: 16px;">
-                        <b>{{item.nombreCompleto}}</b> 
-                    </mat-card-title>
-                </mat-card-header>
-
-                <!-- Mostrar información del técnico -->
-                <mat-card-content class="user-info">
-                    <div class="info-item" style="font-size: 13px;">
-                        <span class="info-label">Email: </span>
-                        <span class="info-value">{{ item.correo }}</span>
-                    </div>
-                    <br>
-                    <div class="info-item" style="font-size: 14px;">
-                        <span class="info-label">Estado:</span>
-                        <span class="status-box"
-                            [ngClass]="item.estadoTecnico === 'DISPONIBLE' ? 'status-activo' : 'status-inactivo'">
-                            {{ item.estadoTecnico }}
-                        </span>
-                    </div>
-                </mat-card-content>
-
-                <!-- Imagen del técnico (DISCUTIR SI SE INCLUYE)-->
-                <!-- <img mat-card-image [src]="'http://localhost:3000/images/'" [alt]="" /> -->
-
-                <!-- Footer con botón de detalle -->
-                <mat-card-footer class="footer">
-                    <button matMiniFab matTooltip="Ver detalles" aria-label="Detalle Técnico"
-                        (click)="detalle(item.id)">
-                        <mat-icon class="mat-18">info</mat-icon>
-                    </button>
-                </mat-card-footer>
-
-            </mat-card>
-        </div>
-        }
-
+<div class="index-container">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="icon-wrapper">
+        <mat-icon class="page-icon">engineering</mat-icon>
+      </div>
+      <div class="title-group">
+        <h1 class="page-title">Técnicos</h1>
+        <p class="page-subtitle">Gestiona todos los técnicos del sistema</p>
+      </div>
     </div>
-    }@else {
-    <p>No hay técnicos disponibles.</p>
-    }
+  </div>
 
+  <!-- BÚSQUEDA Y FILTROS -->
+  <div class="filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar técnicos</mat-label>
+      <input matInput placeholder="Nombre, correo...">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+    
+    <button mat-stroked-button class="filter-btn">
+      <mat-icon>filter_list</mat-icon>
+      Filtros
+    </button>
+  </div>
+
+  <!-- LISTA DE TÉCNICOS -->
+  @if(datos().length > 0){
+    <div class="tecnico-grid">
+      @for (item of datos(); track item.id) {
+        <mat-card class="tecnico-card" appearance="outlined">
+          
+          <!-- HEADER DE LA CARD -->
+          <mat-card-header class="card-header">
+            <div class="card-icon">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="card-title-group">
+              <mat-card-title class="card-title">
+                {{item.nombreCompleto}}
+              </mat-card-title>
+            </div>
+          </mat-card-header>
+
+          <mat-divider></mat-divider>
+
+          <!-- CONTENIDO DE LA CARD -->
+          <mat-card-content class="card-content">
+            
+            <!-- Email -->
+            <div class="info-block">
+              <span class="info-label">
+                <mat-icon>email</mat-icon>
+                Correo Electrónico
+              </span>
+              <p class="info-text">{{ item.correo }}</p>
+            </div>
+
+            <!-- Estado -->
+            <div class="info-block">
+              <span class="info-label">
+                <mat-icon>toggle_on</mat-icon>
+                Estado
+              </span>
+              <div class="status-container">
+                <span class="status-badge" 
+                      [ngClass]="item.estadoTecnico === 'DISPONIBLE' ? 'status-disponible' : 'status-ocupado'">
+                  <mat-icon>{{ item.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
+                  {{ item.estadoTecnico }}
+                </span>
+              </div>
+            </div>
+
+          </mat-card-content>
+
+          <!-- ACCIONES -->
+          <mat-card-actions class="card-actions">
+            <button mat-button color="primary" (click)="detalle(item.id)">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalles
+            </button>
+          </mat-card-actions>
+
+        </mat-card>
+      }
+    </div>
+  }
+  @else {
+    <!-- EMPTY STATE -->
+    <div class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>engineering_off</mat-icon>
+      </div>
+      <h2 class="empty-title">No hay técnicos</h2>
+      <p class="empty-text">Comienza agregando tu primer técnico para gestionar el sistema.</p>
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Agregar Primer Técnico
+      </button>
+    </div>
+  }
 </div>

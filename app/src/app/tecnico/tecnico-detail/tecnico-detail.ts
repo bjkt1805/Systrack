@@ -7,7 +7,7 @@ import { UsuarioModel } from '../../share/models/UsuarioModel';
   selector: 'app-tecnico-detail',
   standalone: false,
   templateUrl: './tecnico-detail.html',
-  styleUrl: './tecnico-detail.css'
+  styleUrls: ['./tecnico-detail.css']
 })
 export class TecnicoDetail {
 

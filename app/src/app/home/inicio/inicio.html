@@ -7,47 +7,59 @@
 
   <div class="welcome-card">
     <div class="primary-title">
-      <div class="logo-ring">
-        <img src="assets/logo.svg" alt="Logo">
+      <div class="object-fit-container logo-ring">
+        <img src="/images/systrackLogo.png" alt="Logo Systrack" loading="lazy">
       </div>
       <div class="title-content">
-        <h2 class="title">Bienvenido, admin</h2>
+        <h1 class="title">Bienvenido(a)</h1>
         <p class="subtitle">Sistema de Gestión de Tickets</p>
       </div>
     </div>
 
-    <div class="menu-grid">
-      <a class="menu-item" routerLink="/panel">
-        <mat-icon>dashboard</mat-icon>
+    <nav class="menu-grid" role="navigation" aria-label="Menú principal">
+      <a class="menu-item" routerLink="/panel" routerLinkActive="active">
+        <mat-icon aria-hidden="true">dashboard</mat-icon>
         <span>Panel</span>
       </a>
-      <a class="menu-item primary" routerLink="/tickets">
-        <mat-icon>confirmation_number</mat-icon>
+      <a class="menu-item primary" routerLink="/tickets" routerLinkActive="active-primary">
+        <mat-icon aria-hidden="true">confirmation_number</mat-icon>
         <span>Tickets</span>
       </a>
-      <a class="menu-item" routerLink="/usuarios">
-        <mat-icon>person</mat-icon>
+      <a class="menu-item" routerLink="/usuarios" routerLinkActive="active">
+        <mat-icon aria-hidden="true">person</mat-icon>
         <span>Usuarios</span>
       </a>
-      <a class="menu-item" routerLink="/articulos">
-        <mat-icon>article</mat-icon>
-        <span>Artículo</span>
+      <a class="menu-item" routerLink="/articulos" routerLinkActive="active">
+        <mat-icon aria-hidden="true">article</mat-icon>
+        <span>Artículos</span>
       </a>
-      <a class="menu-item" routerLink="/staff">
-        <mat-icon>groups</mat-icon>
+      <a class="menu-item" routerLink="/staff" routerLinkActive="active">
+        <mat-icon aria-hidden="true">groups</mat-icon>
         <span>Staff</span>
       </a>
-      <a class="menu-item" routerLink="/configuracion">
-        <mat-icon>settings</mat-icon>
+      <a class="menu-item" routerLink="/configuracion" routerLinkActive="active">
+        <mat-icon aria-hidden="true">settings</mat-icon>
         <span>Configuración</span>
       </a>
-    </div>
+    </nav>
 
-    <div class="submenu">
-      <button mat-button class="submenu-item active">Mis Tickets</button>
-      <button mat-button class="submenu-item">Nuevos Tickets</button>
-      <button mat-button class="submenu-item">Todos los Tickets</button>
-      <button mat-button class="submenu-item">Respuestas Personalizadas</button>
+    <div class="submenu" role="navigation" aria-label="Filtros de tickets">
+      <button mat-button class="submenu-item active" aria-pressed="true">
+        <mat-icon>person</mat-icon>
+        Mis Tickets
+      </button>
+      <button mat-button class="submenu-item" aria-pressed="false">
+        <mat-icon>fiber_new</mat-icon>
+        Nuevos Tickets
+      </button>
+      <button mat-button class="submenu-item" aria-pressed="false">
+        <mat-icon>list_alt</mat-icon>
+        Todos los Tickets
+      </button>
+      <button mat-button class="submenu-item" aria-pressed="false">
+        <mat-icon>forum</mat-icon>
+        Respuestas Personalizadas
+      </button>
     </div>
   </div>
 </div>
