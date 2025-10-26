@@ -1,227 +1,261 @@
-<!-- Revisar si hay datos antes de mostrar el detalle del técnico -->
-
 @if (datos()) {
-<br>
-<mat-card class="ticket-card" appearance="outlined" style="margin-top: 10px;">
+<div class="detail-container">
+  <mat-card class="ticket-card" appearance="outlined">
 
-    <!-- Encabezado del card con avatar (OPCIONAL) -->
+    <!-- HEADER MODERNO -->
     <mat-card-header class="ticket-card__header">
-
-        <!-- Título y subtítulo del card -->
-        <div class="ticket-card__title">
-            <mat-card-title class="ticket-card__name">
-                {{ datos()?.codigo }} - {{ datos()?.titulo }}
-            </mat-card-title>
-            <mat-card-subtitle class="ticket-card__subtitle">
-                <span>{{ datos()?.descripcion }}</span>
-            </mat-card-subtitle>
+      <div class="header-content">
+        <div class="icon-wrapper">
+          <mat-icon class="ticket-icon">confirmation_number</mat-icon>
         </div>
+        <div class="title-group">
+          <h1 class="ticket-card__name">{{ datos()?.codigo }} - {{ datos()?.titulo }}</h1>
+          <p class="ticket-card__subtitle">{{ datos()?.descripcion }}</p>
+        </div>
+        <div class="status-badge" [class.status-abierto]="datos()?.estado === 'Abierto'"
+                                   [class.status-proceso]="datos()?.estado === 'En Proceso'"
+                                   [class.status-resuelto]="datos()?.estado === 'Resuelto'"
+                                   [class.status-cerrado]="datos()?.estado === 'Cerrado'">
+          <mat-icon>{{ getStatusIcon(datos()?.estado) }}</mat-icon>
+          {{ datos()?.estado }}
+        </div>
+      </div>
     </mat-card-header>
+
+    <mat-divider></mat-divider>
 
     <mat-card-content class="ticket-card__content">
 
-        <!-- Contenedor para la información del ticket -->
-        <div class="ticket-info-grid">
+      <!-- SECCIÓN: INFORMACIÓN GENERAL -->
+      <section class="info-section">
+        <h3 class="section-title">
+          <mat-icon>info</mat-icon>
+          Información General
+        </h3>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Fecha de Creación</span>
+            <span class="value">{{ fechaFormateada(datos()?.creadoAt) }}</span>
+          </div>
 
-            <!-- Columna izquierda: datos generales -->
-            <section class="ticket-info ticket-info--main">
+          <div class="info-item">
+            <span class="label">Prioridad</span>
+            <span class="value priority" [class.priority-alta]="datos()?.prioridad === 'Alta'"
+                                          [class.priority-media]="datos()?.prioridad === 'Media'"
+                                          [class.priority-baja]="datos()?.prioridad === 'Baja'">
+              {{ datos()?.prioridad }}
+            </span>
+          </div>
 
-                <!-- Contenedor de la fecha de creación -->
-                <div class="info-row">
-                    <span class="info-label">Fecha de creación</span>
-                    <span class="info-value">{{ fechaFormateada(datos()?.creadoAt) }}</span>
-                </div>
+          <div class="info-item">
+            <span class="label">Solicitante</span>
+            <span class="value">{{ datos()?.solicitante?.correo }}</span>
+          </div>
 
-                <!-- Contenedor del estado del ticket -->
-                <div class="info-row">
-                    <span class="info-label">Estado</span>
-                    <span class="info-value">{{ datos()?.estado }}</span>
-                </div>
+          <div class="info-item">
+            <span class="label">Categoría</span>
+            <span class="value">{{ datos()?.categoria?.nombre }}</span>
+          </div>
 
-                <!-- Contenedor de la prioridad del ticket -->
-                <div class="info-row">
-                    <span class="info-label">Prioridad</span>
-                    <span class="info-value">{{ datos()?.prioridad }}</span>
-                </div>
+          <div class="info-item">
+            <span class="label">Técnico Asignado</span>
+            <span class="value">{{ datos()?.usuarioAsignado?.nombreUsuario || 'Sin asignar' }}</span>
+          </div>
+        </div>
+      </section>
 
-                <!-- Contenedor del usuario solicitante -->
-                <div class="info-row">
-                    <span class="info-label">Solicitante</span>
-                    <!-- <span class="info-value">{{ datos()?.solicitante?.nombreUsuario }} - {{ datos()?.solicitante?.correo }}</span> -->
-                    <span class="info-value">{{ datos()?.solicitante?.correo }}</span>
+      <!-- SECCIÓN: SLA Y MÉTRICAS -->
+      <section class="info-section sla-section">
+        <h3 class="section-title">
+          <mat-icon>schedule</mat-icon>
+          Acuerdo de Nivel de Servicio (SLA)
+        </h3>
+        
+        <div class="sla-grid">
+          <div class="sla-card">
+            <div class="sla-icon response">
+              <mat-icon>reply</mat-icon>
+            </div>
+            <div class="sla-content">
+              <span class="sla-label">Límite de Respuesta</span>
+              <span class="sla-value">
+                {{ fechaLimiteRespuesta() ? (fechaFormateada(datos()?.fechaLimiteRespuesta)) : '—' }}
+              </span>
+            </div>
+          </div>
 
-                </div>
+          <div class="sla-card">
+            <div class="sla-icon resolution">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="sla-content">
+              <span class="sla-label">Límite de Resolución</span>
+              <span class="sla-value">
+                {{ fechaLimiteResolucion() ? (fechaFormateada(datos()?.fechaLimiteResolucion)) : '—' }}
+              </span>
+            </div>
+          </div>
 
-                <!-- Contenedor de la categoría -->
-                <div class="info-row">
-                    <span class="info-label">Categoría</span>
-                    <span class="info-value">{{ datos()?.categoria?.nombre }}</span>
-                </div>
-
-                <!-- Contenedor del usuario asignado -->
-                <div class="info-row">
-                    <span class="info-label">Técnico asignado</span>
-                    <span class="info-value">{{ datos()?.usuarioAsignado?.nombreUsuario }}</span>
-                </div>
-
-            </section>
-
-            <section class="ticket-info ticket-info--sla">
-                <!-- ===== SLA / Métricas derivadas ===== -->
-
-                <!-- Contenedor de límite de respuesta-->
-                <div class="info-row">
-                    <span class="info-label">SLA de Respuesta (expiración)</span>
-
-                    <!-- Fecha límite de respuesta formateada en corto -->
-                    <span class="info-value">
-                        {{ fechaLimiteRespuesta() ? (fechaFormateada(datos()?.fechaLimiteRespuesta)) : '—' }}
-                    </span>
-                </div>
-
-                <!-- Contenedor de resolución -->
-                <div class="info-row">
-                    <span class="info-label">SLA de Resolución (expiración)</span>
-
-                    <!-- Fecha límite de resolución formateada en corto -->
-                    <span class="info-value">
-                        {{ fechaLimiteResolucion() ? (fechaFormateada(datos()?.fechaLimiteResolucion)) : '—' }}
-                    </span>
-                </div>
-
-                <!-- Contenedor de días de resolución (solo si el ticket está cerrado o resuelto) -->
-                <div class="info-row">
-                    <span class="info-label">Días de resolución</span>
-                    <!-- Operador ternario para mostrar el valor o un guion si es nulo-->
-                    <span class="info-value">
-                        {{ tiempoResolucion() || '—' }}
-                    </span>
-                </div>
-
-                <!-- Contenedor de Cumplimiento de respuesta -->
-                <div class="info-row">
-                    <span class="info-label">Cumplimiento de respuesta</span>
-                    <span class="info-value">
-                        @if (cumplioRespuesta() === null) { Pendiente }
-                        @else if (cumplioRespuesta()) { ✅ Cumplido }
-                        @else { ❌ Incumplido }
-                    </span>
-                </div>
-
-                <!-- Cumplimiento de resolución -->
-                <div class="info-row">
-                    <span class="info-label">Cumplimiento de resolución</span>
-                    <!-- Código para mostrar el cumplimiento de resolución -->
-                    <span class="info-value">
-                        @if (cumplioResolucion() === null) { Pendiente }
-                        @else if (cumplioResolucion()) { ✅ Cumplido }
-                        @else { ❌ Incumplido }
-                    </span>
-                </div>
-            </section>
+          <div class="sla-card">
+            <div class="sla-icon tiempo">
+              <mat-icon>hourglass_empty</mat-icon>
+            </div>
+            <div class="sla-content">
+              <span class="sla-label">Tiempo de Resolución</span>
+              <span class="sla-value">{{ tiempoResolucion() || '—' }}</span>
+            </div>
+          </div>
         </div>
 
-    </mat-card-content>
+        <!-- Cumplimiento de SLA -->
+        <div class="compliance-grid">
+          <div class="compliance-item" [class.cumplido]="cumplioRespuesta()"
+                                        [class.incumplido]="cumplioRespuesta() === false"
+                                        [class.pendiente]="cumplioRespuesta() === null">
+            <mat-icon>{{ cumplioRespuesta() ? 'check_circle' : cumplioRespuesta() === false ? 'cancel' : 'pending' }}</mat-icon>
+            <div class="compliance-content">
+              <span class="compliance-label">Cumplimiento de Respuesta</span>
+              <span class="compliance-status">
+                @if (cumplioRespuesta() === null) { Pendiente }
+                @else if (cumplioRespuesta()) { Cumplido }
+                @else { Incumplido }
+              </span>
+            </div>
+          </div>
 
-    <!-- Acciones del card -->
-    <mat-card-actions class="ticket-card__actions">
+          <div class="compliance-item" [class.cumplido]="cumplioResolucion()"
+                                        [class.incumplido]="cumplioResolucion() === false"
+                                        [class.pendiente]="cumplioResolucion() === null">
+            <mat-icon>{{ cumplioResolucion() ? 'check_circle' : cumplioResolucion() === false ? 'cancel' : 'pending' }}</mat-icon>
+            <div class="compliance-content">
+              <span class="compliance-label">Cumplimiento de Resolución</span>
+              <span class="compliance-status">
+                @if (cumplioResolucion() === null) { Pendiente }
+                @else if (cumplioResolucion()) { Cumplido }
+                @else { Incumplido }
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <!-- Botón de regresar (llamando al signal)-->
-        <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
-    </mat-card-actions>
-</mat-card>
-
-@if (historialOrdenado().length > 0) {
-<section class="ticket-history">
-    <h3 class="section-title">Historial del ticket</h3>
-
-    <!-- Acordeón para el historial cambios del tiquete-->
-    <mat-accordion class="history-list">
-        @for (item of historialOrdenado(); track item.id) {
-        <mat-expansion-panel style="margin-bottom: 2%">
-            <h4>{{fechaLimiteRespuesta() ? (fechaFormateada(item.creadoAt)) : '—'}}</h4>
-
+      <!-- SECCIÓN: HISTORIAL -->
+      @if (historialOrdenado().length > 0) {
+      <section class="info-section history-section">
+        <h3 class="section-title">
+          <mat-icon>history</mat-icon>
+          Historial del Ticket ({{ historialOrdenado().length }})
+        </h3>
+        
+        <mat-accordion class="history-accordion">
+          @for (item of historialOrdenado(); track item.id) {
+          <mat-expansion-panel class="history-panel">
             <mat-expansion-panel-header>
-                <div class="history-header">
-                    <div class="bullet"></div>
-                    <div class="header-main">
-                        <div class="title">
-                            {{ item.deEstado }} → <b>{{ item.aEstado }}</b>
-                        </div>
-                        <div class="meta">
-                            <span>Modificado por: {{ item.cambiadoPor.nombreUsuario }}</span>
-                        </div>
-                    </div>
+              <mat-panel-title class="history-title">
+                <div class="history-bullet"></div>
+                <div class="history-header-content">
+                  <span class="history-change">{{ item.deEstado }} → <strong>{{ item.aEstado }}</strong></span>
+                  <span class="history-date">{{ fechaFormateada(item.creadoAt) }}</span>
                 </div>
+              </mat-panel-title>
             </mat-expansion-panel-header>
 
             <div class="history-body">
-                <p class="comment">
-                    <B>Comentario: </B>{{ item?.nota}}
-                </p>
+              <div class="history-meta">
+                <mat-icon>person</mat-icon>
+                <span>{{ item.cambiadoPor.nombreUsuario }}</span>
+              </div>
 
-                @if (item.imagenes && item.imagenes.length > 0) {
+              @if (item?.nota) {
+              <div class="history-comment">
+                <strong>Comentario:</strong>
+                <p>{{ item.nota }}</p>
+              </div>
+              }
+
+              @if (item.imagenes && item.imagenes.length > 0) {
+              <div class="history-images">
+                <strong class="images-title">
+                  <mat-icon>photo_library</mat-icon>
+                  Imágenes adjuntas ({{ item.imagenes.length }})
+                </strong>
                 <div class="images-grid">
-                    <p> <b>Imágenes adjuntas: </b></p>
-                    @for (img of item.imagenes; track img.id) {
-                    <figure class="image-figure">
-                        <button type="button" class="img-thumb" (click)="openImage(img)">
-                            <img [src]="baseImageUrl + img.url" [alt]="img.url" />
-                        </button>
-                        <figcaption class="image-description">{{ img.url }}</figcaption>
-                    </figure>
-                    }
+                  @for (img of item.imagenes; track img.id) {
+                  <figure class="image-item">
+                    <button type="button" class="img-thumb" (click)="openImage(img)">
+                      <img [src]="baseImageUrl + img.url" [alt]="img.url" />
+                      <div class="img-overlay">
+                        <mat-icon>zoom_in</mat-icon>
+                      </div>
+                    </button>
+                    <figcaption class="image-caption">{{ img.url }}</figcaption>
+                  </figure>
+                  }
                 </div>
-                }
+              </div>
+              }
             </div>
-        </mat-expansion-panel>
-    }
-    </mat-accordion>
+          </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </section>
+      }
 
-<!-- Sección de Valoración del Servicio -->
-        @if (datos()?.valoracion) {
-        <div class="ticket-rating">
-            <h3 class="section-title">Valoración del Servicio</h3>
-            <div class="rating-content">
-                <div class="info-row">
-                    <span class="info-label">Calificación</span>
-                    <span class="info-value rating-stars">
-                        @for (star of [1,2,3,4,5]; track star) {
-                            <mat-icon [class.filled]="star <= datos()!.valoracion!.puntaje">
-                                {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }}
-                            </mat-icon>
-                        }
-                        <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
-                    </span>
-                </div>
-                
-                @if (datos()?.valoracion?.comentario) {
-                <div class="info-row">
-                    <span class="info-label">Comentario</span>
-                    <span class="info-value">{{ datos()?.valoracion?.comentario }}</span>
-                </div>
-                }
-            </div>
+      <!-- SECCIÓN: VALORACIÓN -->
+      @if (datos()?.valoracion) {
+      <section class="info-section rating-section">
+        <h3 class="section-title">
+          <mat-icon>star</mat-icon>
+          Valoración del Servicio
+        </h3>
+        
+        <div class="rating-card">
+          <div class="rating-stars">
+            @for (star of [1,2,3,4,5]; track star) {
+              <mat-icon [class.filled]="star <= datos()!.valoracion!.puntaje">
+                {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_outline' }}
+              </mat-icon>
+            }
+            <span class="rating-number">{{ datos()?.valoracion?.puntaje }}/5</span>
+          </div>
+          
+          @if (datos()?.valoracion?.comentario) {
+          <div class="rating-comment">
+            <strong>Comentario del usuario:</strong>
+            <p>{{ datos()?.valoracion?.comentario }}</p>
+          </div>
+          }
         </div>
-        }
+      </section>
+      }
 
-
-</section>
-
-}
+    </mat-card-content>
+    
+    <!-- FOOTER -->
+    <mat-card-footer class="ticket-card__footer">
+      <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Regresar
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</div>
 }
 @else {
-<mat-card class="ticket-card ticket-card--empty" appearance="outlined">
-    <mat-card-content class="empty">
-        <mat-icon>person_search</mat-icon>
-        <p class="mat-body text">Técnico no encontrado</p>
-        <button mat-stroked-button color="primary" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
+<div class="detail-container">
+  <mat-card class="ticket-card ticket-card--empty" appearance="outlined">
+    <mat-card-content class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>confirmation_number_off</mat-icon>
+      </div>
+      <h2 class="empty-title">Ticket no encontrado</h2>
+      <p class="empty-text">No se pudo cargar la información de este ticket.</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Listado
+      </button>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+</div>
 }

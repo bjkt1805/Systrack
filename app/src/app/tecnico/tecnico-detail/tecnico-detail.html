@@ -1,99 +1,154 @@
-<!-- Revisar si hay datos antes de mostrar el detalle del técnico -->
-
 @if (datos()) {
-<br>
-<mat-card class="tech-card" appearance="outlined" style="margin-top: 10px;">
+<div class="detail-container">
+  <mat-card class="tech-card" appearance="outlined">
 
-    <!-- Encabezado del card con avatar (OPCIONAL) -->
+    <!-- HEADER MINIMALISTA CON AVATAR -->
     <mat-card-header class="tech-card__header">
-
-        <!-- Avatar del técnico (OPCIONAL) -->
-        <div class="tech-card__avatar">
-            <img [src]="'http://localhost:3000/images/'" alt="Foto del técnico"
-                onerror="this.style.visibility='hidden'" />
+      <div class="header-content">
+        <div class="icon-wrapper">
+          <img 
+            [src]="'http://localhost:3000/images/' + datos()?.foto" 
+            [alt]="datos()?.nombreUsuario || 'Avatar del técnico'"
+            class="tech-avatar"
+            onerror="this.src='assets/default-avatar.png'"
+          />
         </div>
-
-        <!-- Título y subtítulo del card -->
-        <div class="tech-card__title">
-            <mat-card-title class="tech-card__name">
-                {{ datos()?.nombreUsuario }}
-            </mat-card-title>
-            <mat-card-subtitle class="tech-card__subtitle">
-
-                <span If="datos()?.correo">{{ datos()?.correo }}</span>
-                <span class="dot" If="datos()?.correo && datos()?.estadoTecnico"></span>
-                <span class="status" [class.status--ok]="datos()?.estadoTecnico === 'DISPONIBLE'"
-                    [class.status--off]="datos()?.estadoTecnico !== 'DISPONIBLE'">
-                    {{ datos()?.estadoTecnico || '—' }}
-                </span>
-            </mat-card-subtitle>
+        <div class="title-group">
+          <h1 class="tech-card__name">{{ datos()?.nombreUsuario }}</h1>
+          <p class="tech-card__subtitle">
+            <mat-icon>email</mat-icon>
+            {{ datos()?.correo || 'Sin correo' }}
+            <span class="separator-dot" *ngIf="datos()?.correo && datos()?.estadoTecnico">•</span>
+            <span class="status-badge" [ngClass]="{
+              'status-badge--active': datos()?.estadoTecnico === 'DISPONIBLE',
+              'status-badge--inactive': datos()?.estadoTecnico !== 'DISPONIBLE'
+            }">
+              <mat-icon>{{ datos()?.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
+              {{ datos()?.estadoTecnico || 'Sin estado' }}
+            </span>
+          </p>
         </div>
+      </div>
     </mat-card-header>
 
     <mat-divider></mat-divider>
 
     <mat-card-content class="tech-card__content">
-        <!-- Imagen grande opcional (si deseas mantenerla) -->
-        <img mat-card-image class="tech-card__hero" [src]="'http://localhost:3000/images/' + datos()?.foto" alt="Foto del técnico"
-            decoding="async" />
 
-        <!-- Panel de información -->
-        <section class="tech-info">
+      <!-- SECCIÓN: INFORMACIÓN PERSONAL -->
+      <section class="info-section">
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          Información Personal
+        </h3>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Nombre de Usuario</span>
+            <span class="value">{{ datos()?.nombreUsuario }}</span>
+          </div>
 
-            <!-- Contenedor del nombre completo -->
-            <div class="info-row">
-                <span class="info-label">Nombre completo</span>
-                <span class="info-value">{{ datos()?.nombreUsuario }}</span>
+          <div class="info-item" *ngIf="datos()?.correo">
+            <span class="label">Correo Electrónico</span>
+            <span class="value">{{ datos()?.correo }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Estado</span>
+            <span class="value">
+              <span class="status-badge" [ngClass]="{
+                'status-badge--active': datos()?.estadoTecnico === 'DISPONIBLE',
+                'status-badge--inactive': datos()?.estadoTecnico !== 'DISPONIBLE'
+              }">
+                <mat-icon>{{ datos()?.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
+                {{ datos()?.estadoTecnico || 'No especificado' }}
+              </span>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Carga de Trabajo</span>
+            <span class="value">{{ datos()?.cargaTrabajo || 0 }} tickets</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN: ESPECIALIDADES -->
+      <section class="info-section" *ngIf="datos()?.especialidades?.length">
+        <h3 class="section-title">
+          <mat-icon>workspace_premium</mat-icon>
+          Especialidades ({{ datos()?.especialidades?.length }})
+        </h3>
+        
+        <div class="chips-container">
+          @for (item of datos()?.especialidades; track item.id) {
+            <mat-chip class="chip chip-primary">
+              <mat-icon>star</mat-icon>
+              {{item.nombre}}
+            </mat-chip>
+          }
+        </div>
+      </section>
+
+      <!-- SECCIÓN: ESTADÍSTICAS DE DESEMPEÑO -->
+      <section class="info-section" *ngIf="datos()?.cargaTrabajo !== undefined">
+        <h3 class="section-title">
+          <mat-icon>analytics</mat-icon>
+          Estadísticas de Desempeño
+        </h3>
+        
+        <div class="sla-grid">
+          <div class="sla-card">
+            <div class="sla-icon">
+              <mat-icon>assignment</mat-icon>
             </div>
-
-            <!-- Contenedor del correo electrónico -->
-            <div class="info-row" *ngIf="datos()?.correo">
-                <span class="info-label">Correo</span>
-                <span class="info-value">{{ datos()?.correo }}</span>
+            <div class="sla-content">
+              <span class="sla-label">Tickets Asignados</span>
+              <span class="sla-value">{{ datos()?.cargaTrabajo || 0 }}</span>
             </div>
+          </div>
 
-            <!-- Contenedor de las especialidades del técnico -->
-            <div class="info-row">
-                <span class="info-label">Especialidades</span>
-                <div class="chips">
-                    <mat-chip-listbox aria-label="Especialidades">
-                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
-                        @for (item of datos()?.especialidades; track item.id) {
-                        <mat-chip-option class="chip-tertiary"> {{item.nombre}}
-                        </mat-chip-option>
-                        }
-                    </mat-chip-listbox>
-                </div>
+          <div class="sla-card" *ngIf="datos()?.estadoTecnico">
+            <div class="sla-icon" [ngClass]="{
+              'response': datos()?.estadoTecnico === 'DISPONIBLE',
+              'resolution': datos()?.estadoTecnico !== 'DISPONIBLE'
+            }">
+              <mat-icon>{{ datos()?.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'hourglass_empty' }}</mat-icon>
             </div>
+            <div class="sla-content">
+              <span class="sla-label">Estado Actual</span>
+              <span class="sla-value">{{ datos()?.estadoTecnico }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <!-- Contenedor de carga de trabajo del técnico -->
-            <div class="info-row">
-                <span class="info-label">Carga de trabajo</span>
-                <span class="info-value">{{ datos()?.cargaTrabajo }}</span>
-            </div>
-        </section>
     </mat-card-content>
-
-    <!-- Acciones del card -->
-    <mat-card-actions class="tech-card__actions">
-
-        <!-- Botón de regresar (llamando al signal)-->
-        <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
-    </mat-card-actions>
-</mat-card>
+    
+    <!-- FOOTER CON SOLO BOTÓN REGRESAR -->
+    <mat-card-footer class="tech-card__footer">
+      <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Regresar
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</div>
 }
 @else {
-<mat-card class="tech-card tech-card--empty" appearance="outlined">
-    <mat-card-content class="empty">
-        <mat-icon>person_search</mat-icon>
-        <p class="mat-body text">Técnico no encontrado</p>
-        <button mat-stroked-button color="primary" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
+<div class="detail-container">
+  <mat-card class="tech-card tech-card--empty" appearance="outlined">
+    <mat-card-content class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>person_off</mat-icon>
+      </div>
+      <h2 class="empty-title">Técnico no encontrado</h2>
+      <p class="empty-text">No se pudo cargar la información de este técnico.</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Listado
+      </button>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+</div>
 }

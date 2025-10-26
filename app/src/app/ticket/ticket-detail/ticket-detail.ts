@@ -9,7 +9,7 @@ import { TicketImageViewDialog } from '../ticket-image-view-dialog/ticket-image-
   selector: 'app-ticket-detail',
   standalone: false,
   templateUrl: './ticket-detail.html',
-  styleUrl: './ticket-detail.css'
+  styleUrls: ['./ticket-detail.css']
 })
 export class TicketDetail {
 

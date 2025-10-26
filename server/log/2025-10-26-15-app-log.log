@@ -1,0 +1,11 @@
+2025-10-26 15:28:21.206 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/ticketController.ts:237:47
+
+  234 }
+  235 
+  236 // Busca la categoría por su 'id' en la BD
+→ 237 const ticket = await this.prisma.ticket.findUnique(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
