@@ -5,7 +5,7 @@
   color: var(--footer-on);
   padding-block: 0.5rem;
   width: 100%;
-  height: 25%;
+  height: auto;
   position: static;
   inset: auto 0 0 0;
   z-index: 5;

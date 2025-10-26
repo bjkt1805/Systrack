@@ -1,5 +1,5 @@
 .hero {
-    min-height: calc(100dvh - 64px);
+    min-height: calc(30vh - 50px);;
     display: grid;
     place-items: center;
     padding: clamp(16px, 4vw, 48px);
@@ -59,13 +59,13 @@
 }
 
 .welcome-card {
-    width: min(960px, 92vw);
-    border-radius: 20px;
+    width: min(720px, 92vw);
+    border-radius: 12px;
     overflow: hidden;
     backdrop-filter: blur(10px);
-    background: color-mix(in srgb, var(--mat-sys-surface) 72%, transparent);
+    background: color-mix(in srgb, var(--mat-sys-surface) 95%, transparent);
     border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 26%, transparent);
-    box-shadow: 0 18px 40px color-mix(in srgb, black 18%, transparent);
+    box-shadow: 0 8px 32px color-mix(in srgb, black 12%, transparent);
     transform: translateY(6px);
     opacity: 0;
     animation: card-in 600ms cubic-bezier(.2, .8, .2, 1) forwards
@@ -79,7 +79,7 @@
 }
 
 .welcome-card:hover {
-    box-shadow: 0 28px 60px color-mix(in srgb, black 22%, transparent)
+    box-shadow: 0 12px 48px color-mix(in srgb, black 16%, transparent)
 }
 
 .welcome-card .primary-title {
@@ -87,9 +87,10 @@
     grid-template-columns: auto 1fr;
     align-items: center;
     gap: 12px;
-    padding: 18px 20px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--mat-sys-primary) 18%, transparent), transparent);
-    color: var(--mat-sys-on-surface)
+    padding: 16px 20px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mat-sys-primary) 8%, transparent), transparent);
+    color: var(--mat-sys-on-surface);
+    border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
 }
 
 .welcome-card .primary-title .logo-ring {
@@ -110,83 +111,164 @@
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25))
 }
 
-.welcome-card .primary-title mat-card-title {
-    font-weight: 800;
-    letter-spacing: .2px;
-    line-height: 1.1
-}
-
-.welcome-card .primary-title mat-card-subtitle {
-    margin-top: 2px;
-    opacity: .85;
-    font-weight: 500
-}
-
-.welcome-card .hero-image {
-    max-height: clamp(160px, 28vh, 280px);
-    width: 100%;
-    object-fit: contain;
-    padding: 12px 12px 0;
-    transform-origin: center;
-    animation: pop 700ms cubic-bezier(.17, .84, .44, 1.02) 120ms both
-}
-
-@keyframes pop {
-    0% {
-        transform: scale(.97);
-        opacity: .6
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1
-    }
-}
-
-.welcome-card .secondary-title {
-    padding: 12px 20px 4px
-}
-
-.welcome-card .secondary-title .text {
-    margin: 0;
-    font-size: clamp(14px, 1.6vw, 16px);
-    color: color-mix(in srgb, var(--mat-sys-on-surface) 88%, black 0%)
-}
-
-.welcome-card mat-card-actions {
-    padding: 12px 16px 18px;
+.welcome-card .primary-title .title-content {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap
+    flex-direction: column;
+    gap: 2px;
 }
 
-.welcome-card mat-card-actions .cta,
-.welcome-card mat-card-actions .cta-ghost {
-    border-radius: 999px;
-    padding-inline: 18px;
+.welcome-card .primary-title .title {
+    margin: 0;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: .2px;
-    display: inline-flex;
+    line-height: 1.2;
+    color: var(--mat-sys-on-surface);
+}
+
+.welcome-card .primary-title .subtitle {
+    margin: 0;
+    font-size: 13px;
+    opacity: .7;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: color-mix(in srgb, var(--mat-sys-outline) 12%, transparent);
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 28px 16px;
+    gap: 10px;
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.menu-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--mat-sys-primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.menu-item:hover::before {
+    opacity: 0.08;
+}
+
+.menu-item.primary {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+}
+
+.menu-item.primary::before {
+    background: white;
+}
+
+.menu-item.primary:hover::before {
+    opacity: 0.1;
+}
+
+.menu-item mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.menu-item span {
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.submenu {
+    display: flex;
     gap: 8px;
-    transition: transform .15s ease, box-shadow .15s ease
+    padding: 16px;
+    background: color-mix(in srgb, var(--mat-sys-surface-variant) 20%, var(--mat-sys-surface));
+    border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 12%, transparent);
+    flex-wrap: wrap;
 }
 
-.welcome-card mat-card-actions .cta:hover,
-.welcome-card mat-card-actions .cta-ghost:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 18px color-mix(in srgb, var(--mat-sys-primary) 22%, transparent)
+.submenu-item {
+    border-radius: 20px;
+    font-size: 13px;
+    padding: 8px 18px;
+    color: var(--mat-sys-on-surface);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-transform: none;
+    letter-spacing: 0.2px;
 }
 
-.welcome-card mat-card-actions .cta-ghost {
-    border-color: color-mix(in srgb, var(--mat-sys-primary) 40%, var(--mat-sys-outline))
+.submenu-item:hover:not(.active) {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.submenu-item.active {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .menu-item {
+        padding: 24px 12px;
+    }
+    
+    .submenu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .submenu-item {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-card {
+        width: 96vw;
+    }
+    
+    .hero {
+        padding: clamp(8px, 2vw, 16px);
+    }
+    
+    .menu-item mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .menu-item span {
+        font-size: 12px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .bg-blobs .blob,
-    .welcome-card,
-    .hero-image {
+    .welcome-card {
         animation: none !important;
         transform: none !important
     }

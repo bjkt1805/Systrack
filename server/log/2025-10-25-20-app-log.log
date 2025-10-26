@@ -1,0 +1,11 @@
+2025-10-25 20:55:26.822 error: 	warner--Se produjo un error interno del servidor 
+Invalid `this.prisma.categoria.findUnique()` invocation in
+/Users/warner/Systrack/server/source/controllers/categoriaController.ts:98:53
+
+  95 }
+  96 
+  97 // Busca la categoría por su 'id' en la BD
+→ 98 const categoria = await this.prisma.categoria.findUnique(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.

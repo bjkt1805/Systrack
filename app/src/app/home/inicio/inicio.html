@@ -1,42 +1,53 @@
-<!-- inicio.html -->
-<section class="hero">
-    <div class="bg-blobs" aria-hidden="true">
-        <span class="blob b1"></span>
-        <span class="blob b2"></span>
-        <span class="blob b3"></span>
+<div class="hero">
+  <div class="bg-blobs">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <div class="welcome-card">
+    <div class="primary-title">
+      <div class="logo-ring">
+        <img src="assets/logo.svg" alt="Logo">
+      </div>
+      <div class="title-content">
+        <h2 class="title">Bienvenido, admin</h2>
+        <p class="subtitle">Sistema de Gestión de Tickets</p>
+      </div>
     </div>
 
-    <mat-card class="welcome-card mat-elevation-z8" appearance="outlined">
-        <mat-card-header class="primary-title">
-            <!-- <div class="logo-ring">
-                <img src="/images/systrackLogo.png" alt="Systrack logo" />
-            </div> -->
-            <div>
-                <mat-card-title>Systrack</mat-card-title>
-                <mat-card-subtitle>Tu aliado tecnológico para la gestión de soporte técnico</mat-card-subtitle>
-            </div>
-        </mat-card-header>
+    <div class="menu-grid">
+      <a class="menu-item" routerLink="/panel">
+        <mat-icon>dashboard</mat-icon>
+        <span>Panel</span>
+      </a>
+      <a class="menu-item primary" routerLink="/tickets">
+        <mat-icon>confirmation_number</mat-icon>
+        <span>Tickets</span>
+      </a>
+      <a class="menu-item" routerLink="/usuarios">
+        <mat-icon>person</mat-icon>
+        <span>Usuarios</span>
+      </a>
+      <a class="menu-item" routerLink="/articulos">
+        <mat-icon>article</mat-icon>
+        <span>Artículo</span>
+      </a>
+      <a class="menu-item" routerLink="/staff">
+        <mat-icon>groups</mat-icon>
+        <span>Staff</span>
+      </a>
+      <a class="menu-item" routerLink="/configuracion">
+        <mat-icon>settings</mat-icon>
+        <span>Configuración</span>
+      </a>
+    </div>
 
-        <mat-divider></mat-divider>
-
-        <!-- <img mat-card-image src="/images/systrackLogo.png" alt="Systrack banner" class="hero-image" loading="eager"
-            decoding="async" /> -->
-
-        <mat-card-content class="secondary-title">
-            <p class="text">
-                Aplicación Angular para consumo de API NodeJS
-            </p>
-        </mat-card-content>
-
-        <mat-card-actions align="end">
-            <button mat-raised-button color="primary" class="cta" matRipple>
-                <mat-icon>rocket_launch</mat-icon>
-                Empezar
-            </button>
-            <button mat-stroked-button color="accent" class="cta-ghost" matRipple routerLink="/acerca-de">
-                <mat-icon>info</mat-icon>
-                Acerca de
-            </button>
-        </mat-card-actions>
-    </mat-card>
-</section>
+    <div class="submenu">
+      <button mat-button class="submenu-item active">Mis Tickets</button>
+      <button mat-button class="submenu-item">Nuevos Tickets</button>
+      <button mat-button class="submenu-item">Todos los Tickets</button>
+      <button mat-button class="submenu-item">Respuestas Personalizadas</button>
+    </div>
+  </div>
+</div>

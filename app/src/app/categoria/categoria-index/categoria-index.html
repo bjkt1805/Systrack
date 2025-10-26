@@ -1,56 +1,170 @@
-<div class="grid-container">
-    <mat-card appearance="outlined" class="filter" style="margin-top: 10px;">
-        <!-- Encabezado de Categorías -->
-        <mat-card-header>
-            <h1 class="mat-h1">Categorías</h1>
-        </mat-card-header>
-    </mat-card>
-
-    <!-- Lista de categorías. Revisar si hay más de uno para listarlos en la vista -->
-    @if(datos().length > 0){
-    <div class="categoria-list">
-
-        <!-- Recorrer la lista de categorías para mostrarlos en la vista -->
-        @for (item of datos(); track item.id) {
-        <div class="categoria-card" style="width: 150%;">
-            <mat-card appearance="outlined">
-                <mat-card-header class="secondary-title title" style="margin-bottom: 10px;">
-                    <mat-card-title style="font-size: 16px;">
-                        <b>{{item.nombre}}</b> 
-                    </mat-card-title>
-                </mat-card-header>
-
-                <!-- Mostrar información de categoria -->
-                <mat-card-content class="user-info">
-                    <div class="info-item" style="font-size: 13px;">
-                        <span class="info-label">Descripción: </span>
-                        <span class="info-value">{{ item.descripcion }}</span>
-                    </div>
-                </mat-card-content>
-
-                <!-- Mostrar información de categoria -->
-                <mat-card-content class="user-info">
-                    <div class="info-item" style="font-size: 13px;">
-                        <span class="info-label">SLA: </span>
-                        <span class="info-value">{{ item.sla.nombre }} / {{ item.sla.maxMinutosRespuesta }} / {{ item.sla.maxMinutosResolucion }}</span>
-                    </div>
-                </mat-card-content>
-
-                <!-- Footer con botón de detalle -->
-                <mat-card-footer class="footer">
-                    <button matMiniFab matTooltip="Ver detalles" aria-label="Detalle Categoría"
-                        (click)="detalle(item.id)">
-                        <mat-icon class="mat-18">info</mat-icon>
-                    </button>
-                </mat-card-footer>
-
-            </mat-card>
-        </div>
-        }
-
+<div class="index-container">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="icon-wrapper">
+        <mat-icon class="page-icon">category</mat-icon>
+      </div>
+      <div class="title-group">
+        <h1 class="page-title">Categorías</h1>
+        <p class="page-subtitle">Gestiona todas las categorías del sistema</p>
+      </div>
     </div>
-    }@else {
-    <p>No hay categorias disponibles.</p>
-    }
+    <div class="header-actions">
+      <button mat-raised-button color="primary" class="btn-add">
+        <mat-icon>add</mat-icon>
+        Nueva Categoría
+      </button>
+    </div>
+  </div>
 
+  <!-- BÚSQUEDA Y FILTROS -->
+  <div class="filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar categorías</mat-label>
+      <input matInput placeholder="Nombre, descripción...">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+    
+    <button mat-stroked-button class="filter-btn">
+      <mat-icon>filter_list</mat-icon>
+      Filtros
+    </button>
+  </div>
+
+  <!-- LISTA DE CATEGORÍAS -->
+  @if(datos().length > 0){
+    <div class="categoria-grid">
+      @for (item of datos(); track item.id) {
+        <mat-card class="categoria-card" appearance="outlined">
+          
+          <!-- HEADER DE LA CARD -->
+          <mat-card-header class="card-header">
+            <div class="card-icon">
+              <mat-icon>bookmark</mat-icon>
+            </div>
+            <div class="card-title-group">
+              <mat-card-title class="card-title">
+                {{item.nombre}}
+              </mat-card-title>
+            </div>
+          </mat-card-header>
+
+          <mat-divider></mat-divider>
+
+          <!-- CONTENIDO DE LA CARD -->
+          <mat-card-content class="card-content">
+            
+            <!-- Descripción -->
+            <div class="info-block" *ngIf="item.descripcion">
+              <span class="info-label">
+                <mat-icon>description</mat-icon>
+                Descripción
+              </span>
+              <p class="info-text">{{ item.descripcion }}</p>
+            </div>
+
+            <!-- SLA Info -->
+            <div class="info-block" *ngIf="item.sla">
+              <span class="info-label">
+                <mat-icon>schedule</mat-icon>
+                SLA
+              </span>
+              <div class="sla-info">
+                <div class="sla-item">
+                  <span class="sla-label">Nombre</span>
+                  <span class="sla-value">{{ item.sla.nombre }}</span>
+                </div>
+                <div class="sla-metrics">
+                  <div class="metric">
+                    <mat-icon class="metric-icon">reply</mat-icon>
+                    <div class="metric-content">
+                      <span class="metric-label">Respuesta</span>
+                      <span class="metric-value">{{ item.sla.maxMinutosRespuesta }} min</span>
+                    </div>
+                  </div>
+                  <div class="metric">
+                    <mat-icon class="metric-icon">check_circle</mat-icon>
+                    <div class="metric-content">
+                      <span class="metric-label">Resolución</span>
+                      <span class="metric-value">{{ item.sla.maxMinutosResolucion }} min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Etiquetas -->
+            <div class="info-block" *ngIf="item.etiquetas && item.etiquetas.length > 0">
+              <span class="info-label">
+                <mat-icon>label</mat-icon>
+                Etiquetas ({{ item.etiquetas?.length }})
+              </span>
+              <div class="chips-container">
+                @for (etiqueta of item.etiquetas; track etiqueta.id) {
+                  <span class="chip chip-primary">
+                    <mat-icon>label</mat-icon>
+                    {{etiqueta.nombre}}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Especialidades -->
+            <div class="info-block" *ngIf="item.especialidades && item.especialidades.length > 0">
+              <span class="info-label">
+                <mat-icon>workspace_premium</mat-icon>
+                Especialidades ({{ item.especialidades?.length }})
+              </span>
+              <div class="chips-container">
+                @for (especialidad of item.especialidades; track especialidad.id) {
+                  <span class="chip chip-secondary">
+                    <mat-icon>star</mat-icon>
+                    {{especialidad.nombre}}
+                  </span>
+                }
+              </div>
+            </div>
+
+          </mat-card-content>
+
+          <!-- ACCIONES -->
+          <mat-card-actions class="card-actions">
+            <button mat-button color="primary" (click)="detalle(item.id)">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalles
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+            </mat-menu>
+          </mat-card-actions>
+
+        </mat-card>
+      }
+    </div>
+  }
+  @else {
+    <!-- EMPTY STATE -->
+    <div class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>category_off</mat-icon>
+      </div>
+      <h2 class="empty-title">No hay categorías</h2>
+      <p class="empty-text">Comienza creando tu primera categoría para organizar mejor tu sistema.</p>
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Crear Primera Categoría
+      </button>
+    </div>
+  }
 </div>

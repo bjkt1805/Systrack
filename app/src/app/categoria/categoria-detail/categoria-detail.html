@@ -1,98 +1,157 @@
-<!-- Revisar si hay datos antes de mostrar el detalle del técnico -->
-
 @if (datos()) {
-<br>
-<mat-card class="tech-card" appearance="outlined" style="margin-top: 10px;">
+<div class="detail-container">
+  <mat-card class="tech-card" appearance="outlined">
 
-    <!-- Encabezado del card con avatar (OPCIONAL) -->
+    <!-- HEADER MINIMALISTA -->
     <mat-card-header class="tech-card__header">
-
-        <!-- Título y subtítulo del card -->
-        <div class="tech-card__title">
-            <mat-card-title class="tech-card__name">
-                {{ datos()?.nombre }}
-            </mat-card-title>
+      <div class="header-content">
+        <div class="icon-wrapper">
+          <mat-icon class="category-icon">category</mat-icon>
         </div>
+        <div class="title-group">
+          <h1 class="tech-card__name">{{ datos()?.nombre }}</h1>
+          <p class="tech-card__subtitle" *ngIf="datos()?.descripcion">
+            {{ datos()?.descripcion }}
+          </p>
+        </div>
+      </div>
     </mat-card-header>
+
     <mat-divider></mat-divider>
 
     <mat-card-content class="tech-card__content">
-        <!-- Panel de información -->
-        <section class="tech-info">
 
-            <!-- Contenedor del nombre-->
-            <div class="info-row">
-                <span class="info-label">Nombre</span>
-                <span class="info-value">{{ datos()?.nombre }}</span>
+      <!-- SECCIÓN: INFORMACIÓN GENERAL -->
+      <section class="info-section">
+        <h3 class="section-title">
+          <mat-icon>info</mat-icon>
+          Información General
+        </h3>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Nombre</span>
+            <span class="value">{{ datos()?.nombre }}</span>
+          </div>
+          
+          <div class="info-item full-width" *ngIf="datos()?.descripcion">
+            <span class="label">Descripción</span>
+            <span class="value description">{{ datos()?.descripcion }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN: ETIQUETAS -->
+      <section class="info-section" *ngIf="datos()?.etiquetas?.length">
+        <h3 class="section-title">
+          <mat-icon>label</mat-icon>
+          Etiquetas ({{ datos()?.etiquetas?.length }})
+        </h3>
+        
+        <div class="chips-container">
+          @for (item of datos()?.etiquetas; track item.id) {
+            <mat-chip class="chip chip-primary">
+              <mat-icon>label</mat-icon>
+              {{item.nombre}}
+            </mat-chip>
+          }
+        </div>
+      </section>
+
+      <!-- SECCIÓN: ESPECIALIDADES -->
+      <section class="info-section" *ngIf="datos()?.especialidades?.length">
+        <h3 class="section-title">
+          <mat-icon>workspace_premium</mat-icon>
+          Especialidades ({{ datos()?.especialidades?.length }})
+        </h3>
+        
+        <div class="chips-container">
+          @for (item of datos()?.especialidades; track item.id) {
+            <mat-chip class="chip chip-secondary">
+              <mat-icon>star</mat-icon>
+              {{item.nombre}}
+            </mat-chip>
+          }
+        </div>
+      </section>
+
+      <!-- SECCIÓN: SLA (MÉTRICAS VISUALES) -->
+      <section class="info-section sla-section" *ngIf="datos()?.sla">
+        <h3 class="section-title">
+          <mat-icon>schedule</mat-icon>
+          Acuerdo de Nivel de Servicio (SLA)
+        </h3>
+        
+        <div class="sla-grid">
+          <div class="sla-card">
+            <div class="sla-icon">
+              <mat-icon>assignment</mat-icon>
             </div>
-
-            <!-- Contenedor del descripción -->
-            <div class="info-row" *ngIf="datos()?.descripcion">
-                <span class="info-label">Descripción</span>
-                <span class="info-value">{{ datos()?.descripcion }}</span>
+            <div class="sla-content">
+              <span class="sla-label">Nombre del SLA</span>
+              <span class="sla-value">{{ datos()?.sla?.nombre }}</span>
             </div>
+          </div>
 
-            <!-- Contenedor del etiquetas -->
-            <div class="info-row">
-                <span class="info-label">Etiquetas</span>
-                <div class="chips">
-                    <mat-chip-listbox aria-label="Especialidades">
-                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
-                        @for (item of datos()?.etiquetas; track item.id) {
-                        <mat-chip-option class="chip-primary"> {{item.nombre}}
-                        </mat-chip-option>
-                        }
-                    </mat-chip-listbox>
-                </div>
+          <div class="sla-card">
+            <div class="sla-icon response">
+              <mat-icon>reply</mat-icon>
             </div>
-
-            <!-- Contenedor del especialidades push-->
-            <div class="info-row">
-                <span class="info-label">Especialidades</span>
-                <div class="chips">
-                    <mat-chip-listbox aria-label="Especialidades">
-                        <!-- Recorrer las especialidades del técnico y mostrar su nombre-->
-                        @for (item of datos()?.especialidades; track item.id) {
-                        <mat-chip-option class="chip-secondary"> {{item.nombre}}
-                        </mat-chip-option>
-                        }
-                    </mat-chip-listbox>
-                </div>
+            <div class="sla-content">
+              <span class="sla-label">Tiempo de Respuesta</span>
+              <span class="sla-value">{{ datos()?.sla?.maxMinutosRespuesta }} min</span>
             </div>
+          </div>
 
-            <!-- Contenedor del SLA -->
-            <div class="info-row" *ngIf="datos()?.sla">
-                <span class="info-label">SLA nombre</span>
-                <span class="info-value">{{ datos()?.sla?.nombre}}</span>
-                <span class="info-label">Maximo Minutos Respuesta</span>
-                <span class="info-value">{{ datos()?.sla?.maxMinutosRespuesta}}</span>
-                <span class="info-label">Maximo Minutos Resolucion</span>
-                <span class="info-value">{{ datos()?.sla?.maxMinutosResolucion}}</span>
-            </div>    
+          <div class="sla-card">
+            <div class="sla-icon resolution">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="sla-content">
+              <span class="sla-label">Tiempo de Resolución</span>
+              <span class="sla-value">{{ datos()?.sla?.maxMinutosResolucion }} min</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        </section>
     </mat-card-content>
     
-    <!-- Acciones del card -->
-    <mat-card-actions class="tech-card__actions">
-
-        <!-- Botón de regresar (llamando al signal)-->
-        <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
+    <!-- FOOTER CON ACCIONES -->
+    <mat-card-footer class="tech-card__footer">
+      <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Regresar
+      </button>
+      
+      <div class="action-buttons">
+        <button mat-button color="accent">
+          <mat-icon>edit</mat-icon>
+          Editar
         </button>
-    </mat-card-actions>
-</mat-card>
+        <button mat-raised-button color="primary">
+          <mat-icon>save</mat-icon>
+          Guardar Cambios
+        </button>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>
 }
 @else {
-<mat-card class="tech-card tech-card--empty" appearance="outlined">
-    <mat-card-content class="empty">
-        <mat-icon>person_search</mat-icon>
-        <p class="mat-body text">Categoría no encontrada</p>
-        <button mat-stroked-button color="primary" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
+<div class="detail-container">
+  <mat-card class="tech-card tech-card--empty" appearance="outlined">
+    <mat-card-content class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>category_off</mat-icon>
+      </div>
+      <h2 class="empty-title">Categoría no encontrada</h2>
+      <p class="empty-text">No se pudo cargar la información de esta categoría.</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Listado
+      </button>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+</div>
 }
