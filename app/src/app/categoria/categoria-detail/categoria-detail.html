@@ -117,23 +117,12 @@
 
     </mat-card-content>
     
-    <!-- FOOTER CON ACCIONES -->
+    <!-- FOOTER CON SOLO BOTÓN REGRESAR -->
     <mat-card-footer class="tech-card__footer">
-      <button mat-stroked-button color="primary" class="btn-back" (click)="goBack()">
+      <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         Regresar
       </button>
-      
-      <div class="action-buttons">
-        <button mat-button color="accent">
-          <mat-icon>edit</mat-icon>
-          Editar
-        </button>
-        <button mat-raised-button color="primary">
-          <mat-icon>save</mat-icon>
-          Guardar Cambios
-        </button>
-      </div>
     </mat-card-footer>
   </mat-card>
 </div>

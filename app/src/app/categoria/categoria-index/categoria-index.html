@@ -10,12 +10,6 @@
         <p class="page-subtitle">Gestiona todas las categorías del sistema</p>
       </div>
     </div>
-    <div class="header-actions">
-      <button mat-raised-button color="primary" class="btn-add">
-        <mat-icon>add</mat-icon>
-        Nueva Categoría
-      </button>
-    </div>
   </div>
 
   <!-- BÚSQUEDA Y FILTROS -->
@@ -134,19 +128,6 @@
               <mat-icon>visibility</mat-icon>
               Ver Detalles
             </button>
-            <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-btn">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item>
-                <mat-icon>edit</mat-icon>
-                <span>Editar</span>
-              </button>
-              <button mat-menu-item>
-                <mat-icon>delete</mat-icon>
-                <span>Eliminar</span>
-              </button>
-            </mat-menu>
           </mat-card-actions>
 
         </mat-card>

@@ -280,7 +280,7 @@
 /* FOOTER */
 .tech-card__footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 20px 32px;
   background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, var(--mat-sys-surface));
