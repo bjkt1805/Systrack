@@ -271,7 +271,8 @@ export class TicketController {
               aEstado: true,
               nota: true,
               imagenes: true
-            }
+            },
+            orderBy: { id: "asc" },
           },
 
           // Incluye la valoración del ticket (puntaje y comentario)

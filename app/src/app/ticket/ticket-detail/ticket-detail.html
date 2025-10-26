@@ -94,17 +94,9 @@
                     <span class="info-label">Días de resolución</span>
                     <!-- Operador ternario para mostrar el valor o un guion si es nulo-->
                     <span class="info-value">
-                        {{ diasResolucion() !== null ? diasResolucion() : '—' }}
+                        {{ tiempoResolucion() || '—' }}
                     </span>
                 </div>
-
-                <!-- (Opcional) Contenedor de días hasta "resolución" (si existe resueltoAt antes del cierre) -->
-                @if (diasHastaResuelto() !== null) {
-                <div class="info-row">
-                    <span class="info-label">Días hasta resolución</span>
-                    <span class="info-value">{{ diasHastaResuelto() }}</span>
-                </div>
-                }
 
                 <!-- Contenedor de Cumplimiento de respuesta -->
                 <div class="info-row">
@@ -150,7 +142,7 @@
     <mat-accordion class="history-list">
         @for (item of historialOrdenado(); track item.id) {
         <mat-expansion-panel style="margin-bottom: 2%">
-            <h4>{{item.creadoAt | date:'short'}}</h4>
+            <h4>{{fechaLimiteRespuesta() ? (fechaFormateada(item.creadoAt)) : '—'}}</h4>
 
             <mat-expansion-panel-header>
                 <div class="history-header">

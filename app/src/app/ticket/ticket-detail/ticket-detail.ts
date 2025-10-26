@@ -118,40 +118,55 @@ export class TicketDetail {
   // - CUMPLIMIENTO DE RESOLUCIÓN
   // ====================================
 
-  // Días de resolución - solo si el ticket está resuelto o cerrado
-  diasResolucion = computed(() => {
+  // Signal compuetado para mostrar tiempo de resolución en días (horas y minutos si es menor a 1 día)
+  tiempoResolucion = computed(() => {
 
-    // Obtener el valor de cerradoAt y creadoAt (desde el signal "datos" que devuelve el objeto del ticket)
-    const cierre = this.cerradoAt();
-    const creado = this.creadoAt();
-
-    // Si no existen las fechas (creadoAt o cerradoAt), retornar null
-    if (!cierre || !creado) return null;
-
-    // Calcular la diferencia en milisegundos y convertir a días para mostrarlo como diasResolucion
-    const diffMs = cierre.getTime() - creado.getTime();
-
-    // Retornar la diferencia en días (redondeada hacia abajo)
-    return Math.max(0, Math.floor(diffMs / 86_400_000));
-  });
-
-
-  // (OPCIONAL) Días hasta “resuelto” antes del cierre (mostrar con otra etiqueta)
-  diasHastaResuelto = computed(() => {
-
-    // Obtener el valor de resueltoAt y creadoAt (desde el signal "datos" que devuelve el objeto del ticket)
+    // Obtener la fecha de resolución (priorizando resueltoAt, ya que está relacionado con el SLA de resolución)
     const resuelto = this.resueltoAt();
+
+    // Obtener la fecha de cierre del ticket
+    // const cierre = this.cerradoAt();
+
+    // Obtener la fecha de creación del ticket
     const creado = this.creadoAt();
 
-    // Si no existen las fechas, retornar null
-    if (!resuelto || !creado) return null;
+    // Configurar la fecha de resolución con la fecha de resolución del ticket 
+    const fechaResolucion = resuelto;
 
-    // Calcular la diferencia en milisegundos y convertir a días para mostrarlo como diasHastaResuelto
-    const diffMs = resuelto.getTime() - creado.getTime();
+    // Si no hay fecha de resolución, retornar null
+    if (!fechaResolucion) return null;
 
-    // Retornar la diferencia en días (redondeada hacia abajo)
-    return Math.max(0, Math.floor(diffMs / 86_400_000));
+    // Calcular la diferencia entre la fechaResolucion y la fecha de creación en milisegundos
+    const diffMs = fechaResolucion.getTime() - creado!.getTime();
+
+    // Obtener dias, horas y minutos desde diffMs
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHoras = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffMinutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Si los dias obtenidos es mayor 0 (1 o más) mostrar solo dias
+    if (diffDias > 0) {
+
+      // Ejemplo de salida: "3 días"
+      return `${diffDias} día${diffDias > 1 ? 's' : ''}`;
+    }
+
+    // Si no tiene dias (dias = 0), mostrar horas y minutos
+    if (diffDias === 0) {
+
+      // Si tiene horas, mostrar horas y minutos
+      if (diffHoras > 0) {
+
+        // Ejemplo de salida: "3 horas 15 minutos"
+        return `0 (${diffHoras} hr${diffHoras > 1 ? 's' : ''} ${diffMinutos} min${diffMinutos !== 1 ? 's' : ''})`;
+      }
+    }
+
+    // Si es menos de una hora, mostrar solo minutos
+    return `${diffMinutos} min${diffMinutos === 1 ? '' : 's'}`;
+
   });
+  
 
   // Cumplimiento de respuesta (signal computed fuertemente tipado )
   cumplioRespuesta = computed<null | boolean>(() => {
@@ -218,21 +233,9 @@ export class TicketDetail {
 
   // Signal computado para ordenar las entradas del historial por fecha (de más reciente a más antigua)
   historialOrdenado = computed(() => {
-
-    // Obtener el historial del ticket. Si no existe, retornar un array vacío
-    const historial = this.datos()?.historiales || [];
-
-    // Retornar el historial ordenado por fecha (de más reciente a más antigua)
-    return historial.slice().sort((a, b) => {
-
-      // Obtener la fecha de creación como timestamp para comparar
-      const fechaA = new Date(a.creadoAt).getTime();
-      const fechaB = new Date(b.creadoAt).getTime();
-
-      // Retornar la diferencia para ordenar (de más reciente a más antigua)
-      return fechaB - fechaA;
-    });
-  })
+    // El backend ya devuelve ordenado por id ASC (cronológico)
+    return this.datos()?.historiales || [];
+  });
 
   // Metodo simple para obtener el URL base de las imágenes
   get baseImageUrl(): string {
