@@ -35,7 +35,7 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 1,
+    cargaTrabajo: 0,
     foto: "tecnico1.jpg",
   },
 
@@ -72,7 +72,7 @@ export const usuarios = [
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
-    cargaTrabajo: 1,
+    cargaTrabajo: 0,
   },
 
   // id: 7

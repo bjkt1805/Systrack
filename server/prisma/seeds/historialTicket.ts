@@ -212,7 +212,7 @@ export const historialTicket = [
     cambiadoPorId: 15,
     deEstado: null,
     aEstado: EstadoTicket.PENDIENTE,
-    nota: "No puedo acceder a la aplicación de gestión de proyectos.",
+    nota: "Necesito asistencia con la actualización de Internet Explorer.",
     creadoAt: new Date("2025-10-28T10:00:00Z"), 
   },
 
@@ -232,7 +232,7 @@ export const historialTicket = [
     cambiadoPorId: 5,
     deEstado: EstadoTicket.ASIGNADO,
     aEstado: EstadoTicket.EN_PROCESO,
-    nota: "Iniciando actualización del sistema interno",
+    nota: "Iniciando actualización de Internet Explorer",
     creadoAt: new Date("2025-10-28T15:12:00Z"), 
   },
 
