@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* Hero Section - sin position fixed para no afectar el footer */
 .hero {
     min-height: calc(100vh - 64px);
@@ -7,20 +6,7 @@
     padding: 0;
     display: grid;
     place-items: center;
-=======
-/* Hero Section - Fondo principal */
-.hero {
-    min-height: calc(100vh - 64px);
-    display: grid;
-    place-items: center;
-    padding: 0;
->>>>>>> refs/remotes/origin/main
-    background: radial-gradient(1200px 800px at 10% 10%, color-mix(in srgb, var(--mat-sys-primary) 8%, transparent), transparent 60%), 
-                linear-gradient(180deg, color-mix(in srgb, var(--mat-sys-surface) 95%, var(--mat-sys-primary) 5%), var(--mat-sys-surface-container));
-    position: relative;
-    overflow: hidden;
 }
-
 /* Blobs de fondo animados */
 .bg-blobs {
     position: absolute;

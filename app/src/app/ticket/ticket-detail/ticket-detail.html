@@ -12,10 +12,10 @@
           <h1 class="ticket-card__name">{{ datos()?.codigo }} - {{ datos()?.titulo }}</h1>
           <p class="ticket-card__subtitle">{{ datos()?.descripcion }}</p>
         </div>
-        <div class="status-badge" [class.status-abierto]="datos()?.estado === 'Abierto'"
-                                   [class.status-proceso]="datos()?.estado === 'En Proceso'"
-                                   [class.status-resuelto]="datos()?.estado === 'Resuelto'"
-                                   [class.status-cerrado]="datos()?.estado === 'Cerrado'">
+        <div class="status-badge" [class.status-abierto]="datos()?.estado === 'ABIERTO'"
+                                   [class.status-proceso]="datos()?.estado === 'EN_PROCESO'"
+                                   [class.status-resuelto]="datos()?.estado === 'RESUELTO'"
+                                   [class.status-cerrado]="datos()?.estado === 'CERRADO'">
           <mat-icon>{{ getStatusIcon(datos()?.estado) }}</mat-icon>
           {{ datos()?.estado }}
         </div>
@@ -41,9 +41,9 @@
 
           <div class="info-item">
             <span class="label">Prioridad</span>
-            <span class="value priority" [class.priority-alta]="datos()?.prioridad === 'Alta'"
-                                          [class.priority-media]="datos()?.prioridad === 'Media'"
-                                          [class.priority-baja]="datos()?.prioridad === 'Baja'">
+            <span class="value priority" [class.priority-alta]="datos()?.prioridad === 'ALTA'"
+                                          [class.priority-media]="datos()?.prioridad === 'MEDIA'"
+                                          [class.priority-baja]="datos()?.prioridad === 'BAJA'">
               {{ datos()?.prioridad }}
             </span>
           </div>
@@ -160,9 +160,7 @@
                 </div>
               </mat-panel-title>
             </mat-expansion-panel-header>
-
             <div class="history-body">
-<<<<<<< HEAD
               <div class="history-meta">
                 <mat-icon>person</mat-icon>
                 <span>{{ item.cambiadoPor.nombreUsuario }}</span>
@@ -193,27 +191,10 @@
                     <figcaption class="image-caption">{{ img.url }}</figcaption>
                   </figure>
                   }
-=======
-                <p class="comment">
-                    <B>Comentario: </B>{{ item?.nota}}
-                </p>
-                @if (item.imagenes && item.imagenes.length > 0) {
-                <p> <b>Imágenes adjuntas: </b></p>
-                <div class="images-grid">
-                    @for (img of item.imagenes; track img.id) {
-                    <figure class="image-figure">
-                        <button type="button" class="img-thumb" (click)="openImage(img)">
-                            <img [src]="baseImageUrl + img.url" [alt]="img.url" />
-                        </button>
-                        <figcaption class="image-description">{{ img.url }}</figcaption>
-                    </figure>
-                    }
->>>>>>> refs/remotes/origin/main
                 </div>
               </div>
               }
             </div>
-<<<<<<< HEAD
           </mat-expansion-panel>
           }
         </mat-accordion>
@@ -247,37 +228,6 @@
         </div>
       </section>
       }
-=======
-        </mat-expansion-panel>
-        }
-    </mat-accordion>
-
-    <!-- Sección de Valoración del Servicio -->
-    @if (datos()?.valoracion) {
-    <div class="ticket-rating">
-        <h3 class="section-title">Valoración del Servicio</h3>
-        <div class="rating-content">
-            <div class="info-row">
-                <span class="info-label">Calificación</span>
-                <span class="info-value rating-stars">
-                    @for (star of [1,2,3,4,5]; track star) {
-                    <mat-icon [class.filled]="star <= datos()!.valoracion!.puntaje">
-                        {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }} </mat-icon>
-                            }
-                            <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
-                </span>
-            </div>
-
-            @if (datos()?.valoracion?.comentario) {
-            <div class="info-row">
-                <span class="info-label">Comentario</span>
-                <span class="info-value">{{ datos()?.valoracion?.comentario }}</span>
-            </div>
-            }
-        </div>
-    </div>
-    }
->>>>>>> refs/remotes/origin/main
 
     </mat-card-content>
     
@@ -292,7 +242,6 @@
 </div>
 }
 @else {
-<<<<<<< HEAD
 <div class="detail-container">
   <mat-card class="ticket-card ticket-card--empty" appearance="outlined">
     <mat-card-content class="empty-state">
@@ -305,16 +254,6 @@
         <mat-icon>arrow_back</mat-icon>
         Volver al Listado
       </button>
-=======
-<mat-card class="ticket-card ticket-card--empty" appearance="outlined">
-    <mat-card-content class="empty">
-        <mat-icon>person_search</mat-icon>
-        <p class="mat-body text">Tiquete no encontrado</p>
-        <button mat-stroked-button color="primary" (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Regresar
-        </button>
->>>>>>> refs/remotes/origin/main
     </mat-card-content>
   </mat-card>
 </div>

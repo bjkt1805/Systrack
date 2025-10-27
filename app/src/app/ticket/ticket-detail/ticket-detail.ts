@@ -226,6 +226,21 @@ export class TicketDetail {
     return resuelto.getTime() <= limite.getTime();
   });
 
+  /**
+   * Método para obtener el ícono correspondiente al estado del ticket
+   * @param estado - Estado actual del ticket
+   * @returns Nombre del ícono de Material Icons
+   */
+  getStatusIcon(estado: string | undefined): string {
+    const iconMap: { [key: string]: string } = {
+      'ABIERTO': 'lock_open',
+      'EN_PROCESO': 'autorenew',
+      'RESUELTO': 'check_circle',
+      'CERRADO': 'lock'
+    };
+    return iconMap[estado || ''] || 'help_outline';
+  }
+
   // Para regresar a la vista de lista de tickets
   goBack(): void {
     this.router.navigate(['/ticket/']);
