@@ -162,10 +162,9 @@
                 <p class="comment">
                     <B>Comentario: </B>{{ item?.nota}}
                 </p>
-
                 @if (item.imagenes && item.imagenes.length > 0) {
+                <p> <b>Imágenes adjuntas: </b></p>
                 <div class="images-grid">
-                    <p> <b>Imágenes adjuntas: </b></p>
                     @for (img of item.imagenes; track img.id) {
                     <figure class="image-figure">
                         <button type="button" class="img-thumb" (click)="openImage(img)">
@@ -178,35 +177,34 @@
                 }
             </div>
         </mat-expansion-panel>
-    }
+        }
     </mat-accordion>
 
-<!-- Sección de Valoración del Servicio -->
-        @if (datos()?.valoracion) {
-        <div class="ticket-rating">
-            <h3 class="section-title">Valoración del Servicio</h3>
-            <div class="rating-content">
-                <div class="info-row">
-                    <span class="info-label">Calificación</span>
-                    <span class="info-value rating-stars">
-                        @for (star of [1,2,3,4,5]; track star) {
-                            <mat-icon [class.filled]="star <= datos()!.valoracion!.puntaje">
-                                {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }}
-                            </mat-icon>
-                        }
-                        <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
-                    </span>
-                </div>
-                
-                @if (datos()?.valoracion?.comentario) {
-                <div class="info-row">
-                    <span class="info-label">Comentario</span>
-                    <span class="info-value">{{ datos()?.valoracion?.comentario }}</span>
-                </div>
-                }
+    <!-- Sección de Valoración del Servicio -->
+    @if (datos()?.valoracion) {
+    <div class="ticket-rating">
+        <h3 class="section-title">Valoración del Servicio</h3>
+        <div class="rating-content">
+            <div class="info-row">
+                <span class="info-label">Calificación</span>
+                <span class="info-value rating-stars">
+                    @for (star of [1,2,3,4,5]; track star) {
+                    <mat-icon [class.filled]="star <= datos()!.valoracion!.puntaje">
+                        {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }} </mat-icon>
+                            }
+                            <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
+                </span>
             </div>
+
+            @if (datos()?.valoracion?.comentario) {
+            <div class="info-row">
+                <span class="info-label">Comentario</span>
+                <span class="info-value">{{ datos()?.valoracion?.comentario }}</span>
+            </div>
+            }
         </div>
-        }
+    </div>
+    }
 
 
 </section>

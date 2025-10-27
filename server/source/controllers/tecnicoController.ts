@@ -9,7 +9,7 @@ export class TecnicoController {
   // TAMBIÉN SE INCLUYE PAGINACIÓN
   get = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      
+
       // Parámetro de consulta
       const consulta = (request.query.consulta as string) ?? "";
 
@@ -42,12 +42,12 @@ export class TecnicoController {
         ...(estado ? { estadoTecnico: EstadoTecnico[estado] } : {}),
         ...(consulta
           ? {
-              // Búsqueda por nombre o email
-              OR: [
-                { nombreUsuario: { contains: consulta } },
-                { correo: { contains: consulta } },
-              ],
-            }
+            // Búsqueda por nombre o email
+            OR: [
+              { nombreUsuario: { contains: consulta } },
+              { correo: { contains: consulta } },
+            ],
+          }
           : {}),
       };
 
@@ -138,8 +138,7 @@ export class TecnicoController {
         estadoTecnico: tecnico.estadoTecnico,
         especialidades: tecnico.especialidades,
         foto: tecnico.foto,
-        cargaTrabajo,
-        disponible,
+        cargaTrabajo: tecnico.cargaTrabajo,
       });
     } catch (error: any) {
       next(error);
