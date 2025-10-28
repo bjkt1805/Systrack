@@ -83,8 +83,8 @@
                     <!-- Tiempo restante SLA -->
                     <div class="sla-info">
                         <div class="sla-header">
-                            <mat-icon>schedule</mat-icon>
-                            <span>SLA: {{ ticket.tiempoRestanteSLA }}</span>
+                            <mat-icon style="padding-right: 10px">schedule</mat-icon>
+                            <span><b>SLA de Resolución: </b><br>{{ ticket.tiempoRestanteSLA }}</span>
                         </div>
                         <div class="sla-progress">
                             <div class="progress-bar" [style.width.%]="ticket.porcentajeSLA"

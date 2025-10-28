@@ -314,6 +314,9 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
   // Determinar qué fecha usar como referencia para los cálculos
   let fechaReferencia: Date;
 
+  // Inicializar variable con el valor del backend que ya tenga el cumplimiento de resolución
+  let cumplimientoReal = ticket.cumplioResolucion;
+
   // Si el ticket está resuelto, usar la fecha de resolución
   if (ticket.estado === 'RESUELTO' && ticket.resueltoAt) {
     fechaReferencia = new Date(ticket.resueltoAt);
@@ -344,9 +347,6 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
   
   // Convertir el tiempo restante a días
   const tiempoRestanteDias = Math.floor(tiempoRestanteHoras / 24);
-
-  // Inicializar variable con el valor del backend que ya tenga el cumplimiento de resolución
-  let cumplimientoReal = ticket.cumplioResolucion;
   
   // Si el ticket está finalizado, validar el cumplimiento contra las fechas reales
   if (ticket.estado === 'RESUELTO' || ticket.estado === 'CERRADO') {
@@ -359,10 +359,12 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
 
   // Si el ticket está finalizado (resuelto o cerrado)
   if (ticket.estado === 'RESUELTO' || ticket.estado === 'CERRADO') {
+
     // Mostrar "Cumplido" o "Vencido" según el cumplimiento validado
     tiempoRestanteSLA = cumplimientoReal ? 'Cumplido' : 'Vencido';
   } 
-  // Si el ticket está activo (pendiente, asignado, en proceso)
+
+  //  SI EL TICKET ESTÁ ACTIVO (PENDIENTE, ASIGNADO, EN PROCESO)
   else {
     // Si el tiempo restante es negativo, el SLA ya se venció
     if (tiempoRestante < 0) {
@@ -398,32 +400,33 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
   // Variable para determinar el color de urgencia del ticket
   let colorUrgencia = '';
   
-  // Si el ticket está finalizado
+  // Si el ticket está finalizado (resuelto o cerrado)
   if (ticket.estado === 'RESUELTO' || ticket.estado === 'CERRADO') {
     // Color verde si cumplió, rojo si se venció
     colorUrgencia = cumplimientoReal ? 'cumplido' : 'vencido';
   } 
   // Si el ticket está activo
   else {
+
     // Si ya se venció el SLA, color rojo
     if (tiempoRestante < 0) {
       colorUrgencia = 'vencido';
     } 
-    // Si es urgente o quedan menos de 4 horas, color rojo urgente
-    else if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4) {
-      colorUrgencia = 'urgente';
-    } 
-    // Si es alta prioridad o quedan menos de 24 horas, color naranja
-    else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
-      colorUrgencia = 'alta';
-    } 
-    // Si es prioridad media, color amarillo
-    else if (ticket.prioridad === 'MEDIA') {
-      colorUrgencia = 'media';
-    } 
-    // Si es prioridad baja, color verde
+    // // Si es urgente o quedan menos de 4 horas, color rojo urgente
+    // else if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4) {
+    //   colorUrgencia = 'urgente';
+    // } 
+    // // Si es alta prioridad o quedan menos de 24 horas, color naranja
+    // else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
+    //   colorUrgencia = 'alta';
+    // } 
+    // // Si es prioridad media, color amarillo
+    // else if (ticket.prioridad === 'MEDIA') {
+    //   colorUrgencia = 'media';
+    // } 
+    // Si el SLA está cumplido (o pendiente), color verde
     else {
-      colorUrgencia = 'baja';
+      colorUrgencia = 'cumplido';
     }
   }
 
@@ -448,7 +451,7 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
     iconoCategoria,
     diaSemana,
     cumplioRespuesta: ticket.cumplioRespuesta ?? null,
-    cumplioResolucion: cumplimientoReal ?? null, // Aqui usar el valor validado por el frontend
+    cumplioResolucion: ticket.cumplioResolucion ?? null, // Aqui usar el valor validado por el frontend
   };
 }
 

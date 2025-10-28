@@ -288,7 +288,7 @@
   border-radius: 3px;
 }
 
-.progress-bar.urgencia-urgente {
+/* .progress-bar.urgencia-urgente {
   background: #c62828;
 }
 
@@ -302,6 +302,14 @@
 
 .progress-bar.urgencia-baja {
   background: #2e7d32;
+} */
+
+.progress-bar.urgencia-cumplido {
+  background: #2e7d32; 
+}
+
+.progress-bar.urgencia-vencido {
+  background: #c62828; 
 }
 
 /* ====== Acciones ====== */

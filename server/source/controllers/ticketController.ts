@@ -98,7 +98,11 @@ export class TicketController {
                 }
               }
             }
-          }
+          }, 
+          resueltoAt: true,
+          cerradoAt: true,
+          cumplioRespuesta: true,
+          cumplioResolucion: true
         },
       });
 
