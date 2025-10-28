@@ -412,18 +412,18 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
     if (tiempoRestante < 0) {
       colorUrgencia = 'vencido';
     } 
-    // // Si es urgente o quedan menos de 4 horas, color rojo urgente
-    // else if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4) {
-    //   colorUrgencia = 'urgente';
-    // } 
-    // // Si es alta prioridad o quedan menos de 24 horas, color naranja
-    // else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
-    //   colorUrgencia = 'alta';
-    // } 
-    // // Si es prioridad media, color amarillo
-    // else if (ticket.prioridad === 'MEDIA') {
-    //   colorUrgencia = 'media';
-    // } 
+    // Si es urgente o quedan menos de 4 horas, color rojo urgente
+    else if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4) {
+      colorUrgencia = 'urgente';
+    } 
+    // Si es alta prioridad o quedan menos de 24 horas, color naranja
+    else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
+      colorUrgencia = 'alta';
+    } 
+    // Si es prioridad media, color amarillo
+    else if (ticket.prioridad === 'MEDIA') {
+      colorUrgencia = 'media';
+    } 
     // Si el SLA está cumplido (o pendiente), color verde
     else {
       colorUrgencia = 'cumplido';
