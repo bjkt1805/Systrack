@@ -309,91 +309,90 @@ configurarFechasSemanaPersonalizada(fechaBase: string): void {
 
   convertirATicketKanban(ticket: TicketModel): TicketKanban {
 
-    // Obtener la fecha de hoy
-    const hoy = new Date();
+  // Obtener la fecha de hoy
+  const hoy = new Date();
 
-    // Obtener la fecha límite de resolución del ticket
-    const fechaLimite = new Date(ticket.fechaLimiteResolucion);
+  // Obtener la fecha límite de resolución del ticket
+  const fechaLimite = new Date(ticket.fechaLimiteResolucion);
 
-    // Obtener el tiempo restante (fecha) del ticket (fechaLimite - hoy)
+  // CALCULAR el tiempo total del SLA (desde creación hasta fecha límite)
+  const fechaCreacion = new Date(ticket.creadoAt);
+  const tiempoTotalSLA = fechaLimite.getTime() - fechaCreacion.getTime();
 
-    const tiempoRestante = fechaLimite.getTime() - hoy.getTime();
+  // Obtener el tiempo restante (fecha) del ticket (fechaLimite - hoy)
+  const tiempoRestante = fechaLimite.getTime() - hoy.getTime();
 
-    // Convertir el tiempo restante en horas
-    const tiempoRestanteHoras = Math.floor(tiempoRestante / (1000 * 60 * 60));
+  // Convertir el tiempo restante en horas
+  const tiempoRestanteHoras = Math.floor(tiempoRestante / (1000 * 60 * 60));
 
-    // Convertir el tiempo restante en días
-    const tiempoRestanteDias = Math.floor(tiempoRestanteHoras / 24);
+  // Convertir el tiempo restante en días
+  const tiempoRestanteDias = Math.floor(tiempoRestanteHoras / 24);
 
-    /**
-     * Calcular el tiempo restante del SLA
-     */
+  /**
+   * Calcular el tiempo restante del SLA
+   */
+  let tiempoRestanteSLA: string = '';
 
-    // Variable de tiempoRestanteSAL 
+  // Si el tiempo Restante es menor a 0, el SLA está vencido
+  if (tiempoRestante < 0) {
+    tiempoRestanteSLA = 'Vencido';
 
-    let tiempoRestanteSLA: string = '';
+  // Si los dias restantes son mayores a 0 
+  } else if (tiempoRestanteDias > 0) {
+    // A tiempoRestanteSLA se le asigna el valor de los días y horas restantes
+    tiempoRestanteSLA = `${tiempoRestanteDias}d ${tiempoRestanteHoras % 24}h`;
 
-    // Si el tiempo Restante es menor a 0, el SLA está vencido
-    if (tiempoRestante < 0) {
-      tiempoRestanteSLA = 'Vencido';
+  // Si las horas restantes son mayores a 0
+  } else if (tiempoRestanteHoras > 0) {
+    // A tiempoRestanteSLA se le asigna el valor de las horas restantes
+    tiempoRestanteSLA = `${tiempoRestanteHoras}h`;
 
-      // Si los dias restantes son mayores a 0 
-    } else if (tiempoRestanteDias > 0) {
-
-      // A tiempoRestanteSLA se le asigna el valor de los días y horas restantes
-      tiempoRestanteSLA = `${tiempoRestanteDias}d ${tiempoRestanteHoras % 24}h`;
-
-      // Si las horas restantes son mayores a 0
-    } else if (tiempoRestanteHoras > 0) {
-
-      // A tiempoRestanteSLA se le asigna el valor de las horas restantes
-      tiempoRestanteSLA = `${tiempoRestanteHoras}h`;
-
-      // Case contrario (tiempoRestante >= 0 y horas restantes <= 0) 
-      // asignar los minutos restantes
-    } else {
-      const minutosRestantes = Math.floor(tiempoRestante / (1000 * 60));
-      tiempoRestanteSLA = `${minutosRestantes}m`;
-    }
-
-    // Calcular porcentaje de tiempo restante (para barra de progreso)
-    const tiempoTotal = 7 * 24 * 60 * 60 * 1000; // Asumiendo 7 días de SLA
-    const porcentajeSLA = Math.max(0, Math.min(100, (tiempoRestante / tiempoTotal) * 100));
-
-    // Determinar color de urgencia
-    let colorUrgencia = '';
-    if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4 || tiempoRestante < 0) {
-      colorUrgencia = 'urgente';
-    } else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
-      colorUrgencia = 'alta';
-    } else if (ticket.prioridad === 'MEDIA') {
-      colorUrgencia = 'media';
-    } else {
-      colorUrgencia = 'baja';
-    }
-
-    // Determinar icono según categoría
-    const iconoCategoria = this.obtenerIconoCategoria(ticket.categoriaId);
-
-    // Obtener el día de la semana del ticket
-    const diaSemana = this.obtenerDiaSemana(ticket.creadoAt);
-
-    return {
-      id: ticket.id,
-      codigo: ticket.codigo,
-      titulo: ticket.titulo,
-      categoria: ticket.categoria.nombre,
-      estado: ticket.estado,
-      prioridad: ticket.prioridad,
-      fechaLimiteResolucion: fechaLimite,
-      tiempoRestanteSLA,
-      porcentajeSLA,
-      colorUrgencia,
-      iconoCategoria,
-      diaSemana,
-    };
-
+  // Caso contrario (tiempoRestante >= 0 y horas restantes <= 0) 
+  } else {
+    const minutosRestantes = Math.floor(tiempoRestante / (1000 * 60));
+    tiempoRestanteSLA = `${minutosRestantes}m`;
   }
+
+  // CALCULAR porcentaje basado en el tiempo REAL del ticket
+  // Si está vencido, porcentaje = 0. Si no, calcular proporción restante
+  let porcentajeSLA = 0;
+  if (tiempoRestante > 0 && tiempoTotalSLA > 0) {
+    porcentajeSLA = Math.min(100, (tiempoRestante / tiempoTotalSLA) * 100);
+  }
+
+  // Determinar color de urgencia
+  let colorUrgencia = '';
+  if (ticket.prioridad === 'URGENTE' || tiempoRestanteHoras < 4 || tiempoRestante < 0) {
+    colorUrgencia = 'urgente';
+  } else if (ticket.prioridad === 'ALTA' || tiempoRestanteHoras < 24) {
+    colorUrgencia = 'alta';
+  } else if (ticket.prioridad === 'MEDIA') {
+    colorUrgencia = 'media';
+  } else {
+    colorUrgencia = 'baja';
+  }
+
+  // Determinar icono según categoría
+  const iconoCategoria = this.obtenerIconoCategoria(ticket.categoriaId);
+
+  // Obtener el día de la semana del ticket
+  const diaSemana = this.obtenerDiaSemana(ticket.creadoAt);
+
+  return {
+    id: ticket.id,
+    codigo: ticket.codigo,
+    titulo: ticket.titulo,
+    categoria: ticket.categoria.nombre,
+    estado: ticket.estado,
+    prioridad: ticket.prioridad,
+    fechaLimiteResolucion: fechaLimite,
+    tiempoRestanteSLA,
+    porcentajeSLA,
+    colorUrgencia,
+    iconoCategoria,
+    diaSemana,
+  };
+}
 
   /**
  * Obtener el ícono Material según el ID de categoría
