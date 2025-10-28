@@ -93,6 +93,22 @@
                         </div>
                     </div>  
 
+                    <!-- Indicadores de cumplimiento SLA -->
+                        <div class="sla-cumplimiento">
+                            @if (ticket.cumplioRespuesta !== null) {
+                                <mat-icon [class]="ticket.cumplioRespuesta ? 'cumplido' : 'incumplido'" 
+                                          matTooltip="SLA Respuesta: {{ ticket.cumplioRespuesta ? 'Cumplido' : 'Incumplido' }}">
+                                    {{ ticket.cumplioRespuesta ? 'check_circle' : 'cancel' }}
+                                </mat-icon>
+                            }
+                            @if (ticket.cumplioResolucion !== null) {
+                                <mat-icon [class]="ticket.cumplioResolucion ? 'cumplido' : 'incumplido'"
+                                          matTooltip="SLA Resolución: {{ ticket.cumplioResolucion ? 'Cumplido' : 'Incumplido' }}">
+                                    {{ ticket.cumplioResolucion ? 'check_circle' : 'cancel' }}
+                                </mat-icon>
+                            }
+                        </div>
+
                     <!-- Estado -->
                     <div>
                         <div>
