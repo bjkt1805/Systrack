@@ -1,0 +1,11 @@
+2025-10-29 09:19:43.568 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findMany()` invocation in
+C:\Systrack\server\source\controllers\tecnicoController.ts:55:49
+
+  52 };
+  53 
+  54 //Select * from usuario where rol = 'TECNICO' AND (nombreUsuario like 'onsulta%' OR correo like '%consulta%') AND estadoTecnico = 'DISPONIBLE' order by correo asc limit 20 offset 0;
+→ 55 const listado = await this.prisma.usuario.findMany(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.

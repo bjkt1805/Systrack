@@ -9,18 +9,82 @@
 }
 
 /* HEADER DE LA PÁGINA */
-.page-header {
+.main-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
   padding: 32px;
-  background: linear-gradient(135deg,
+  /* background: linear-gradient(135deg,
     color-mix(in srgb, var(--mat-sys-primary) 8%, transparent),
     color-mix(in srgb, var(--mat-sys-tertiary) 5%, transparent)
-  );
+  ); */
   border-radius: 16px;
   border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+}
+
+/* ====== ACCIONES DEL HEADER (ESQUINA SUPERIOR DERECHA) ====== */
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.btn-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  padding: 0 24px;
+  height: 44px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-primary) 25%, transparent);
+  transition: all .3s ease;
+  white-space: nowrap;
+}
+
+.btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--mat-sys-primary) 35%, transparent);
+}
+
+.btn-create mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ====== RESPONSIVE PARA EL HEADER PRINCIPAL ====== */
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-create {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-create {
+    padding: 0 20px;
+    height: 40px;
+  }
 }
 
 .header-content {
@@ -395,5 +459,122 @@
   * {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+
+/* ACCIONES DE LA CARD MEJORADAS */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 20%, var(--mat-sys-surface));
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+  margin: 0;
+}
+
+.actions-left {
+  display: flex;
+  gap: 8px;
+}
+
+.actions-right {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-detail {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-edit {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  transition: all .2s ease;
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.btn-edit:hover {
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 20%, transparent);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-tertiary) 25%, transparent);
+}
+
+.btn-edit mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-tertiary);
+}
+
+/* BOTÓN DE CREAR EN EMPTY STATE */
+.btn-create-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  padding: 0 32px;
+  height: 48px;
+  border-radius: 24px;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  transition: all .3s ease;
+}
+
+.btn-create-empty:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
+}
+
+.btn-create-empty mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* RESPONSIVE PARA ACCIONES */
+@media (max-width: 768px) {
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-create {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .actions-left,
+  .actions-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-detail {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-create {
+    padding: 0 20px;  
+    height: 40px;
+  }
+
+  .btn-create-empty {
+    padding: 0 28px;
+    height: 44px;
   }
 }

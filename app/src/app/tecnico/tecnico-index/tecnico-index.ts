@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { UsuarioModel } from '../../share/models/UsuarioModel';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tecnico-index',
@@ -17,11 +17,12 @@ export class TecnicoIndex {
   datos = signal<UsuarioModel[]>([]);
 
   constructor(private tecnicoService: TecnicoService,
-              private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     // Llamar al método para listar técnicos al inicializar el componente
     this.listTecnicos();
-   }
+  }
 
   // Listar todos los técnicos del API
   listTecnicos() {
@@ -35,4 +36,19 @@ export class TecnicoIndex {
   detalle(id: number) {
     this.router.navigate(['/tecnico', id]);
   }
+
+  // Navegar a la creación de un nuevo técnico
+  crearTecnico() {
+    this.router.navigate(['/tecnico/create'], {
+      relativeTo: this.route,
+    });
+  }
+
+  // Navegar a la actualización de un técnico
+  actualizarTecnico(id: number) {
+    this.router.navigate(['/tecnico/edit', id], {
+      relativeTo: this.route,
+    });
+  }
+
 }

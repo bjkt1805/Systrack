@@ -31,7 +31,7 @@ export class TicketIndex implements OnInit{
   // ===== VARIABLES DEL USUARIO LOGUEADO ID (HARDCODEADA) =====
   // Esta variable simula el usuario logueado
   // Posteriormente se obtendrá del servicio de autenticación
-  USUARIO_LOGUEADO_ID: number = 4;
+  USUARIO_LOGUEADO_ID: number = 5;
 
   // Signal para obtener el usuario logueado completo
   usuarioLogueado = signal<any>(null); 

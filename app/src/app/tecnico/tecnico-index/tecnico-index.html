@@ -1,6 +1,6 @@
 <div class="index-container">
   <!-- HEADER -->
-  <div class="page-header">
+  <div class="main-header">
     <div class="header-content">
       <div class="icon-wrapper">
         <mat-icon class="page-icon">engineering</mat-icon>
@@ -10,7 +10,17 @@
         <p class="page-subtitle">Gestiona todos los técnicos del sistema</p>
       </div>
     </div>
+
+
+    <!-- BOTÓN AGREGAR TÉCNICO -->
+    <div class="header-actions">
+      <button mat-raised-button color="primary" class="btn-create" (click)="crearTecnico()">
+        <mat-icon>person_add</mat-icon>
+        Agregar Técnico
+      </button>
+    </div>
   </div>
+
 
   <!-- BÚSQUEDA Y FILTROS -->
   <div class="filters-section">
@@ -19,7 +29,7 @@
       <input matInput placeholder="Nombre, correo...">
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
-    
+
     <button mat-stroked-button class="filter-btn">
       <mat-icon>filter_list</mat-icon>
       Filtros
@@ -28,77 +38,85 @@
 
   <!-- LISTA DE TÉCNICOS -->
   @if(datos().length > 0){
-    <div class="tecnico-grid">
-      @for (item of datos(); track item.id) {
-        <mat-card class="tecnico-card" appearance="outlined">
-          
-          <!-- HEADER DE LA CARD -->
-          <mat-card-header class="card-header">
-            <div class="card-icon">
-              <mat-icon>person</mat-icon>
-            </div>
-            <div class="card-title-group">
-              <mat-card-title class="card-title">
-                {{item.nombreCompleto}}
-              </mat-card-title>
-            </div>
-          </mat-card-header>
+  <div class="tecnico-grid">
+    @for (item of datos(); track item.id) {
+    <mat-card class="tecnico-card" appearance="outlined">
 
-          <mat-divider></mat-divider>
+      <!-- HEADER DE LA CARD -->
+      <mat-card-header class="card-header">
+        <div class="card-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="card-title-group">
+          <mat-card-title class="card-title">
+            {{item.nombreCompleto}}
+          </mat-card-title>
+        </div>
+      </mat-card-header>
 
-          <!-- CONTENIDO DE LA CARD -->
-          <mat-card-content class="card-content">
-            
-            <!-- Email -->
-            <div class="info-block">
-              <span class="info-label">
-                <mat-icon>email</mat-icon>
-                Correo Electrónico
-              </span>
-              <p class="info-text">{{ item.correo }}</p>
-            </div>
+      <mat-divider></mat-divider>
 
-            <!-- Estado -->
-            <div class="info-block">
-              <span class="info-label">
-                <mat-icon>toggle_on</mat-icon>
-                Estado
-              </span>
-              <div class="status-container">
-                <span class="status-badge" 
-                      [ngClass]="item.estadoTecnico === 'DISPONIBLE' ? 'status-disponible' : 'status-ocupado'">
-                  <mat-icon>{{ item.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
-                  {{ item.estadoTecnico }}
-                </span>
-              </div>
-            </div>
+      <!-- CONTENIDO DE LA CARD -->
+      <mat-card-content class="card-content">
 
-          </mat-card-content>
+        <!-- Email -->
+        <div class="info-block">
+          <span class="info-label">
+            <mat-icon>email</mat-icon>
+            Correo Electrónico
+          </span>
+          <p class="info-text">{{ item.correo }}</p>
+        </div>
 
-          <!-- ACCIONES -->
-          <mat-card-actions class="card-actions">
-            <button mat-button color="primary" (click)="detalle(item.id)">
-              <mat-icon>visibility</mat-icon>
-              Ver Detalles
-            </button>
-          </mat-card-actions>
+        <!-- Estado -->
+        <div class="info-block">
+          <span class="info-label">
+            <mat-icon>toggle_on</mat-icon>
+            Estado
+          </span>
+          <div class="status-container">
+            <span class="status-badge"
+              [ngClass]="item.estadoTecnico === 'DISPONIBLE' ? 'status-disponible' : 'status-ocupado'">
+              <mat-icon>{{ item.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
+              {{ item.estadoTecnico }}
+            </span>
+          </div>
+        </div>
 
-        </mat-card>
-      }
-    </div>
+      </mat-card-content>
+
+      <!-- ACCIONES -->
+      <mat-card-actions class="card-actions">
+        <div class="actions-left">
+          <button mat-button color="primary" (click)="detalle(item.id)" class="btn-detail">
+            <mat-icon>visibility</mat-icon>
+            Ver Detalles
+          </button>
+        </div>
+        <div class="actions-right">
+          <button mat-icon-button color="accent" (click)="actualizarTecnico(item.id)" matTooltip="Editar técnico"
+            class="btn-edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </mat-card-actions>
+
+    </mat-card>
+    }
+  </div>
   }
   @else {
-    <!-- EMPTY STATE -->
-    <div class="empty-state">
-      <div class="empty-icon">
-        <mat-icon>engineering_off</mat-icon>
-      </div>
-      <h2 class="empty-title">No hay técnicos</h2>
-      <p class="empty-text">Comienza agregando tu primer técnico para gestionar el sistema.</p>
-      <button mat-raised-button color="primary">
-        <mat-icon>add</mat-icon>
-        Agregar Primer Técnico
-      </button>
+  <!-- EMPTY STATE -->
+  <div class="empty-state">
+    <div class="empty-icon">
+      <mat-icon>engineering_off</mat-icon>
     </div>
+    <h2 class="empty-title">No hay técnicos</h2>
+    <p class="empty-text">Comienza agregando tu primer técnico para gestionar el sistema.</p>
+    <button mat-raised-button color="primary" (click)="crearTecnico()" class="btn-create-empty">
+      <mat-icon>add</mat-icon>
+      Agregar Primer Técnico
+    </button>
+  </div>
   }
 </div>

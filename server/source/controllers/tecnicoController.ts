@@ -180,10 +180,43 @@ export class TecnicoController {
     }
   };
 
-  //CREAR TÉCNICO
+  //CREAR UN TÉCNICO
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
+      const body = request.body
+
+      const newTecnico = await this.prisma.usuario.create({
+        data: {
+          nombreUsuario: body.nombreUsuario,
+          nombreCompleto: body.nombreCompleto,
+          telefono: body.telefono,
+          correo: body.correo,
+          contrasenaHash: body.contrasennaHash,
+          rol: body.rol,
+          estadoTecnico: body.estadoTecnico,
+          cargaTrabajo: body.cargaTrabajo,
+          activo: body.activo,
+          foto: body.foto,
+          //especialidades:[{id: valor},{id: valor}]
+          especialidades: {
+            connect: body.especialidades,
+          },
+          // //plataformas:[{anno_lanzamiento: valor, plataformaId: valor}]
+          // plataformas: {
+          //     create: await Promise.all(
+          //         body.plataformas.map(async (plat: PlataformaVideojuego) => {
+          //             return {
+          //                 anno_lanzamiento: plat.anno_lanzamiento,
+          //                 plataforma: { connect: { id: plat.plataformaId } },
+          //             };
+          //         })
+          //     ),
+          // },
+        },
+      });
+      response.status(201).json(newTecnico);
     } catch (error) {
+      console.error("[BACKEND] Error creando técnico:", error);
       next(error);
     }
   };

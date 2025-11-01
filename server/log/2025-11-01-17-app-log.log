@@ -1,0 +1,59 @@
+2025-11-01 17:19:34.490 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\tecnicoController.ts:188:52
+
+  185 try {
+  186   const body = request.body
+  187 
+→ 188   const newTecnico = await this.prisma.usuario.create({
+          data: {
+            nombreUsuario: "prueba.prueba",
+            nombreCompleto: "Prueba Prueba",
+            telefono: "72969719",
+            correo: "prueba@gmail.com",
+            rol: "TECNICO",
+            estadoTecnico: "DISPONIBLE",
+            cargaTrabajo: 0,
+            activo: true,
+            foto: "tecnico_1762039172633.jpg",
+            especialidades: {
+              connect: [
+                1,
+                2
+              ]
+            },
+        +   contrasenaHash: String
+          }
+        })
+
+Argument `contrasenaHash` must not be null.
+2025-11-01 17:22:12.602 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\tecnicoController.ts:188:52
+
+  185 try {
+  186   const body = request.body
+  187 
+→ 188   const newTecnico = await this.prisma.usuario.create({
+          data: {
+            nombreUsuario: "Prueba",
+            nombreCompleto: "Prueba Prueba",
+            telefono: "72969719",
+            correo: "prueba@gmail.com",
+            contrasenaHash: "",
+            rol: "TECNICO",
+            estadoTecnico: "DISPONIBLE",
+            cargaTrabajo: 0,
+            activo: true,
+            foto: "tecnico_1762039330879.jpg",
+            especialidades: {
+              connect: [
+                1,
+                2
+              ]
+              ~~~
+            }
+          }
+        })
+
+Argument `connect`: Invalid value provided. Expected EspecialidadWhereUniqueInput, provided Int.

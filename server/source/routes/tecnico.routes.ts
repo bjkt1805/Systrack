@@ -17,6 +17,9 @@ export class TecnicoRoutes {
         //GET localhost:3000/tecnico/3
         router.get('/:id',controller.getById) 
 
+        // POST localhost:3000/tecnico/
+        router.post('/',controller.create)
+
         return router
     }
 }

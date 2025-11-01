@@ -1,0 +1,317 @@
+<div class="form-container">
+    <!-- HEADER DEL FORMULARIO -->
+    <div class="form-header">
+        <div class="header-content">
+            <div class="icon-wrapper">
+                <mat-icon class="form-icon">{{ isCreate ? 'person_add' : 'edit' }}</mat-icon>
+            </div>
+            <div class="title-group">
+                <h1 class="form-title">{{ titleForm }} Técnico</h1>
+                <p class="form-subtitle">
+                    @if (isCreate) {
+                    Complete la información para agregar un nuevo técnico al sistema
+                    } @else {
+                    Modifique la información del técnico seleccionado
+                    }
+                </p>
+            </div>
+        </div>
+
+        <!-- BOTÓN VOLVER -->
+        <div class="header-actions">
+            <button mat-stroked-button class="btn-back" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+                Volver
+            </button>
+        </div>
+
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <form [formGroup]="tecnicoForm" (ngSubmit)="submitTecnico()" class="form-content">
+
+        <!-- SECCIÓN: INFORMACIÓN PERSONAL -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">person</mat-icon>
+                <mat-card-title class="section-title">Información Personal</mat-card-title>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+
+                    <!-- NOMBRE DE USUARIO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre de Usuario</mat-label>
+                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez">
+                        <mat-icon matPrefix>account_circle</mat-icon>
+                        @if (tecnicoForm.get('nombreUsuario')?.invalid && tecnicoForm.get('nombreUsuario')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('nombreUsuario')?.errors?.['required']) {
+                            El nombre de usuario es requerido
+                            }
+                            @if (tecnicoForm.get('nombreUsuario')?.errors?.['minlength']) {
+                            Mínimo 5 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- NOMBRE COMPLETO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre Completo</mat-label>
+                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González">
+                        <mat-icon matPrefix>badge</mat-icon>
+                        @if (tecnicoForm.get('nombreCompleto')?.invalid && tecnicoForm.get('nombreCompleto')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('nombreCompleto')?.errors?.['required']) {
+                            El nombre completo es requerido
+                            }
+                            @if (tecnicoForm.get('nombreCompleto')?.errors?.['minlength']) {
+                            Mínimo 3 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- CORREO ELECTRÓNICO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Correo Electrónico</mat-label>
+                        <input matInput formControlName="correo" type="email" placeholder="juan.perez@empresa.com">
+                        <mat-icon matPrefix>email</mat-icon>
+                        @if (tecnicoForm.get('correo')?.invalid && tecnicoForm.get('correo')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('correo')?.errors?.['required']) {
+                            El correo electrónico es requerido
+                            }
+                            @if (tecnicoForm.get('correo')?.errors?.['pattern']) {
+                            Formato de correo inválido
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- TELÉFONO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput formControlName="telefono" placeholder="+506 8888-8888">
+                        <mat-icon matPrefix>phone</mat-icon>
+                        @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('telefono')?.errors?.['required']) {
+                            El teléfono es requerido
+                            }
+                            @if (tecnicoForm.get('telefono')?.errors?.['pattern']) {
+                            Formato de teléfono inválido
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: CONFIGURACIÓN TÉCNICO -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">settings</mat-icon>
+                <mat-card-title class="section-title">Configuración de Técnico</mat-card-title>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+
+                    <!-- ESTADO TÉCNICO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Estado del Técnico</mat-label>
+                        <mat-select formControlName="estadoTecnico">
+                            <mat-option value="DISPONIBLE">
+                                <mat-icon class="option-icon">check_circle</mat-icon>
+                                Disponible
+                            </mat-option>
+                            <mat-option value="NO_DISPONIBLE">
+                                <mat-icon class="option-icon">cancel</mat-icon>
+                                No Disponible
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>toggle_on</mat-icon>
+                        @if (tecnicoForm.get('estadoTecnico')?.invalid && tecnicoForm.get('estadoTecnico')?.touched) {
+                        <mat-error>El estado del técnico es requerido</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- CARGA DE TRABAJO -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Carga de Trabajo</mat-label>
+                        <input matInput formControlName="cargaTrabajo" type="number" min="0" max="100" readonly="true">
+                        <mat-icon matPrefix>work</mat-icon>
+                        <mat-hint>Número de tickets asignados actualmente</mat-hint>
+                    </mat-form-field>
+
+                    <!-- ESTADO ACTIVO -->
+                    <div class="checkbox-field">
+                        <mat-checkbox formControlName="activo" class="full-width-checkbox">
+                            <div class="checkbox-content">
+                                <mat-icon class="checkbox-icon">power_settings_new</mat-icon>
+                                <div class="checkbox-text">
+                                    <span class="checkbox-label">Usuario Activo</span>
+                                    <span class="checkbox-hint">El técnico puede acceder al sistema</span>
+                                </div>
+                            </div>
+                        </mat-checkbox>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: ESPECIALIDADES -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">star</mat-icon>
+                <mat-card-title class="section-title">Especialidades</mat-card-title>
+                <div class="section-actions">
+                    <button type="button" mat-mini-fab color="primary" (click)="addEspecialidad()"
+                        matTooltip="Agregar especialidad" class="btn-add-especialidad">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+
+                <!-- LISTA DE ESPECIALIDADES -->
+                <div class="especialidades-container" formArrayName="especialidades">
+                    @for (especialidadControl of especialidades.controls; track $index) {
+                    <div class="especialidad-item" [formGroupName]="$index">
+
+                        <mat-form-field appearance="outline" class="especialidad-field">
+                            <mat-label>Especialidad {{ $index + 1 }}</mat-label>
+                            <mat-select formControlName="especialidadId">
+                                <mat-option value="">Seleccione una especialidad</mat-option>
+                                @for (especialidad of especialidadesList(); track especialidad.id) {
+                                <mat-option [value]="especialidad.id">
+                                    {{ especialidad.nombre }}
+                                </mat-option>
+                                }
+                            </mat-select>
+                            <mat-icon matPrefix>category</mat-icon>
+                            @if (especialidadControl.get('especialidadId')?.invalid &&
+                            especialidadControl.get('especialidadId')?.touched) {
+                            <mat-error>Seleccione una especialidad</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <!-- BOTÓN ELIMINAR -->
+                        @if (especialidades.length > 1) {
+                        <button type="button" mat-icon-button color="warn" (click)="removeEspecialidad($index)"
+                            matTooltip="Eliminar especialidad" class="btn-remove-especialidad">
+                            <mat-icon>remove_circle</mat-icon>
+                        </button>
+                        }
+
+                    </div>
+                    }
+                </div>
+
+                <!-- MENSAJE SI NO HAY ESPECIALIDADES -->
+                @if (especialidades.length === 0) {
+                <div class="no-especialidades">
+                    <mat-icon class="no-especialidades-icon">info</mat-icon>
+                    <p class="no-especialidades-text">
+                        No hay especialidades agregadas. Haga clic en el botón "+" para agregar una.
+                    </p>
+                </div>
+                }
+
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: FOTO DE PERFIL -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">photo_camera</mat-icon>
+                <mat-card-title class="section-title">Foto de Perfil</mat-card-title>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+                <div class="photo-upload-container">
+
+                    <!-- PREVIEW DE LA IMAGEN -->
+                    <div class="photo-preview">
+                        @if (preview) {
+                        <img [src]="preview" alt="Vista previa" class="preview-image">
+                        } @else {
+                        <img [src]="'http://localhost:3000/images/' + nameImage" alt="Imagen actual" class="preview-image">
+                        }
+                        <div class="photo-overlay">
+                            <mat-icon class="photo-icon">photo_camera</mat-icon>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLES DE IMAGEN -->
+                    <div class="photo-controls">
+                        <input #fileInput type="file" accept="image/*" (change)="selectFile($event)"
+                            class="file-input" id="file-input">
+
+                        <label for="file-input" class="btn-upload" mat-raised-button>
+                            <mat-icon>upload</mat-icon>
+                            Seleccionar Imagen
+                        </label>
+
+                        @if (currentFile || preview) {
+                        <button type="button" mat-stroked-button color="warn" (click)="removeImage()"
+                            class="btn-remove-image">
+                            <mat-icon>delete</mat-icon>
+                            Quitar Imagen
+                        </button>
+                        }
+                    </div>
+
+                    <div class="photo-hints">
+                        <p class="photo-hint">
+                            <mat-icon class="hint-icon">info</mat-icon>
+                            Tamaño recomendado: 400x400px | Formatos: JPG, PNG | Máximo: 2MB
+                        </p>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- ACCIONES DEL FORMULARIO -->
+        <div class="form-actions">
+            <div class="actions-left">
+                <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
+                    <mat-icon>refresh</mat-icon>
+                    Limpiar Formulario
+                </button>
+            </div>
+
+            <div class="actions-right">
+                <button type="button" mat-button (click)="goBack()" class="btn-cancel">
+                    <mat-icon>cancel</mat-icon>
+                    Cancelar
+                </button>
+
+                <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido) -->
+                <button type="submit" mat-raised-button color="primary" [disabled]="tecnicoForm.invalid"
+                    class="btn-submit">
+                    <mat-icon>{{ isCreate ? 'save' : 'update' }}</mat-icon>
+                    {{ isCreate ? 'Crear Técnico' : 'Actualizar Técnico' }}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

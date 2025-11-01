@@ -7,6 +7,7 @@ import { TecnicoRoutingModule } from './tecnico-routing-module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,12 +23,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TecnicoIndex } from './tecnico-index/tecnico-index';
 import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TecnicoForm } from './tecnico-form/tecnico-form';
 
 
 @NgModule({
   declarations: [
     TecnicoIndex,
-    TecnicoDetail
+    TecnicoDetail, 
+    TecnicoForm
   ],
   imports: [
     CommonModule,
@@ -39,6 +43,7 @@ import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -48,6 +53,7 @@ import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
+    ReactiveFormsModule
   ]
 })
 export class TecnicoModule { }
