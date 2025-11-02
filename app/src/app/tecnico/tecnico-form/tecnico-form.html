@@ -21,7 +21,7 @@
         <div class="header-actions">
             <button mat-stroked-button class="btn-back" (click)="goBack()">
                 <mat-icon>arrow_back</mat-icon>
-                Volver
+                Regresar
             </button>
         </div>
 
@@ -44,7 +44,7 @@
 
                     <!-- NOMBRE DE USUARIO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Nombre de Usuario</mat-label>
+                        <mat-label>Nombre de Usuario </mat-label>
                         <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez">
                         <mat-icon matPrefix>account_circle</mat-icon>
                         @if (tecnicoForm.get('nombreUsuario')?.invalid && tecnicoForm.get('nombreUsuario')?.touched) {
@@ -61,7 +61,7 @@
 
                     <!-- NOMBRE COMPLETO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Nombre Completo</mat-label>
+                        <mat-label>Nombre Completo </mat-label>
                         <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González">
                         <mat-icon matPrefix>badge</mat-icon>
                         @if (tecnicoForm.get('nombreCompleto')?.invalid && tecnicoForm.get('nombreCompleto')?.touched) {
@@ -78,7 +78,7 @@
 
                     <!-- CORREO ELECTRÓNICO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Correo Electrónico</mat-label>
+                        <mat-label>Correo Electrónico </mat-label>
                         <input matInput formControlName="correo" type="email" placeholder="juan.perez@empresa.com">
                         <mat-icon matPrefix>email</mat-icon>
                         @if (tecnicoForm.get('correo')?.invalid && tecnicoForm.get('correo')?.touched) {
@@ -95,8 +95,8 @@
 
                     <!-- TELÉFONO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput formControlName="telefono" placeholder="+506 8888-8888">
+                        <mat-label>Teléfono (+506) </mat-label>
+                        <input matInput formControlName="telefono" placeholder="88888888">
                         <mat-icon matPrefix>phone</mat-icon>
                         @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
                         <mat-error>
@@ -128,7 +128,7 @@
 
                     <!-- ESTADO TÉCNICO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Estado del Técnico</mat-label>
+                        <mat-label>Estado del Técnico </mat-label>
                         <mat-select formControlName="estadoTecnico">
                             <mat-option value="DISPONIBLE">
                                 <mat-icon class="option-icon">check_circle</mat-icon>
@@ -157,10 +157,23 @@
                     <div class="checkbox-field">
                         <mat-checkbox formControlName="activo" class="full-width-checkbox">
                             <div class="checkbox-content">
-                                <mat-icon class="checkbox-icon">power_settings_new</mat-icon>
+                                <!-- ICONO DINÁMICO CON ANIMACIÓN -->
+                                <mat-icon class="checkbox-icon"
+                                    [ngClass]="tecnicoForm.get('activo')?.value ? 'icon-active' : 'icon-inactive'">
+                                    {{ tecnicoForm.get('activo')?.value ? 'power_settings_new' : 'power_off' }}
+                                </mat-icon>
                                 <div class="checkbox-text">
-                                    <span class="checkbox-label">Usuario Activo</span>
-                                    <span class="checkbox-hint">El técnico puede acceder al sistema</span>
+                                    <!-- LABEL DINÁMICO -->
+                                    <span class="checkbox-label"
+                                        [ngClass]="tecnicoForm.get('activo')?.value ? 'label-active' : 'label-inactive'">
+                                        {{ tecnicoForm.get('activo')?.value ? 'Usuario Activo' : 'Usuario Inactivo' }}
+                                    </span>
+                                    <!-- hINT DINÁMICO CON ANIMACIÓN -->
+                                    <span class="checkbox-hint"
+                                        [ngClass]="tecnicoForm.get('activo')?.value ? 'hint-active' : 'hint-inactive'">
+                                        {{ tecnicoForm.get('activo')?.value ? 'El técnico puede acceder al sistema' :
+                                        'El técnico no puede acceder al sistema' }}
+                                    </span>
                                 </div>
                             </div>
                         </mat-checkbox>
@@ -196,11 +209,14 @@
                             <mat-label>Especialidad {{ $index + 1 }}</mat-label>
                             <mat-select formControlName="especialidadId">
                                 <mat-option value="">Seleccione una especialidad</mat-option>
-                                @for (especialidad of especialidadesList(); track especialidad.id) {
+
+                                <!-- Usar solo especialidades filtradas -->
+                                @for (especialidad of getEspecialidadesDisponibles($index); track especialidad.id) {
                                 <mat-option [value]="especialidad.id">
                                     {{ especialidad.nombre }}
                                 </mat-option>
                                 }
+
                             </mat-select>
                             <mat-icon matPrefix>category</mat-icon>
                             @if (especialidadControl.get('especialidadId')?.invalid &&
@@ -209,8 +225,8 @@
                             }
                         </mat-form-field>
 
-                        <!-- BOTÓN ELIMINAR -->
-                        @if (especialidades.length > 1) {
+                        <!-- Mostrar botón eliminar cuando hay más de 1 especialidad O cuando se está editando el técnico -->
+                        @if (especialidades.length > 1 || !isCreate) {
                         <button type="button" mat-icon-button color="warn" (click)="removeEspecialidad($index)"
                             matTooltip="Eliminar especialidad" class="btn-remove-especialidad">
                             <mat-icon>remove_circle</mat-icon>
@@ -251,7 +267,8 @@
                         @if (preview) {
                         <img [src]="preview" alt="Vista previa" class="preview-image">
                         } @else {
-                        <img [src]="'http://localhost:3000/images/' + nameImage" alt="Imagen actual" class="preview-image">
+                        <img [src]="'http://localhost:3000/images/' + nameImage" alt="Imagen actual"
+                            class="preview-image">
                         }
                         <div class="photo-overlay">
                             <mat-icon class="photo-icon">photo_camera</mat-icon>
@@ -260,15 +277,16 @@
 
                     <!-- CONTROLES DE IMAGEN -->
                     <div class="photo-controls">
-                        <input #fileInput type="file" accept="image/*" (change)="selectFile($event)"
-                            class="file-input" id="file-input">
+                        <input #fileInput type="file" accept="image/*" (change)="selectFile($event)" class="file-input"
+                            id="file-input">
 
                         <label for="file-input" class="btn-upload" mat-raised-button>
                             <mat-icon>upload</mat-icon>
                             Seleccionar Imagen
                         </label>
 
-                        @if (currentFile || preview) {
+                        <!-- Mostrar botón quitar en edición Y cuando hay archivo/preview -->
+                        @if (currentFile || preview || (!isCreate && nameImage !== 'image-not-found.jpg')) {
                         <button type="button" mat-stroked-button color="warn" (click)="removeImage()"
                             class="btn-remove-image">
                             <mat-icon>delete</mat-icon>

@@ -83,16 +83,16 @@ export class TecnicoForm implements OnInit, OnDestroy {
   private initForm(): void {
     this.tecnicoForm = this.fb.group({
       id: [null],
-      nombreUsuario: [null, [Validators.required, Validators.minLength(5)]], // Nombre de usuario requerido, mínimo 5 caracteres
-      nombreCompleto: [null, [Validators.required, Validators.minLength(3)]], // Nombre completo requerido, mínimo 3 caracteres
+      nombreUsuario: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(20)]], // Nombre de usuario requerido, mínimo 5 caracteres y máximo 20 
+      nombreCompleto: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]], // Nombre completo requerido, mínimo 3 caracteres y máximo 50
       correo: [null, [Validators.required, Validators.pattern(this.emailPattern)]], // Correo requerido y formato válido (utilizando la expresión regular)
       contrasennaHash: [""], // Contraseña vacía para creación/actualización
-      telefono: [null, [Validators.required, Validators.pattern(this.phonePattern)]], // Teléfono requerido y formato válido (utilizando la expresión regular)
+      telefono: [null, [Validators.required, Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(8)]], // Teléfono requerido y formato válido (utilizando la expresión regular)
       foto: [this.nameImage],
       rol: ['TECNICO'], // Rol fijo para técnicos
-      estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido
+      estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido (valor por defecto 'DISPONIBLE')
       cargaTrabajo: [0], // Campo por defecto que viene en 0
-      activo: [true, Validators.required], // Campo de estado
+      activo: [true, Validators.required], // Campo de estado (valor por defecto true)
       especialidades: this.fb.array([], [Validators.required]) // FormArray para especialidades con validación requerida
     });
 
@@ -171,13 +171,43 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * Elimina una especialidad del FormArray según el índice
    * @param index Índice de la especialidad a eliminar
    */
-  removeEspecialidad(index: number) {
-    this.especialidades.removeAt(index);
-    this.tecnicoForm.setControl(
-      'especialidades',
-      this.fb.array(this.especialidades.controls)
-    )
+removeEspecialidad(index: number) {
+
+  // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
+  // En modo creación, mantener al menos una
+  if (this.isCreate && this.especialidades.length <= 1) {
+    this.noti.warning(
+      'Especialidad requerida', 
+      'Debe tener al menos una especialidad para crear un técnico', 
+      3000
+    );
+    return;
   }
+
+  // // CONFIRMACIÓN: En modo edición, preguntar antes de eliminar si queda solo una
+  // if (!this.isCreate && this.especialidades.length === 1) {
+  //   const confirmar = confirm('¿Está seguro de eliminar la última especialidad? El técnico quedará sin especialidades.');
+  //   if (!confirmar) {
+  //     return;
+  //   }
+  // }
+
+  // Eliminar la especialidad
+  this.especialidades.removeAt(index);
+  
+  // Actualizar el control del formulario
+  this.tecnicoForm.setControl(
+    'especialidades',
+    this.fb.array(this.especialidades.controls)
+  );
+
+  console.log(`🗑️ Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
+  
+  // AGREGAR especialidad vacía si no quedan y estamos creando
+  if (this.isCreate && this.especialidades.length === 0) {
+    this.addEspecialidad();
+  }
+}
 
   /**
    * Gestiona la selección de archivo para la imagen del técnico
@@ -231,11 +261,64 @@ export class TecnicoForm implements OnInit, OnDestroy {
       fileInput.value = '';
     }
 
-    // Si estamos editando, mantener la imagen anterior como respaldo
-    if (!this.isCreate && this.previousImage) {
-      this.nameImage = this.previousImage;
+    // Comportamiento diferente para el manejo de la imagen según el modo
+    if (this.isCreate) {
+      // Modo creación: usar imagen por defecto
+      this.nameImage = 'image-not-found.jpg';
+    } else {
+      // ✅ Modo edición: marcar para eliminación
+      this.nameImage = 'image-not-found.jpg';
+      console.log('🗑️ Imagen marcada para eliminación en modo edición');
+
+      // Opcional: Mostrar confirmación
+      this.noti.info(
+        'Imagen eliminada',
+        'La imagen será removida al guardar los cambios',
+        3000
+      );
     }
   }
+
+  /**
+ * Obtiene las especialidades disponibles para un índice específico
+ * @param currentIndex Índice actual del select de especialidades
+ * @returns Array de especialidades no seleccionadas o la especialidad actual
+ */
+  getEspecialidadesDisponibles(currentIndex: number): EspecialidadModel[] {
+    // Obtener todas las especialidades seleccionadas actualmente
+    const especialidadesSeleccionadas = this.especialidades.value
+      .map((esp: any, index: number) => {
+        // Excluir el índice actual para permitir que mantenga su selección
+        return index !== currentIndex ? esp.especialidadId : null;
+      })
+      .filter((id: any) => id !== null && id !== undefined);
+
+    console.log(`Especialidades ya seleccionadas (excluyendo índice ${currentIndex}):`, especialidadesSeleccionadas);
+
+    // Filtrar especialidades disponibles
+    const disponibles = this.especialidadesList().filter(especialidad => {
+      const yaSeleccionada = especialidadesSeleccionadas.includes(especialidad.id);
+      return !yaSeleccionada;
+    });
+
+    console.log(`Especialidades disponibles para índice ${currentIndex}:`, disponibles.map(e => e.nombre));
+
+    return disponibles;
+  }
+
+  /**
+   * Verifica si una especialidad ya está seleccionada en otro select
+   * @param especialidadId ID de la especialidad a verificar
+   * @param currentIndex Índice actual del select
+   * @returns true si ya está seleccionada, false si está disponible
+   */
+  isEspecialidadSeleccionada(especialidadId: number, currentIndex: number): boolean {
+    return this.especialidades.value.some((esp: any, index: number) =>
+      index !== currentIndex && esp.especialidadId === especialidadId
+    );
+  }
+
+
 
   /**
    * Envía el formulario: valida, carga la imagen y guarda/actualiza el técnico
@@ -364,7 +447,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
           valor: control.value,
           tocado: control.touched,
           errores: control.errors,
-          
+
         });
       }
     });

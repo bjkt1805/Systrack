@@ -134,11 +134,15 @@ export class TecnicoController {
       response.json({
         id: tecnico.id,
         nombreUsuario: tecnico.nombreUsuario,
+        nombreCompleto: tecnico.nombreCompleto,
+        telefono: tecnico.telefono,
         correo: tecnico.correo,
         estadoTecnico: tecnico.estadoTecnico,
-        especialidades: tecnico.especialidades,
-        foto: tecnico.foto,
         cargaTrabajo: tecnico.cargaTrabajo,
+        activo: tecnico.activo,
+        foto: tecnico.foto,
+        especialidades: tecnico.especialidades,
+
       });
     } catch (error: any) {
       next(error);
@@ -197,21 +201,9 @@ export class TecnicoController {
           cargaTrabajo: body.cargaTrabajo,
           activo: body.activo,
           foto: body.foto,
-          //especialidades:[{id: valor},{id: valor}]
           especialidades: {
             connect: body.especialidades,
           },
-          // //plataformas:[{anno_lanzamiento: valor, plataformaId: valor}]
-          // plataformas: {
-          //     create: await Promise.all(
-          //         body.plataformas.map(async (plat: PlataformaVideojuego) => {
-          //             return {
-          //                 anno_lanzamiento: plat.anno_lanzamiento,
-          //                 plataforma: { connect: { id: plat.plataformaId } },
-          //             };
-          //         })
-          //     ),
-          // },
         },
       });
       response.status(201).json(newTecnico);
@@ -224,6 +216,62 @@ export class TecnicoController {
   //ACTUALIZAR TÉCNICO
   update = async (request: Request, response: Response, next: NextFunction) => {
     try {
+      const body = request.body;
+      const idTecnico = parseInt(request.params.id);
+
+      //Obtener técnico anterior
+      const tecnicoExistente = await this.prisma.usuario.findUnique({
+        where: { id: idTecnico },
+        include: {
+          especialidades: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+      if (!tecnicoExistente) {
+        response
+          .status(404)
+          .json({ message: "El técnico no existe" });
+        return
+      }
+      // Determinar la imagen a usar (si se envía una nueva o se mantiene la existente)
+      const finalImage =
+        body.foto !== undefined ? body.foto : tecnicoExistente.foto;
+
+      // Desconectar especialidades antiguas y conectar las nuevas
+      const disconnectEspecialidades = tecnicoExistente.especialidades.map(
+        (especialidad: { id: number }) => ({ id: especialidad.id })
+      );
+      const connectEspecialidades = body.especialidades
+        ? body.especialidades.map((especialidad: { id: number }) => ({ id: especialidad.id }))
+        : [];
+
+      //Actualizar
+      const updateTecnico = await this.prisma.usuario.update({
+        where: {
+          id: idTecnico,
+        },
+        data: {
+          nombreUsuario: body.nombreUsuario,
+          nombreCompleto: body.nombreCompleto,
+          telefono: body.telefono,
+          correo: body.correo,
+          contrasenaHash: body.contrasennaHash,
+          rol: body.rol,
+          estadoTecnico: body.estadoTecnico,
+          cargaTrabajo: body.cargaTrabajo,
+          activo: body.activo,
+          foto: finalImage,
+          especialidades: {
+            disconnect: disconnectEspecialidades, // Desconectar todas las especialidades actuales
+            connect: connectEspecialidades, // Conectar las nuevas especialidades
+          },
+        },
+      });
+
+      response.json(updateTecnico);
     } catch (error) {
       next(error);
     }
