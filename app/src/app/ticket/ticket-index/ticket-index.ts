@@ -27,11 +27,12 @@ export class TicketIndex implements OnInit{
 
   // Inyectar Router y ActivatedRoute
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   // ===== VARIABLES DEL USUARIO LOGUEADO ID (HARDCODEADA) =====
   // Esta variable simula el usuario logueado
   // Posteriormente se obtendrá del servicio de autenticación
-  USUARIO_LOGUEADO_ID: number = 5;
+  USUARIO_LOGUEADO_ID: number = 1;
 
   // Signal para obtener el usuario logueado completo
   usuarioLogueado = signal<any>(null); 
@@ -143,5 +144,19 @@ export class TicketIndex implements OnInit{
   // Navegar al detalle de un ticket
   detalleTicket(id: number) {
     this.router.navigate(['/ticket', id]);
+  }
+
+  // Navegar a la creación de un nuevo ticket
+  crearTicket() {
+    this.router.navigate(['/ticket/create'], {
+      relativeTo: this.route,
+    });
+  }
+
+  // Navegar a la actualización de un ticket
+  actualizarTicket(id: number) {
+    this.router.navigate(['/ticket/edit', id], {
+      relativeTo: this.route,
+    });
   }
 }

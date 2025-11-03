@@ -18,8 +18,6 @@ export interface TicketsByUsuario {
 })
 export class TicketService extends BaseAPI<TicketModel> {
 
-
-
   constructor(httpClient: HttpClient) {
     super(
       httpClient,

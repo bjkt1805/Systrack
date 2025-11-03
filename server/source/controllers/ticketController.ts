@@ -98,7 +98,7 @@ export class TicketController {
                 }
               }
             }
-          }, 
+          },
           resueltoAt: true,
           cerradoAt: true,
           cumplioRespuesta: true,
@@ -254,6 +254,7 @@ export class TicketController {
             select: {
               id: true,
               nombre: true,
+              descripcion: true,
               sla: true,
             },
           },
@@ -346,10 +347,66 @@ export class TicketController {
   //   }
   // };
 
-  //CREAR TICKET
+  /**
+   * Generar código único para el ticket
+   * @param id ID del ticket recién creado
+   * @returns Código en formato INC-YYYY-<id>
+   */
+  private generateCodigoTicket(id: number): string {
+    const currentYear = new Date().getFullYear();
+    return `INC-${currentYear}-${id}`;
+  }
+
+  //CREAR UN TICKET
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
+      const body = request.body
+
+      const newTicket = await this.prisma.ticket.create({
+        data: {
+          codigo: body.codigo,
+          titulo: body.titulo,
+          descripcion: body.descripcion,
+          estado: body.estado,
+          prioridad: body.prioridad,
+          solicitanteId: body.solicitanteId,
+          categoriaId: body.categoriaId,
+          usuarioAsignadoId: body.usuarioAsignadoId,
+          fechaLimiteRespuesta: body.fechaLimiteRespuesta,
+          fechaLimiteResolucion: body.fechaLimiteResolucion,
+          respondidoAt: body.respondidoAt,
+          resueltoAt: body.resueltoAt,
+          cerradoAt: body.cerradoAt,
+          cerradoPorId: body.cerradoPorId,
+          cumplioRespuesta: body.cumplioRespuesta,
+          cumplioResolucion: body.cumplioResolucion,
+
+        },
+      });
+
+      // GENERAR código con el ID obtenido
+      const codigo = this.generateCodigoTicket(newTicket.id);
+
+      // ACTUALIZAR el ticket con el código generado
+      const ticketConCodigo = await this.prisma.ticket.update({
+        where: { id: newTicket.id },
+        data: { codigo },
+        include: {
+          solicitante: true,
+          categoria: {
+            include: {
+              sla: true,
+              etiquetas: true
+            }
+          }
+        }
+      });
+
+      console.log(`[BACKEND] Ticket creado exitosamente con código: ${codigo}`);
+      response.status(201).json(ticketConCodigo);
+
     } catch (error) {
+      console.error("[BACKEND] Error creando ticket:", error);
       next(error);
     }
   };
@@ -357,54 +414,95 @@ export class TicketController {
   //ACTUALIZAR TICKET
   update = async (request: Request, response: Response, next: NextFunction) => {
     try {
+      const body = request.body;
+      const idTicket = parseInt(request.params.id);
+
+      //Obtener ticket anterior
+      const ticketExistente = await this.prisma.ticket.findUnique({
+        where: { id: idTicket },
+      });
+      if (!ticketExistente) {
+        response
+          .status(404)
+          .json({ message: "El ticket no existe" });
+        return
+      }
+
+      //Actualizar
+      const updateTicket = await this.prisma.ticket.update({
+        where: {
+          id: idTicket,
+        },
+        data: {
+          codigo: body.codigo,
+          titulo: body.titulo,
+          descripcion: body.descripcion,
+          estado: body.estado,
+          prioridad: body.prioridad,
+          solicitanteId: body.solicitanteId,
+          categoriaId: body.categoriaId,
+          usuarioAsignadoId: body.usuarioAsignadoId,
+          fechaLimiteRespuesta: body.fechaLimiteRespuesta,
+          fechaLimiteResolucion: body.fechaLimiteResolucion,
+          respondidoAt: body.respondidoAt,
+          resueltoAt: body.resueltoAt,
+          cerradoAt: body.cerradoAt,
+          cerradoPorId: body.cerradoPorId,
+          cumplioRespuesta: body.cumplioRespuesta,
+          cumplioResolucion: body.cumplioResolucion,
+
+        },
+      });
+
+      response.json(updateTicket);
     } catch (error) {
       next(error);
     }
   };
 
-// MÉTODOS PARA CÁLCULO DE SEMANA
-private obtenerInicioSemana(fecha: Date): Date {
+  // MÉTODOS PARA CÁLCULO DE SEMANA
+  private obtenerInicioSemana(fecha: Date): Date {
 
-  // TRABAJAR en UTC para evitar conversiones de zona horaria
-  const año = fecha.getUTCFullYear();
-  const mes = fecha.getUTCMonth();
-  const dia = fecha.getUTCDate();
+    // TRABAJAR en UTC para evitar conversiones de zona horaria
+    const año = fecha.getUTCFullYear();
+    const mes = fecha.getUTCMonth();
+    const dia = fecha.getUTCDate();
 
-  // CREAR fecha UTC explícita
-  const fechaUTC = new Date(Date.UTC(año, mes, dia, 0, 0, 0, 0));
+    // CREAR fecha UTC explícita
+    const fechaUTC = new Date(Date.UTC(año, mes, dia, 0, 0, 0, 0));
 
-  console.log('[BACKEND] === DEBUG INICIO SEMANA ===');
-  console.log('[BACKEND] Fecha original:', fecha.toISOString());
-  console.log('[BACKEND] Fecha UTC creada:', fechaUTC.toISOString());
-  console.log('[BACKEND] getUTCDay():', fechaUTC.getUTCDay());
-  console.log('[BACKEND] getUTCDate():', fechaUTC.getUTCDate());
+    console.log('[BACKEND] === DEBUG INICIO SEMANA ===');
+    console.log('[BACKEND] Fecha original:', fecha.toISOString());
+    console.log('[BACKEND] Fecha UTC creada:', fechaUTC.toISOString());
+    console.log('[BACKEND] getUTCDay():', fechaUTC.getUTCDay());
+    console.log('[BACKEND] getUTCDate():', fechaUTC.getUTCDate());
 
-  const diaSemana = fechaUTC.getUTCDay(); // 0 = domingo, 1 = lunes, etc.
+    const diaSemana = fechaUTC.getUTCDay(); // 0 = domingo, 1 = lunes, etc.
 
-  // CÁLCULO para obtener el lunes (semana empieza en lunes)
-  let diasARestar = 0;
+    // CÁLCULO para obtener el lunes (semana empieza en lunes)
+    let diasARestar = 0;
 
-  // Si es domingo, ir al lunes anterior (restar 6 días)
-  if (diaSemana === 0) {
-    diasARestar = 6;
+    // Si es domingo, ir al lunes anterior (restar 6 días)
+    if (diaSemana === 0) {
+      diasARestar = 6;
 
-  // Para cualquier otro día, restar (día - 1) para llegar al lunes
-  } else {
-    
-    diasARestar = diaSemana - 1;
+      // Para cualquier otro día, restar (día - 1) para llegar al lunes
+    } else {
+
+      diasARestar = diaSemana - 1;
+    }
+
+    console.log('Días a restar para llegar al lunes:', diasARestar);
+
+    // CREAR el lunes de esa semana en UTC
+    const lunes = new Date(Date.UTC(año, mes, dia - diasARestar, 0, 0, 0, 0));
+
+    console.log('Lunes calculado:', lunes.toISOString());
+    console.log('Verificación - día de la semana del lunes:', lunes.getUTCDay()); // Debe ser 1
+    console.log('=== FIN DEBUG CORREGIDO ===');
+
+    return lunes;
   }
-  
-  console.log('Días a restar para llegar al lunes:', diasARestar);
-  
-  // CREAR el lunes de esa semana en UTC
-  const lunes = new Date(Date.UTC(año, mes, dia - diasARestar, 0, 0, 0, 0));
-  
-  console.log('Lunes calculado:', lunes.toISOString());
-  console.log('Verificación - día de la semana del lunes:', lunes.getUTCDay()); // Debe ser 1
-  console.log('=== FIN DEBUG CORREGIDO ===');
-  
-  return lunes;
-}
 
   private obtenerFinSemana(fecha: Date): Date {
     const inicioSemana = this.obtenerInicioSemana(fecha);

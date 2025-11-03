@@ -6,7 +6,7 @@ export const ticket = [
 
   // Ticket id : 1
   {
-    codigo: "INC-2025-0001",
+    codigo: "INC-2025-1",
     titulo: "Laptop no enciende",
     descripcion: "El equipo no responde al botón de encendido.",
     estado: EstadoTicket.RESUELTO,
@@ -27,7 +27,7 @@ export const ticket = [
 
   // Ticket id : 2
   {
-    codigo: "INC-2025-0002",
+    codigo: "INC-2025-2",
     titulo: "Sin acceso a VPN",
     descripcion: "No puedo conectarme a la VPN de la empresa.",
     estado: EstadoTicket.ASIGNADO,
@@ -48,7 +48,7 @@ export const ticket = [
 
   // Ticket id : 3
   {
-    codigo: "INC-2025-0003",
+    codigo: "INC-2025-3",
     titulo: "Error en sistema de facturación",
     descripcion: "No se puede emitir facturas desde el ERP.",
     estado: EstadoTicket.CERRADO,
@@ -69,7 +69,7 @@ export const ticket = [
 
   // Ticket id : 4
   {
-    codigo: "INC-2025-0004",
+    codigo: "INC-2025-4",
     titulo: "Problema con impresora",
     descripcion: "La impresora no imprime documentos.",
     estado: EstadoTicket.RESUELTO,
@@ -90,7 +90,7 @@ export const ticket = [
 
   // Ticket id : 5
   {
-    codigo: "INC-2025-0005",
+    codigo: "INC-2025-5",
     titulo: "Restablecimiento de contraseña",
     descripcion: "Solicito restablecer mi contraseña de correo.",
     estado: EstadoTicket.EN_PROCESO,
@@ -111,7 +111,7 @@ export const ticket = [
 
   // Ticket id : 6
   {
-    codigo: "INC-2025-0006",
+    codigo: "INC-2025-6",
     titulo: "Problema de red",
     descripcion: "No hay conexión a internet en la oficina.",
     estado: EstadoTicket.PENDIENTE,
@@ -132,7 +132,7 @@ export const ticket = [
 
   // Ticket id : 7
   {
-    codigo: "INC-2025-0007",
+    codigo: "INC-2025-7",
     titulo: "Actualización de software",
     descripcion: "Solicito actualización de sistema interno.",
     estado: EstadoTicket.CERRADO,

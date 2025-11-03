@@ -1,0 +1,19 @@
+2025-11-02 18:01:40.890 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:364:50
+
+  361 try {
+  362   const body = request.body
+  363 
+→ 364   const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-02 18:02:16.736 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:364:50
+
+  361 try {
+  362   const body = request.body
+  363 
+→ 364   const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-02 18:15:57.130 error: 	1--Tiquete no encontrado Tiquete no encontrado

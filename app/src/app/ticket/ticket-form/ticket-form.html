@@ -1,0 +1,298 @@
+<div class="form-container">
+    <!-- HEADER DEL FORMULARIO -->
+    <div class="form-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon class="icon-ticket">confirmation_number</mat-icon>
+            </div>
+            <div class="header-text">
+                <h1 class="header-title">{{ titleForm }}</h1>
+                <p class="header-subtitle">
+                    {{ isCreate ? 'Complete la información para crear un nuevo ticket' : 'Información del ticket' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- BOTÓN VOLVER -->
+        <div class="header-actions">
+            <button type="button" mat-stroked-button (click)="goBack()" class="btn-back">
+                <mat-icon>arrow_back</mat-icon>
+                Volver
+            </button>
+        </div>
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket()" class="form-content">
+
+        <!-- SECCIÓN: INFORMACIÓN DEL SOLICITANTE -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon mat-card-avatar class="section-icon">person</mat-icon>
+                <mat-card-title class="section-title">Información del Solicitante</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">Usuario que reporta la incidencia</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid solicitante-grid">
+
+                    <!-- NOMBRE COMPLETO -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre Completo</mat-label>
+                        <input matInput formControlName="solicitanteNombre" readonly>
+                        <mat-icon matPrefix>badge</mat-icon>
+                    </mat-form-field>
+
+                    <!-- CORREO ELECTRÓNICO -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Correo Electrónico</mat-label>
+                        <input matInput formControlName="solicitanteCorreo" readonly>
+                        <mat-icon matPrefix>email</mat-icon>
+                    </mat-form-field>
+
+                    <!-- FECHA DE CREACIÓN -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Fecha de Creación</mat-label>
+                        <input matInput formControlName="fechaCreacion" readonly>
+                        <mat-icon matPrefix>schedule</mat-icon>
+                    </mat-form-field>
+
+                    <!-- ESTADO -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Estado</mat-label>
+                        <input matInput formControlName="estado" readonly>
+                        <mat-icon matPrefix>info</mat-icon>
+                    </mat-form-field>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: DETALLES DEL TICKET -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon mat-card-avatar class="section-icon">description</mat-icon>
+                <mat-card-title class="section-title">Detalles del Ticket</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">Información principal de la incidencia</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+
+                    <!-- CÓDIGO (solo en edición) -->
+                    @if (!isCreate) {
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Código</mat-label>
+                        <input matInput formControlName="codigo" readonly>
+                        <mat-icon matPrefix>tag</mat-icon>
+                    </mat-form-field>
+                    }
+
+                    <!-- TÍTULO -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Título del Ticket</mat-label>
+                        <input matInput formControlName="titulo" placeholder="Ej: Problema con el acceso al sistema">
+                        <mat-icon matPrefix>title</mat-icon>
+                        @if (ticketForm.get('titulo')?.invalid && ticketForm.get('titulo')?.touched) {
+                        <mat-error>
+                            @if (ticketForm.get('titulo')?.errors?.['required']) {
+                            El título es requerido
+                            }
+                            @if (ticketForm.get('titulo')?.errors?.['minlength']) {
+                            Mínimo 5 caracteres
+                            }
+                            @if (ticketForm.get('titulo')?.errors?.['maxlength']) {
+                            Máximo 100 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- DESCRIPCIÓN -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Descripción Detallada</mat-label>
+                        <textarea matInput formControlName="descripcion" rows="4"
+                            placeholder="Describa detalladamente el problema que está experimentando..."></textarea>
+                        <mat-icon matPrefix>notes</mat-icon>
+                        @if (ticketForm.get('descripcion')?.invalid && ticketForm.get('descripcion')?.touched) {
+                        <mat-error>
+                            @if (ticketForm.get('descripcion')?.errors?.['required']) {
+                            La descripción es requerida
+                            }
+                            @if (ticketForm.get('descripcion')?.errors?.['minlength']) {
+                            Mínimo 10 caracteres
+                            }
+                            @if (ticketForm.get('descripcion')?.errors?.['maxlength']) {
+                            Máximo 500 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- PRIORIDAD -->
+                    <mat-form-field appearance="outline" class="prioridad-field">
+                        <mat-label>Prioridad</mat-label>
+                        <mat-select formControlName="prioridad">
+                            @for (prioridad of prioridadesList(); track prioridad.value) {
+                            <mat-option [value]="prioridad.value">
+                                <div class="prioridad-option">
+                                    <mat-icon [style.color]="getPrioridadColor(prioridad.value)">
+                                    </mat-icon>
+                                    <span>{{ prioridad.label }}</span>
+                                </div>
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix [style.color]="getPrioridadColor(ticketForm.get('prioridad')?.value)">
+                            {{ getPrioridadIcon(ticketForm.get('prioridad')?.value) }}
+                        </mat-icon>
+                        @if (ticketForm.get('prioridad')?.invalid && ticketForm.get('prioridad')?.touched) {
+                        <mat-error>Seleccione una prioridad</mat-error>
+                        }
+                    </mat-form-field>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: CATEGORIZACIÓN -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon mat-card-avatar class="section-icon">category</mat-icon>
+                <mat-card-title class="section-title">Categorización</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">Seleccione la etiqueta que mejor describa su
+                    problema</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+
+                    <!-- BÚSQUEDA DE ETIQUETAS -->
+                    <div class="etiqueta-search-container">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Buscar Etiqueta</mat-label>
+                            <input matInput [formControl]="etiquetaSearchControl" placeholder="Escriba para buscar...">
+                            <mat-icon matPrefix>search</mat-icon>
+                            @if (etiquetaSearchControl.value) {
+                            <button matSuffix mat-icon-button (click)="etiquetaSearchControl.setValue('')">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- SELECCIÓN DE ETIQUETA -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Etiqueta</mat-label>
+                        <mat-select formControlName="etiquetaId" (selectionChange)="onEtiquetaSelected($event.value)">
+                            <mat-option value="">Seleccione una etiqueta</mat-option>
+                            @for (etiqueta of etiquetasFiltered(); track etiqueta.id) {
+                            <mat-option [value]="etiqueta.id">
+                                {{ etiqueta.nombre }}
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix>label</mat-icon>
+                        @if (ticketForm.get('etiquetaId')?.invalid && ticketForm.get('etiquetaId')?.touched) {
+                        <mat-error>Seleccione una etiqueta</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- CATEGORÍA AUTOMÁTICA -->
+                    @if (categoriaSeleccionada()) {
+                    <div class="categoria-automatica">
+                        <mat-card class="categoria-card" appearance="outlined">
+                            <mat-card-content>
+                                <div class="categoria-info">
+                                    <div class="categoria-header">
+                                        <mat-icon class="categoria-icon">folder</mat-icon>
+                                        <h3>Categoría Asignada Automáticamente</h3>
+                                    </div>
+                                    <div class="categoria-details">
+                                        <p class="categoria-nombre">{{ categoriaSeleccionada()?.nombre }}</p>
+                                        <p class="categoria-descripcion">{{ categoriaSeleccionada()?.descripcion }}</p>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    }
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: SLA Y TIEMPOS -->
+        @if (categoriaSeleccionada()) {
+        <mat-card class="form-section sla-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon mat-card-avatar class="section-icon">timer</mat-icon>
+                <mat-card-title class="section-title">Tiempos de Respuesta (SLA)</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">Tiempos calculados automáticamente</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="section-content">
+                <div class="sla-grid">
+
+                    <!-- SLA RESPUESTA -->
+                    <div class="sla-item">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Límite de Respuesta</mat-label>
+                            <input matInput formControlName="slaRespuesta" readonly>
+                            <mat-icon matPrefix class="sla-icon-respuesta">schedule</mat-icon>
+                        </mat-form-field>
+                        <div class="sla-info">
+                            <span class="sla-label">Tiempo máximo: {{ categoriaSeleccionada()?.sla?.maxMinutosRespuesta
+                                }} minutos</span>
+                        </div>
+                    </div>
+
+                    <!-- SLA RESOLUCIÓN -->
+                    <div class="sla-item">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Límite de Resolución</mat-label>
+                            <input matInput formControlName="slaResolucion" readonly>
+                            <mat-icon matPrefix class="sla-icon-resolucion">alarm</mat-icon>
+                        </mat-form-field>
+                        <div class="sla-info">
+                            <span class="sla-label">Tiempo máximo: {{ categoriaSeleccionada()?.sla?.maxMinutosResolucion
+                                }} minutos</span>
+                        </div>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+        }
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="form-actions">
+            <div class="actions-left">
+                <!-- Solo mostrar botón limpiar en modo creación -->
+                @if (isCreate) {
+                <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
+                    <mat-icon class="icon-formActions">refresh</mat-icon>
+                    Limpiar Formulario
+                </button>
+                }
+            </div>
+
+            <div class="actions-right">
+                <!-- BOTÓN CANCELAR/CERRAR -->
+                <button type="button" mat-button (click)="goBack()" class="btn-cancel">
+                    <mat-icon class="icon-formActions">cancel</mat-icon>
+                    {{ isCreate ? 'Cancelar' : 'Cancelar' }}
+                </button>
+
+                <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido o si no hay categoría seleccionada) -->
+                <button type="submit" mat-raised-button color="primary"
+                    [disabled]="ticketForm.invalid || !categoriaSeleccionada()" class="btn-submit">
+                    <mat-icon class="icon-formActions">{{ isCreate ? 'save' : 'update' }}</mat-icon>
+                    {{ isCreate ? 'Crear Ticket' : 'Actualizar Ticket' }}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

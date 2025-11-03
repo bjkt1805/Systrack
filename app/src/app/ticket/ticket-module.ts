@@ -24,6 +24,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TicketDetail } from './ticket-detail/ticket-detail';
 import { TicketImageViewDialog } from './ticket-image-view-dialog/ticket-image-view-dialog';
 import { TicketIndex } from './ticket-index/ticket-index';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TicketForm } from './ticket-form/ticket-form';
 
 
 @NgModule({
@@ -31,7 +33,8 @@ import { TicketIndex } from './ticket-index/ticket-index';
     TicketIndex,
     TicketDetail,
     TicketAdmin,
-    TicketImageViewDialog
+    TicketImageViewDialog, 
+    TicketForm
   ],
   imports: [
     CommonModule,
@@ -53,7 +56,8 @@ import { TicketIndex } from './ticket-index/ticket-index';
     MatBadgeModule,
     MatTooltipModule,
     MatExpansionModule, 
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule, 
+    ReactiveFormsModule
   ]
 })
 export class TicketModule { }

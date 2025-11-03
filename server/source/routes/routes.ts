@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { TecnicoRoutes } from './tecnico.routes';
 import { CategoriaRoutes } from './categoria.routes';
 import { TicketRoutes } from './ticket.routes';
+import { EtiquetaRoutes} from './etiqueta.routes';
 import { UsuarioRoutes } from './usuario.routes';
 import { EspecialidadRoutes } from './especialidad.routes';
 import { ImageRoutes } from './image.routes';
@@ -17,6 +18,7 @@ export class AppRoutes {
         router.use('/especialidad',EspecialidadRoutes.routes)
         router.use('/categoria',CategoriaRoutes.routes)
         router.use('/ticket',TicketRoutes.routes)
+        router.use('/etiqueta',EtiquetaRoutes.routes)
         return router;
     }
 }

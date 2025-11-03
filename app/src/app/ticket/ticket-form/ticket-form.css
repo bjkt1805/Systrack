@@ -1,0 +1,503 @@
+/* ====== CONTENEDOR PRINCIPAL ====== */
+.form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--mat-sys-primary) 3%, transparent),
+    color-mix(in srgb, var(--mat-sys-secondary) 2%, transparent)
+  );
+}
+
+/* ====== HEADER DEL FORMULARIO ====== */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: var(--mat-sys-surface);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+  border-radius: 16px;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+}
+
+.icon-ticket {
+  color: var(--mat-sys-on-primary);
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+  background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-back {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all .3s ease;
+}
+
+.btn-back:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ====== FORMULARIO ====== */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ====== SECCIONES DEL FORMULARIO ====== */
+.form-section {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  transition: all .3s ease;
+}
+
+.form-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  transform: translateY(-2px);
+}
+
+.section-header {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--mat-sys-primary) 8%, var(--mat-sys-surface)),
+    color-mix(in srgb, var(--mat-sys-secondary) 5%, var(--mat-sys-surface))
+  );
+  padding: 20px 24px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.section-icon {
+  background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+  color: var(--mat-sys-on-primary);
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent);
+  margin: 4px 0 0 0;
+}
+
+.section-content {
+  padding: 24px;
+}
+
+/* ====== GRIDS DE FORMULARIO ====== */
+.form-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.solicitante-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ====== CAMPOS DE FORMULARIO ====== */
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-form-field-outline {
+  border-radius: 12px;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-form-field-outline {
+  transition: all .3s ease;
+}
+
+.mat-mdc-form-field:hover:not(.mat-form-field-disabled) .mat-mdc-form-field-outline {
+  border-color: color-mix(in srgb, var(--mat-sys-primary) 60%, transparent);
+}
+
+/* ====== PRIORIDAD ====== */
+.prioridad-field .mat-mdc-form-field-prefix {
+  transition: all .3s ease;
+}
+
+.prioridad-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.prioridad-option .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ====== BÚSQUEDA DE ETIQUETAS ====== */
+.etiqueta-search-container {
+  grid-column: 1 / -1;
+  margin-bottom: 16px;
+}
+
+/* ====== CATEGORÍA AUTOMÁTICA ====== */
+.categoria-automatica {
+  grid-column: 1 / -1;
+  margin-top: 16px;
+}
+
+.categoria-card {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--mat-sys-tertiary) 10%, var(--mat-sys-surface)),
+    color-mix(in srgb, var(--mat-sys-primary) 5%, var(--mat-sys-surface))
+  );
+  border: 2px solid color-mix(in srgb, var(--mat-sys-tertiary) 30%, transparent);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.categoria-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.categoria-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.categoria-icon {
+  color: var(--mat-sys-tertiary);
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.categoria-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.categoria-details {
+  padding-left: 36px;
+}
+
+.categoria-nombre {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--mat-sys-tertiary);
+}
+
+.categoria-descripcion {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+  line-height: 1.5;
+}
+
+/* ====== SECCIÓN SLA ====== */
+.sla-section {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, #4CAF50 8%, var(--mat-sys-surface)),
+    color-mix(in srgb, #2196F3 5%, var(--mat-sys-surface))
+  );
+  border: 2px solid color-mix(in srgb, #4CAF50 20%, transparent);
+}
+
+.sla-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.sla-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sla-icon-respuesta {
+  color: #2196F3;
+}
+
+.sla-icon-resolucion {
+  color: #FF9800;
+}
+
+.sla-info {
+  padding-left: 12px;
+}
+
+.sla-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ====== ACCIONES DEL FORMULARIO ====== */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 10%, var(--mat-sys-surface));
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.actions-left,
+.actions-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-reset,
+.btn-cancel,
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  padding: 0 24px;
+  height: 44px;
+  border-radius: 12px;
+  transition: all .3s ease;
+}
+
+.btn-submit {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-primary) 25%, transparent);
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--mat-sys-primary) 35%, transparent);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ====== RESPONSIVE PARA FORM-ACTIONS ====== */
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .actions-left,
+  .actions-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-reset,
+  .btn-cancel,
+  .btn-submit {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-actions {
+    padding: 20px;
+  }
+
+  .btn-reset,
+  .btn-cancel,
+  .btn-submit {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}
+
+mat-label, mat-icon, .inputReadOnly {
+  color: black;
+}
+
+mat-icon.icon-formActions {
+  color: inherit;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 16px;
+  }
+
+  .form-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-grid,
+  .solicitante-grid,
+  .sla-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-content {
+    padding: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-submit,
+  .btn-reset,
+  .btn-cancel {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .icon-ticket {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-title {
+    font-size: 24px;
+  }
+
+  .header-subtitle {
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+}
+
+/* ====== ACCESIBILIDAD ====== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ====== DARK MODE SUPPORT ====== */
+@media (prefers-color-scheme: dark) {
+  .categoria-card {
+    background: linear-gradient(135deg,
+      color-mix(in srgb, var(--mat-sys-tertiary) 15%, var(--mat-sys-surface)),
+      color-mix(in srgb, var(--mat-sys-primary) 8%, var(--mat-sys-surface))
+    );
+  }
+
+  .sla-section {
+    background: linear-gradient(135deg,
+      color-mix(in srgb, #4CAF50 12%, var(--mat-sys-surface)),
+      color-mix(in srgb, #2196F3 8%, var(--mat-sys-surface))
+    );
+  }
+}
+
+/* ====== ANIMACIONES ====== */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.form-section:nth-child(1) { animation-delay: 0.1s; }
+.form-section:nth-child(2) { animation-delay: 0.2s; }
+.form-section:nth-child(3) { animation-delay: 0.3s; }
+.form-section:nth-child(4) { animation-delay: 0.4s; }

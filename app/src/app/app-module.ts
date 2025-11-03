@@ -31,7 +31,6 @@ import { AsignacionModule } from './asignacion/asignacion-module';
     TicketModule,
     AsignacionModule,
     AppRoutingModule,
-
     
   ],
   providers: [

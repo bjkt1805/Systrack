@@ -23,6 +23,12 @@ export class TicketRoutes {
         //GET localhost:3000/ticket/3
         router.get('/:id',controller.getById) 
 
+        // POST localhost:3000/ticket/ - Crear un ticket
+        router.post('/',controller.create)
+
+        // PUT localhost:3000/ticket/3 - Actualizar un ticket por su ID
+        router.put('/:id',controller.update)
+
         return router
     }
 }
