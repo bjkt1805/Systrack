@@ -100,15 +100,21 @@
                         <mat-icon matPrefix>phone</mat-icon>
                         @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
                         <mat-error>
-                            @if (tecnicoForm.get('telefono')?.errors?.['required']) {
+                            @if (tecnicoForm.get('telefono')?.errors?.['required'])  {
                             El teléfono es requerido
                             }
                             @if (tecnicoForm.get('telefono')?.errors?.['pattern']) {
                             Formato de teléfono inválido
                             }
+                            @if ((tecnicoForm.get('telefono')?.errors?.['minlength']) || tecnicoForm.get('telefono')?.errors?.['maxlength']) {
+                            Debe ser de 8 caracteres
+                            }
+                            <!-- @if (tecnicoForm.get('telefono')?.errors?.['maxlength']) {
+                            Debe ser de 8 caracteres
+                            } -->
                         </mat-error>
                         }
-                    </mat-form-field>
+                        </mat-form-field>
 
                 </div>
             </mat-card-content>

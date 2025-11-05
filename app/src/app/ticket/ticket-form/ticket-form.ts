@@ -381,7 +381,7 @@ export class TicketForm {
       // Copiar todos los valores del formulario y además asignar categoriaId, usuarioAsignadoId,
       // respondidoAt, resueltoAt, cerradoPorId, cumplioResolucion
       ...formValue,
-      codigo: formValue.codigo, // El código se genera en el backend (formato INC-YYYY-<id>)
+    codigo: formValue.codigo, // El código se genera en el backend (formato INC-YYYY-<id>)
       titulo: formValue.titulo,
       descripcion: formValue.descripcion,
       prioridad: formValue.prioridad,

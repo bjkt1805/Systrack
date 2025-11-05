@@ -88,7 +88,9 @@ export class TecnicoForm implements OnInit, OnDestroy {
       correo: [null, [Validators.required, Validators.pattern(this.emailPattern)]], // Correo requerido y formato válido (utilizando la expresión regular)
       contrasennaHash: [""], // Contraseña vacía para creación/actualización
       telefono: [null, [Validators.required, Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(8)]], // Teléfono requerido y formato válido (utilizando la expresión regular)
+
       foto: [this.nameImage],
+
       rol: ['TECNICO'], // Rol fijo para técnicos
       estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido (valor por defecto 'DISPONIBLE')
       cargaTrabajo: [0], // Campo por defecto que viene en 0

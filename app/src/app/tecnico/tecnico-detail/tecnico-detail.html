@@ -10,7 +10,7 @@
             [src]="'http://localhost:3000/images/' + datos()?.foto" 
             [alt]="datos()?.nombreUsuario || 'Avatar del técnico'"
             class="tech-avatar"
-            onerror="this.src='assets/default-avatar.png'"
+            onerror="this.src='http://localhost:3000/images/image-not-found.jpg'"
           />
         </div>
         <div class="title-group">
