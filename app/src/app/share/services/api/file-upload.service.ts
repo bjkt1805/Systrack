@@ -7,6 +7,8 @@ import { environment } from '../../../../environments/environment.development';
   providedIn: 'root',
 })
 export class FileUploadService {
+  
+  // Obtener la URL base de la API desde environment
   private baseUrl = environment.apiURL;
   constructor(private http: HttpClient) {}
 

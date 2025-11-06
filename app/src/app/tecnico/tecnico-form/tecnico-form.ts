@@ -246,7 +246,7 @@ removeEspecialidad(index: number) {
     }
   }
 
-  /**
+/**
  * Elimina la imagen seleccionada y restaura la imagen por defecto
  */
   removeImage() {
@@ -268,9 +268,9 @@ removeEspecialidad(index: number) {
       // Modo creación: usar imagen por defecto
       this.nameImage = 'image-not-found.jpg';
     } else {
-      // ✅ Modo edición: marcar para eliminación
+      // Modo edición: marcar para eliminación
       this.nameImage = 'image-not-found.jpg';
-      console.log('🗑️ Imagen marcada para eliminación en modo edición');
+      console.log('Imagen marcada para eliminación en modo edición');
 
       // Opcional: Mostrar confirmación
       this.noti.info(

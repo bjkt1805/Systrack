@@ -164,15 +164,6 @@ export class TecnicoController {
             contains: searchTerm,
           },
         },
-        // include:{
-        //     generos:true,
-        //     plataformas: {
-        //         select:{
-        //             plataforma:true,
-        //             anno_lanzamiento:true
-        //         }
-        //     }
-        // }
       });
       if (objeto) {
         response.status(200).json(objeto);
