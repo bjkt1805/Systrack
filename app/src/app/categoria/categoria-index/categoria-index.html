@@ -9,6 +9,14 @@
         <h1 class="page-title">Categorías</h1>
         <p class="page-subtitle">Gestiona todas las categorías del sistema</p>
       </div>
+  
+      <!-- BOTÓN AGREGAR CATEGORÍA -->
+      <div class="header-actions">
+        <button mat-raised-button color="primary" class="btn-create" (click)="crearCategoria()">
+          <mat-icon>category_add</mat-icon>
+          Agregar Categoría
+        </button>
+      </div>
     </div>
   </div>
 
@@ -124,10 +132,18 @@
 
           <!-- ACCIONES -->
           <mat-card-actions class="card-actions">
-            <button mat-button color="primary" (click)="detalle(item.id)">
-              <mat-icon>visibility</mat-icon>
-              Ver Detalles
-            </button>
+            <div class="actions-left">
+              <button mat-button color="primary" (click)="detalle(item.id)">
+                <mat-icon>visibility</mat-icon>
+                Ver Detalles
+              </button>
+            </div>
+            <div class="actions-right">
+              <button mat-icon-button color="accent" (click)="actualizarCategoria(item.id)" matTooltip="Editar categoría"
+                class="btn-edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
           </mat-card-actions>
 
         </mat-card>

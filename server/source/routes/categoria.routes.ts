@@ -17,6 +17,12 @@ export class CategoriaRoutes {
         //GET localhost:3000/categoria/3
         router.get('/:id',controller.getById) 
 
+        // POST localhost:3000/categoria/ - Crear una categoría
+        router.post('/',controller.create)
+
+        // PUT localhost:3000/categoria/3 - Actualizar una categoría por su ID
+        router.put('/:id',controller.update)
+        
         return router
     }
 }

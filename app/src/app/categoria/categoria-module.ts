@@ -7,6 +7,7 @@ import { CategoriaRoutingModule } from './categoria-routing-module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,11 +23,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CategoriaIndex } from './categoria-index/categoria-index';
 import { CategoriaDetail } from './categoria-detail/categoria-detail';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CategoriaForm } from './categoria-form/categoria-form';
 
 @NgModule({
   declarations: [
     CategoriaIndex,
-    CategoriaDetail
+    CategoriaDetail,
+    CategoriaForm
   ],
   imports: [
     CommonModule,
@@ -38,6 +42,7 @@ import { CategoriaDetail } from './categoria-detail/categoria-detail';
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -47,6 +52,7 @@ import { CategoriaDetail } from './categoria-detail/categoria-detail';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
+    ReactiveFormsModule
   ]
 })
 export class CategoriaModule { }

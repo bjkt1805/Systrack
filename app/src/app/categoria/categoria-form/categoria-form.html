@@ -1,0 +1,283 @@
+<div class="form-container">
+    <!-- HEADER DEL FORMULARIO -->
+    <div class="form-header">
+        <div class="header-content">
+            <div class="icon-wrapper">
+                <mat-icon class="form-icon">{{ isCreate ? 'person_add' : 'edit' }}</mat-icon>
+            </div>
+            <div class="title-group">
+                <h1 class="form-title">{{ titleForm }} Categoría</h1>
+                <p class="form-subtitle">
+                    @if (isCreate) {
+                    Complete la información para agregar una nueva categoría al sistema
+                    } @else {
+                    Modifique la información de la categoría seleccionada
+                    }
+                </p>
+            </div>
+        </div>
+
+        <!-- BOTÓN VOLVER -->
+        <div class="header-actions">
+            <button mat-stroked-button class="btn-back" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+                Regresar
+            </button>
+        </div>
+
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <form [formGroup]="categoriaForm" (ngSubmit)="submitCategoria()" class="form-content">
+
+        <!-- SECCIÓN: INFORMACIÓN PERSONAL -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">person</mat-icon>
+                <mat-card-title class="section-title">Información requerida para la categoría</mat-card-title>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+
+                    <!-- NOMBRE DE CATEGORÍA -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre de Categoría </mat-label>
+                        <input matInput formControlName="nombre" placeholder="Ej: Desarrollo">
+                        <mat-icon matPrefix>category</mat-icon>
+                        @if (categoriaForm.get('nombre')?.invalid &&
+                        categoriaForm.get('nombre')?.touched) {
+                        <mat-error>
+                            @if (categoriaForm.get('nombre')?.errors?.['required']) {
+                            El nombre de la categoría es requerido
+                            }
+                            @if (categoriaForm.get('nombre')?.errors?.['minlength']) {
+                            Mínimo 5 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- DESCRIPCIÓN -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Descripción </mat-label>
+                        <input matInput formControlName="descripcion" placeholder="Ej: Desarrollo de software">
+                        <mat-icon matPrefix>description</mat-icon>
+                        @if (categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched) {
+                        <mat-error>
+                            @if (categoriaForm.get('descripcion')?.errors?.['required']) {
+                            La descripción es requerida
+                            }
+                            @if (categoriaForm.get('descripcion')?.errors?.['minlength']) {
+                            Mínimo 3 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: ESPECIALIDADES -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">star</mat-icon>
+                <mat-card-title class="section-title">Especialidades</mat-card-title>
+                <div class="section-actions">
+                    <button type="button" mat-mini-fab color="primary" (click)="addEspecialidad()"
+                        matTooltip="Agregar especialidad" class="btn-add-especialidad">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+
+                <!-- LISTA DE ESPECIALIDADES -->
+                <div class="especialidades-container" formArrayName="especialidades">
+                    @for (especialidadControl of especialidades.controls; track $index) {
+                    <div class="especialidad-item" [formGroupName]="$index">
+
+                        <mat-form-field appearance="outline" class="especialidad-field">
+                            <mat-label>Especialidad {{ $index + 1 }}</mat-label>
+                            <mat-select formControlName="especialidadId">
+                                <mat-option value="">Seleccione una especialidad</mat-option>
+
+                                <!-- Usar solo especialidades filtradas -->
+                                @for (especialidad of getEspecialidadesDisponibles($index); track especialidad.id) {
+                                <mat-option [value]="especialidad.id">
+                                    {{ especialidad.nombre }}
+                                </mat-option>
+                                }
+
+                            </mat-select>
+                            <mat-icon matPrefix>category</mat-icon>
+                            @if (especialidadControl.get('especialidadId')?.invalid &&
+                            especialidadControl.get('especialidadId')?.touched) {
+                            <mat-error>Seleccione una especialidad</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <!-- Mostrar botón eliminar cuando hay más de 1 especialidad O cuando se está editando la categoría -->
+                        @if (especialidades.length > 1 || !isCreate) {
+                        <button type="button" mat-icon-button color="warn" (click)="removeEspecialidad($index)"
+                            matTooltip="Eliminar especialidad" class="btn-remove-especialidad">
+                            <mat-icon>remove_circle</mat-icon>
+                        </button>
+                        }
+
+                    </div>
+                    }
+                </div>
+
+                <!-- MENSAJE SI NO HAY ESPECIALIDADES -->
+                @if (especialidades.length === 0) {
+                <div class="no-especialidades">
+                    <mat-icon class="no-especialidades-icon">info</mat-icon>
+                    <p class="no-especialidades-text">
+                        No hay especialidades agregadas. Haga clic en el botón "+" para agregar una.
+                    </p>
+                </div>
+                }
+            </mat-card-content>
+        </mat-card>
+
+
+
+
+        <!-- SECCIÓN: ETIQUETAS -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">star</mat-icon>
+                <mat-card-title class="section-title">Etiquetas</mat-card-title>
+                <div class="section-actions">
+                    <button type="button" mat-mini-fab color="primary" (click)="addEtiqueta()"
+                        matTooltip="Agregar etiqueta" class="btn-add-etiqueta">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+
+                <!-- LISTA DE ETIQUETAS -->
+                <div class="etiquetas-container" formArrayName="etiquetas">
+                    @for (etiquetaControl of etiquetas.controls; track $index) {
+                    <div class="etiqueta-item" [formGroupName]="$index">
+
+                        <mat-form-field appearance="outline" class="etiqueta-field">
+                            <mat-label>Etiqueta {{ $index + 1 }}</mat-label>
+                            <mat-select formControlName="etiquetaId">
+                                <mat-option value="">Seleccione una etiqueta</mat-option>
+
+                                <!-- Usar solo etiquetas filtradas -->
+                                @for (etiqueta of getEtiquetasDisponibles($index); track etiqueta.id) {
+                                <mat-option [value]="etiqueta.id">
+                                    {{ etiqueta.nombre }}
+                                </mat-option>
+                                }
+
+                            </mat-select>
+                            <mat-icon matPrefix>category</mat-icon>
+                            @if (etiquetaControl.get('etiquetaId')?.invalid &&
+                            etiquetaControl.get('etiquetaId')?.touched) {
+                            <mat-error>Seleccione una etiqueta</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <!-- Mostrar botón eliminar cuando hay más de 1 etiqueta O cuando se está editando la categoria -->
+                        @if (etiquetas.length > 1 || !isCreate) {
+                        <button type="button" mat-icon-button color="warn" (click)="removeEtiqueta($index)"
+                            matTooltip="Eliminar etiqueta" class="btn-remove-etiqueta">
+                            <mat-icon>remove_circle</mat-icon>
+                        </button>
+                        }
+
+                    </div>
+                    }
+                </div>
+
+                <!-- MENSAJE SI NO HAY ETIQUETAS -->
+                @if (etiquetas.length === 0) {
+                <div class="no-etiquetas">
+                    <mat-icon class="no-etiquetas-icon">info</mat-icon>
+                    <p class="no-etiquetas-text">
+                        No hay etiquetas agregadas. Haga clic en el botón "+" para agregar una.
+                    </p>
+                </div>
+                }
+
+            </mat-card-content>
+        </mat-card>
+
+
+        <!-- SECCIÓN: SLA (SERVICE LEVEL AGREEMENT) -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">schedule</mat-icon>
+                <mat-card-title class="section-title">Seleccione el SLA</mat-card-title>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+                <div class="form-grid">
+                    <!-- SELECT DE SLA -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>SLA</mat-label>
+                        <mat-select formControlName="sla">
+                            <mat-option value="">Seleccione un SLA</mat-option>
+                            @for (sla of slaList(); track sla.id) {
+                            <mat-option [value]="sla.id">
+                                {{ sla.nombre }} - Respuesta: {{ sla.maxMinutosRespuesta }}min / Resolución: {{
+                                sla.maxMinutosResolucion }}min
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix>timer</mat-icon>
+                        @if (categoriaForm.get('sla')?.invalid && categoriaForm.get('sla')?.touched) {
+                        <mat-error>
+                            @if (categoriaForm.get('sla')?.errors?.['required']) {
+                            Debe seleccionar un SLA
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+
+        <!-- ACCIONES DEL FORMULARIO -->
+        <div class="form-actions">
+            <div class="actions-left">
+                <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
+                    <mat-icon>refresh</mat-icon>
+                    Limpiar Formulario
+                </button>
+            </div>
+
+            <div class="actions-right">
+                <button type="button" mat-button (click)="goBack()" class="btn-cancel">
+                    <mat-icon>cancel</mat-icon>
+                    Cancelar
+                </button>
+
+                <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido)  [disabled]="categoriaForm.invalid -->
+                <button type="submit" mat-raised-button color="primary" 
+                    class="btn-submit">
+                    <mat-icon>{{ isCreate ? 'save' : 'update' }}</mat-icon>
+                    {{ isCreate ? 'Crear Categoría' : 'Actualizar Categoría' }}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

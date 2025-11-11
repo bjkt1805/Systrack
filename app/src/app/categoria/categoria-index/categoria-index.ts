@@ -21,7 +21,9 @@ export class CategoriaIndex {
   datos = signal<CategoriaModel[]>([]);
 
   constructor(private CategoriaService: CategoriaService,
-    private router:Router
+    private router:Router,
+    private route: ActivatedRoute
+
   ){
     this.listCategorias()
   }
@@ -40,5 +42,19 @@ export class CategoriaIndex {
       return;
     }
     this.router.navigate(['/categoria', id]);
+  }
+
+    // Navegar a la creación de un nuevo categoría
+  crearCategoria() {
+    this.router.navigate(['/categoria/create'], {
+      relativeTo: this.route,
+    });
+  }
+
+  // Navegar a la actualización de un categoría
+  actualizarCategoria(id: number) {
+    this.router.navigate(['/categoria/edit', id], {
+      relativeTo: this.route,
+    });
   }
 }

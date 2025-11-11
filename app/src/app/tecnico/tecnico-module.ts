@@ -26,7 +26,6 @@ import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TecnicoForm } from './tecnico-form/tecnico-form';
 
-
 @NgModule({
   declarations: [
     TecnicoIndex,

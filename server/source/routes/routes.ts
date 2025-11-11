@@ -6,6 +6,7 @@ import { EtiquetaRoutes} from './etiqueta.routes';
 import { UsuarioRoutes } from './usuario.routes';
 import { EspecialidadRoutes } from './especialidad.routes';
 import { ImageRoutes } from './image.routes';
+import { SLARoutes } from './SLA.routes';
 
 export class AppRoutes {
     static get routes(): Router {
@@ -19,6 +20,7 @@ export class AppRoutes {
         router.use('/categoria',CategoriaRoutes.routes)
         router.use('/ticket',TicketRoutes.routes)
         router.use('/etiqueta',EtiquetaRoutes.routes)
+        router.use('/sla',SLARoutes.routes)
         return router;
     }
 }

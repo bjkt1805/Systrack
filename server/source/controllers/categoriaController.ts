@@ -103,6 +103,7 @@ export class CategoriaController {
           sla: {
             // Incluye información del SLA relacionado
             select: {
+              id: true, // ID del SLA
               nombre: true, // Nombre del SLA
               maxMinutosRespuesta: true, // Tiempo máximo de respuesta
               maxMinutosResolucion: true, // Tiempo máximo de resolución
@@ -159,18 +160,109 @@ export class CategoriaController {
     }
   };
 
-  //CREAR CATEGORIA
-  create = async (request: Request, response: Response, next: NextFunction) => {
-    try {
-    } catch (error) {
-      next(error);
-    }
-  };
+//CREAR CATEGORIA
+create = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const body = request.body;
+    
+    const newCategoria = await this.prisma.categoria.create({
+      data: {
+        nombre: body.nombre,
+        descripcion: body.descripcion,
+        slaId: body.sla?.id,
+        especialidades: {
+          connect: body.especialidades,
+        },
+        etiquetas: {
+          connect: body.etiquetas,
+        },
+      },
+    });
+    
+    response.status(201).json(newCategoria);
+  } catch (error) {
+    console.error("[BACKEND] Error creando categoría:", error);
+    next(error);
+  }
+};
 
-  //ACTUALIZAR CATEGORIA
-  update = async (request: Request, response: Response, next: NextFunction) => {
-    try {
+//ACTUALIZAR CATEGORIA
+update = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const body = request.body;
+    const idCategoria = parseInt(request.params.id);
+
+      //Obtener categoría anterior
+      const categoriaExistente = await this.prisma.categoria.findUnique({
+        where: { id: idCategoria },
+        include: {
+          especialidades: {
+            select: {
+              id: true,
+            },
+          },
+          etiquetas: {
+            select: {
+              id: true,
+            },
+          },
+          sla: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+      if (!categoriaExistente) {
+        response
+          .status(404)
+          .json({ message: "La categoría no existe" });
+        return
+      }
+
+      // Desconectar especialidades antiguas y conectar las nuevas
+      const disconnectEspecialidades = categoriaExistente.especialidades.map(
+        (especialidad: { id: number }) => ({ id: especialidad.id })
+      );
+      const connectEspecialidades = body.especialidades
+        ? body.especialidades.map((especialidad: { id: number }) => ({ id: especialidad.id }))
+        : [];
+
+
+      // Desconectar etiquetas antiguas y conectar las nuevas
+      const disconnectEtiquetas = categoriaExistente.etiquetas.map(
+        (etiqueta: { id: number }) => ({ id: etiqueta.id })
+      );
+      const connectEtiquetas = body.etiquetas
+        ? body.etiquetas.map((etiqueta: { id: number }) => ({ id: etiqueta.id }))
+        : [];
+
+
+
+      //Actualizar
+      const updateCategoria = await this.prisma.categoria.update({
+        where: {
+          id: idCategoria,
+        },
+        data: {
+          nombre: body.nombre,
+          descripcion: body.descripcion,
+          slaId: body.sla?.id,
+          especialidades: {
+            disconnect: disconnectEspecialidades,
+            connect: connectEspecialidades,
+          },
+          etiquetas: {
+            disconnect: disconnectEtiquetas,
+            connect: connectEtiquetas,
+          },
+
+        },
+      });
+
+      response.json(updateCategoria);
     } catch (error) {
+      console.error("[BACKEND] Error creando categoría:", error);
       next(error);
     }
   };
