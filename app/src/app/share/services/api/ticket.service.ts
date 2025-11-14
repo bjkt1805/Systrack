@@ -51,4 +51,18 @@ export class TicketService extends BaseAPI<TicketModel> {
     );
   }
 
+  /** 
+   * Modificar el método de creación de tickets para aceptar FormData
+   */
+  createTiquete(formData: FormData): Observable<TicketModel> {
+    return this.http.post<TicketModel>(`${this.urlAPI}/${environment.endPointTicket}`,formData);
+  }
+
+  /**
+   * Modificar el método de actualización de tickets para aceptar FormData
+   */
+  updateTiquete(ticketId: number,formData: FormData): Observable<TicketModel> {
+    return this.http.put<TicketModel>(`${this.urlAPI}/${environment.endPointTicket}/${ticketId}`, formData);
+  }
+
 }

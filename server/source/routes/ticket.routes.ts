@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { TicketController } from '../controllers/ticketController'
+import uploadTicketImages from '../middleware/ticketImageConfig';
 
 export class TicketRoutes {
 
@@ -21,13 +22,13 @@ export class TicketRoutes {
         // router.get('/search',controller.search)
         
         //GET localhost:3000/ticket/3
-        router.get('/:id',controller.getById) 
+        router.get('/:id', controller.getById)
 
-        // POST localhost:3000/ticket/ - Crear un ticket
-        router.post('/',controller.create)
+        // POST localhost:3000/ticket/ - Crear un ticket (incluyendo imágenes)
+        router.post('/', uploadTicketImages, controller.create)
 
-        // PUT localhost:3000/ticket/3 - Actualizar un ticket por su ID
-        router.put('/:id',controller.update)
+        // PUT localhost:3000/ticket/3 - Actualizar un ticket por su ID (incluyendo imágenes)
+        router.put('/:id', uploadTicketImages, controller.update);
 
         return router
     }

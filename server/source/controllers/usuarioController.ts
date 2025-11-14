@@ -1,21 +1,74 @@
 import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs";
+import { PrismaClient, Rol, Usuario } from "../../generated/prisma";
+import passport from "passport";
+import { generateToken } from "../config/authUtils";
 import { AppError } from "../errors/custom.error";
-import { PrismaClient } from "../../generated/prisma";
+
+const prisma = new PrismaClient();
 
 export class UsuarioController {
+
     prisma = new PrismaClient();
 
-    //LISTADO DE USUARIOS
-    get = async (request: Request, response: Response, next: NextFunction) => {
+    // Crear usuario nuevo con contraseña encriptada (bcrypt.hash())
+    register = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            //Select * from usuario
-            const listado = await this.prisma.usuario.findMany({
-                orderBy: {
-                    nombreCompleto: "asc",
+            const { nombreUsuario, nombreCompleto, telefono, correo, password, rol, foto } = req.body;
+
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+
+            const user = await prisma.usuario.create({
+                data: {
+                    nombreUsuario,
+                    nombreCompleto,
+                    telefono,
+                    correo,
+                    contrasenaHash: hash,
+                    rol: Rol[rol as keyof typeof Rol],
                 },
             });
-            //Dar respuesta
-            response.json(listado);
+
+            res.status(201).json({
+                success: true,
+                message: "Usuario creado",
+                data: user,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    login = (req: Request, res: Response, next: NextFunction) => {
+        passport.authenticate(
+            "local",
+            { session: false },
+            (
+                err: Error | null,
+                user: Express.User | false | null,
+                info: { message?: string }
+            ) => {
+                if (err) return next(err);
+                if (!user) {
+                    return res
+                        .status(401)
+                        .json({ success: false, message: info.message });
+                }
+                const token = generateToken(user as Usuario);
+                return res.json({
+                    success: true,
+                    message: "Inicio de sesión exitoso",
+                    token,
+                });
+            }
+        )(req, res, next);
+    };
+    userAuth = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const usuario = req.user as Usuario;
+            res.json(usuario);
+
         } catch (error) {
             next(error);
         }
@@ -71,44 +124,5 @@ export class UsuarioController {
         }
     };
 
-    // CREAR UN USUARIO 
-    create = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const body = request.body
 
-            const newUsuario = await this.prisma.usuario.create({
-                data: {
-                    nombreUsuario: body.nombreUsuario,
-                    nombreCompleto: body.nombreCompleto,
-                    telefono: body.telefono,
-                    correo: body.correo,
-                    contrasenaHash: body.contrasenaHash,
-                    rol: body.rol,
-                    estadoTecnico: body.estadoTecnico,
-                    cargaTrabajo: body.cargaTrabajo,
-                    activo: body.activo,
-                    foto: body.foto,
-                    //especialidades:[{id: valor},{id: valor}]
-                    especialidades: {
-                        connect: body.especialidades,
-                    },
-                    // //plataformas:[{anno_lanzamiento: valor, plataformaId: valor}]
-                    // plataformas: {
-                    //     create: await Promise.all(
-                    //         body.plataformas.map(async (plat: PlataformaVideojuego) => {
-                    //             return {
-                    //                 anno_lanzamiento: plat.anno_lanzamiento,
-                    //                 plataforma: { connect: { id: plat.plataformaId } },
-                    //             };
-                    //         })
-                    //     ),
-                    // },
-                },
-            });
-            response.status(201).json(newUsuario);
-        } catch (error) {
-            console.error("[BACKEND] Error creando usuario:", error);
-            next(error);
-        }
-    };
 }

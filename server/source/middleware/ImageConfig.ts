@@ -35,10 +35,17 @@ const storage: StorageEngine = multer.diskStorage({
   },
 });
 
-// Configuración de multer con el tamaño máximo del archivo
+// Configuración de multer con el tamaño máximo del archivo y aceptar solo imágenes
 const uploadFile = multer({
   storage: storage,
   limits: { fileSize: maxSize },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten archivos de imagen.'));
+    }
+  }
 }).single('file');
 
 // Convertir el middleware a una promesa

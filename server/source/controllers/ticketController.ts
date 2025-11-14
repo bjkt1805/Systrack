@@ -360,26 +360,31 @@ export class TicketController {
   //CREAR UN TICKET
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const body = request.body
 
+      // Obtener datos del tiquete mediante FormData (hay que parsear el JSON)
+      const ticketData = JSON.parse(request.body.ticketData);
+
+      console.log("contenido del body:", request.body);
+
+      const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
       const newTicket = await this.prisma.ticket.create({
         data: {
-          codigo: body.codigo,
-          titulo: body.titulo,
-          descripcion: body.descripcion,
-          estado: body.estado,
-          prioridad: body.prioridad,
-          solicitanteId: body.solicitanteId,
-          categoriaId: body.categoriaId,
-          usuarioAsignadoId: body.usuarioAsignadoId,
-          fechaLimiteRespuesta: body.fechaLimiteRespuesta,
-          fechaLimiteResolucion: body.fechaLimiteResolucion,
-          respondidoAt: body.respondidoAt,
-          resueltoAt: body.resueltoAt,
-          cerradoAt: body.cerradoAt,
-          cerradoPorId: body.cerradoPorId,
-          cumplioRespuesta: body.cumplioRespuesta,
-          cumplioResolucion: body.cumplioResolucion,
+          codigo: ticketData.codigo,
+          titulo: ticketData.titulo,
+          descripcion: ticketData.descripcion,
+          estado: ticketData.estado,
+          prioridad: ticketData.prioridad,
+          solicitanteId: ticketData.solicitanteId,
+          categoriaId: ticketData.categoriaId,
+          usuarioAsignadoId: ticketData.usuarioAsignadoId,
+          fechaLimiteRespuesta: ticketData.fechaLimiteRespuesta,
+          fechaLimiteResolucion: ticketData.fechaLimiteResolucion,
+          respondidoAt: ticketData.respondidoAt,
+          resueltoAt: ticketData.resueltoAt,
+          cerradoAt: ticketData.cerradoAt,
+          cerradoPorId: ticketData.cerradoPorId,
+          cumplioRespuesta: ticketData.cumplioRespuesta,
+          cumplioResolucion: ticketData.cumplioResolucion,
 
         },
       });
@@ -402,6 +407,36 @@ export class TicketController {
         }
       });
 
+      // Crear una entrada inicial en el historial del ticket (historialTicket)
+      const historial = await this.prisma.historialTicket.create({
+        data: {
+          ticketId: ticketConCodigo.id,
+          cambiadoPorId: ticketConCodigo.solicitante.id,
+          deEstado: null,
+          aEstado: 'PENDIENTE',
+          nota: "Ticket creado",
+        },
+      });
+
+      // Crear registros de imágenes si existen
+      if (imageFiles.length > 0) {
+
+        // Recorrer mediante map el array de imagenes (imageFiles)
+        // y crear un arreglo de datos para insertar en imagenTicket 
+        // usando createMany
+        const imagenesData = imageFiles.map(file => ({
+          historialId: historial.id,
+          url: file.filename, // guardar el nombre del archivo como el url
+          descripcion: `${file.originalname}` // construir la descripcion de la imagen
+        }));
+
+        // Insertar las imágenes en la tabla imagenTicket
+        await this.prisma.imagenTicket.createMany({
+          data: imagenesData
+        });
+      }
+
+
       console.log(`[BACKEND] Ticket creado exitosamente con código: ${codigo}`);
       response.status(201).json(ticketConCodigo);
 
@@ -414,12 +449,30 @@ export class TicketController {
   //ACTUALIZAR TICKET
   update = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const body = request.body;
+
+      // Obtener el id del tiquete mediante el parámetro
       const idTicket = parseInt(request.params.id);
+
+      // Obtener la data (parseada en JSON desde el formData enviado en el frontend)
+      const ticketData = JSON.parse(request.body.ticketData);
+
+      // Obtener la lista de imágenes (records) a borrar de imagenTicket mediante Multer
+      const imageFiles = (request.files as Express.Multer.File[]) || [];
+
+      // Obtener el array de Id de imagenes (records) a borrar de imagenTicket mediante Multer
+      const imagesToDelete: number[] = request.body.imagesToDelete
+        ? JSON.parse(request.body.imagesToDelete)
+        : [];
 
       //Obtener ticket anterior
       const ticketExistente = await this.prisma.ticket.findUnique({
         where: { id: idTicket },
+        include: {
+          historiales: {
+            where: { deEstado: null }, // Historial inicial (creación)
+            include: { imagenes: true }
+          }
+        }
       });
       if (!ticketExistente) {
         response
@@ -428,31 +481,86 @@ export class TicketController {
         return
       }
 
-      //Actualizar
+      //Actualizar tiquete
       const updateTicket = await this.prisma.ticket.update({
         where: {
           id: idTicket,
         },
         data: {
-          codigo: body.codigo,
-          titulo: body.titulo,
-          descripcion: body.descripcion,
-          estado: body.estado,
-          prioridad: body.prioridad,
-          solicitanteId: body.solicitanteId,
-          categoriaId: body.categoriaId,
-          usuarioAsignadoId: body.usuarioAsignadoId,
-          fechaLimiteRespuesta: body.fechaLimiteRespuesta,
-          fechaLimiteResolucion: body.fechaLimiteResolucion,
-          respondidoAt: body.respondidoAt,
-          resueltoAt: body.resueltoAt,
-          cerradoAt: body.cerradoAt,
-          cerradoPorId: body.cerradoPorId,
-          cumplioRespuesta: body.cumplioRespuesta,
-          cumplioResolucion: body.cumplioResolucion,
+          codigo: ticketData.codigo,
+          titulo: ticketData.titulo,
+          descripcion: ticketData.descripcion,
+          estado: ticketData.estado,
+          prioridad: ticketData.prioridad,
+          solicitanteId: ticketData.solicitanteId,
+          categoriaId: ticketData.categoriaId,
+          usuarioAsignadoId: ticketData.usuarioAsignadoId,
+          fechaLimiteRespuesta: ticketData.fechaLimiteRespuesta,
+          fechaLimiteResolucion: ticketData.fechaLimiteResolucion,
+          respondidoAt: ticketData.respondidoAt,
+          resueltoAt: ticketData.resueltoAt,
+          cerradoAt: ticketData.cerradoAt,
+          cerradoPorId: ticketData.cerradoPorId,
+          cumplioRespuesta: ticketData.cumplioRespuesta,
+          cumplioResolucion: ticketData.cumplioResolucion,
 
         },
       });
+
+      // Eliminar las imágenes marcadas para borrar 
+      if (imagesToDelete.length > 0) {
+
+        // Eliminar imágenes físicas en /uploads/assets (obtener URLs primero)
+        const imagenesAEliminar = await this.prisma.imagenTicket.findMany({
+          where: { id: { in: imagesToDelete } },
+          select: { url: true }
+        });
+
+        // Eliminar registros de la BD
+        const deletedCount = await this.prisma.imagenTicket.deleteMany({
+          where: { id: { in: imagesToDelete } }
+        });
+
+        console.log(`[BACKEND] ${deletedCount.count} imagen(es) eliminada(s) de BD`);
+
+        // Eliminar las imágenes / archivos físicamente
+        const fs = require('fs');
+        const path = require('path');
+
+        // Recorrer el array imagenesAEliminar para borrar cada imagen físicamente de /assets/uploads
+        imagenesAEliminar.forEach(imagen => {
+          const filePath = path.join(__dirname, '../../assets/uploads/', imagen.url);
+          fs.unlink(filePath, (err: any) => {
+            if (err) {
+              console.warn(`[BACKEND] No se pudo eliminar imagen: ${imagen.url}`, err.message);
+            } else {
+              console.log(`[BACKEND] Imagen eliminada: ${imagen.url}`);
+            }
+          });
+        });
+      }
+
+      // Agregar nuevas imágenes (si se añaden) al primer historial del tiquete
+      if (imageFiles.length > 0) {
+
+        // Como el primer historial del array historiales se crea automáticamente
+        // acceder a él en el índice 0 
+        const historialInicial = ticketExistente.historiales[0];
+
+        // Recorrer mediante map el array de imagenes (imageFiles)
+        // y crear un arreglo de datos para insertar en imagenTicket 
+        // usando createMany
+        const imagenesData = imageFiles.map(file => ({
+          historialId: historialInicial.id,
+          url: file.filename, // guardar el nombre del archivo como el url
+          descripcion: `${file.originalname}` // construir la descripcion de la imagen
+        }));
+
+        // Insertar las imágenes en la tabla imagenTicket
+        await this.prisma.imagenTicket.createMany({
+          data: imagenesData
+        });
+      }
 
       response.json(updateTicket);
     } catch (error) {

@@ -178,8 +178,7 @@ export class TecnicoController {
   //CREAR UN TÉCNICO
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const body = request.body
-
+      const body = request.body // Obtener datos del cuerpo de la solicitud
       const newTecnico = await this.prisma.usuario.create({
         data: {
           nombreUsuario: body.nombreUsuario,

@@ -203,7 +203,7 @@ removeEspecialidad(index: number) {
     this.fb.array(this.especialidades.controls)
   );
 
-  console.log(`🗑️ Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
+  console.log(`Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
   
   // AGREGAR especialidad vacía si no quedan y estamos creando
   if (this.isCreate && this.especialidades.length === 0) {

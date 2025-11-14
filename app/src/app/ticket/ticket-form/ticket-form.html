@@ -91,7 +91,8 @@
                     <!-- TÍTULO -->
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Título del Ticket</mat-label>
-                        <input matInput formControlName="titulo" placeholder="Ej: Problema con el acceso al sistema">
+                        <input matInput formControlName="titulo" placeholder="Ej: Problema con el acceso al sistema"
+                            minlength="5" maxlength="20">
                         <mat-icon matPrefix>title</mat-icon>
                         @if (ticketForm.get('titulo')?.invalid && ticketForm.get('titulo')?.touched) {
                         <mat-error>
@@ -111,7 +112,7 @@
                     <!-- DESCRIPCIÓN -->
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Descripción Detallada</mat-label>
-                        <textarea matInput formControlName="descripcion" rows="4"
+                        <textarea matInput formControlName="descripcion" rows="4" minlength="10" maxlength="500"
                             placeholder="Describa detalladamente el problema que está experimentando..."></textarea>
                         <mat-icon matPrefix>notes</mat-icon>
                         @if (ticketForm.get('descripcion')?.invalid && ticketForm.get('descripcion')?.touched) {
@@ -265,34 +266,180 @@
         </mat-card>
         }
 
-        <!-- BOTONES DE ACCIÓN -->
-        <div class="form-actions">
-            <div class="actions-left">
-                <!-- Solo mostrar botón limpiar en modo creación -->
-                @if (isCreate) {
-                <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
-                    <mat-icon class="icon-formActions">refresh</mat-icon>
-                    Limpiar Formulario
-                </button>
+        <!-- SECCIÓN: IMÁGENES DEL TIQUETE -->
+        <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon mat-card-avatar class="section-icon">image</mat-icon>
+                <mat-card-title class="section-title">Imágenes del Ticket</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">Adjunte imágenes relacionadas al problema (máximo {{
+                    maxImages
+                    }})</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="section-content">
+
+                <!-- IMÁGENES EXISTENTES (solo en edición) -->
+                @if (!isCreate && existingImages.length > 0) {
+                <div class="existing-images-section">
+                    <h4>Imágenes Actuales ({{ existingImages.length }}):</h4>
+                    <div class="images-grid">
+                        @for (image of existingImages; track image.id) {
+                        <div class="image-preview-item"
+                            [class.marked-for-deletion]="isImageMarkedForDeletion(image.id)">
+                            <img [src]="getImageUrl(image.url)" [alt]="image.descripcion || 'Imagen del ticket'"
+                                class="preview-image"
+                                (error)="$event.target.src='http://localhost:3000/images/image-not-found.jpg'">
+
+                            <div class="image-overlay">
+                                <span class="image-name">{{ image.url }}</span>
+
+                                @if (isImageMarkedForDeletion(image.id)) {
+                                <button type="button" mat-mini-fab color="accent"
+                                    (click)="unmarkImageForDeletion(image.id)" class="undo-btn"
+                                    matTooltip="Deshacer eliminación">
+                                    <mat-icon>undo</mat-icon>
+                                </button>
+                                } @else {
+                                <button type="button" mat-mini-fab color="warn" (click)="markImageForDeletion(image.id)"
+                                    class="remove-btn" matTooltip="Marcar para eliminar">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                }
+                            </div>
+
+                            @if (isImageMarkedForDeletion(image.id)) {
+                            <div class="deletion-badge">
+                                <mat-icon>delete_forever</mat-icon>
+                                Se eliminará
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
                 }
+
+                <!-- SEPARADOR -->
+                @if (!isCreate && existingImages.length > 0 && (selectedImages.length > 0 || (existingImages.length -
+                imagesToDelete.length) < maxImages)) { <mat-divider class="images-divider"></mat-divider>
+                    }
+
+                    <!-- AGREGAR NUEVAS IMÁGENES -->
+                    @if (isCreate || (existingImages.length - imagesToDelete.length + selectedImages.length) <
+                        maxImages) { <div class="image-upload-container">
+                        <input type="file" #imageInput (change)="onImagesSelected($event)" multiple accept="image/*"
+                            style="display: none;">
+
+                        <button type="button" mat-stroked-button (click)="imageInput.click()" class="upload-btn">
+                            <mat-icon>add_photo_alternate</mat-icon>
+                            @if (isCreate) {
+                            Agregar Imágenes ({{ selectedImages.length }}/{{ maxImages }})
+                            } @else {
+                            Agregar Imágenes
+                            ({{ existingImages.length - imagesToDelete.length + selectedImages.length }}/{{ maxImages
+                            }})
+                            }
+                        </button>
+
+                        @if (selectedImages.length > 0 || imagesToDelete.length > 0) {
+                        <button type="button" mat-button color="warn" (click)="clearImages()" class="clear-btn">
+                            <mat-icon>clear_all</mat-icon>
+                            @if (isCreate) { Limpiar Todo } @else { Deshacer Cambios }
+                        </button>
+                        }
+</div>
+}
+
+
+<!-- PREVIEWS DE NUEVAS IMÁGENES -->
+@if (selectedImages.length > 0) {
+<div class="new-images-section">
+    <h4>Nuevas Imágenes a Subir ({{ selectedImages.length }}):</h4>
+    <div class="images-grid">
+        @for (preview of imagePreviews; track $index) {
+        <div class="image-preview-item new-image">
+            <img [src]="preview" [alt]="'Preview ' + ($index + 1)" class="preview-image">
+            <div class="image-overlay">
+                <span class="image-name">{{ selectedImages[$index].name }}</span>
+                <button type="button" mat-mini-fab color="warn" (click)="removeImage($index)" class="remove-btn">
+                    <mat-icon>delete</mat-icon>
+                </button>
             </div>
-
-            <div class="actions-right">
-                <!-- BOTÓN CANCELAR/CERRAR -->
-                <button type="button" mat-button (click)="goBack()" class="btn-cancel">
-                    <mat-icon class="icon-formActions">cancel</mat-icon>
-                    {{ isCreate ? 'Cancelar' : 'Cancelar' }}
-                </button>
-
-                <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido o si no hay categoría seleccionada) -->
-                <button type="submit" mat-raised-button color="primary"
-                    [disabled]="ticketForm.invalid || !categoriaSeleccionada()" class="btn-submit">
-                    <mat-icon class="icon-formActions">{{ isCreate ? 'save' : 'update' }}</mat-icon>
-                    {{ isCreate ? 'Crear Ticket' : 'Actualizar Ticket' }}
-                </button>
+            <div class="new-badge">
+                <mat-icon>fiber_new</mat-icon>
+                Nueva
             </div>
         </div>
+        }
+    </div>
+</div>
+}
 
-    </form>
+<!-- MENSAJE DE LÍMITE ALCANZADO -->
+@if (!isCreate && (existingImages.length - imagesToDelete.length + selectedImages.length) >= maxImages) {
+<div class="limit-message">
+    <mat-icon>info</mat-icon>
+    Ha alcanzado el límite de {{ maxImages }} imágenes.
+    Elimine imágenes existentes para agregar nuevas.
+</div>
+}
+
+<!-- RESUMEN DE CAMBIOS (solo en edición) -->
+@if (!isCreate && (selectedImages.length > 0 || imagesToDelete.length > 0)) {
+<div class="changes-summary">
+    <mat-card class="summary-card" appearance="outlined">
+        <mat-card-content>
+            <h4>Resumen de Cambios:</h4>
+            <ul>
+                @if (selectedImages.length > 0) {
+                <li class="summary-add">
+                    <mat-icon>add_circle</mat-icon>
+                    Se agregarán {{ selectedImages.length }} nueva(s) imagen(es)
+                </li>
+                }
+                @if (imagesToDelete.length > 0) {
+                <li class="summary-delete">
+                    <mat-icon>remove_circle</mat-icon>
+                    Se eliminarán {{ imagesToDelete.length }} imagen(es) existente(s)
+                </li>
+                }
+            </ul>
+        </mat-card-content>
+    </mat-card>
+</div>
+}
+
+</mat-card-content>
+</mat-card>
+
+<!-- BOTONES DE ACCIÓN -->
+<div class="form-actions">
+    <div class="actions-left">
+        <!-- Solo mostrar botón limpiar en modo creación -->
+        @if (isCreate) {
+        <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
+            <mat-icon class="icon-formActions">refresh</mat-icon>
+            Limpiar Formulario
+        </button>
+        }
+    </div>
+
+    <div class="actions-right">
+        <!-- BOTÓN CANCELAR/CERRAR -->
+        <button type="button" mat-button (click)="goBack()" class="btn-cancel">
+            <mat-icon class="icon-formActions">cancel</mat-icon>
+            {{ isCreate ? 'Cancelar' : 'Cancelar' }}
+        </button>
+
+        <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido o si no hay categoría seleccionada) -->
+        <button type="submit" mat-raised-button color="primary"
+            [disabled]="ticketForm.invalid || !categoriaSeleccionada()" class="btn-submit">
+            <mat-icon class="icon-formActions">{{ isCreate ? 'save' : 'update' }}</mat-icon>
+            {{ isCreate ? 'Crear Ticket' : 'Actualizar Ticket' }}
+        </button>
+    </div>
+</div>
+
+</form>
 
 </div>

@@ -1,0 +1,2 @@
+2025-11-13 16:01:16.939 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'ticketData')
+2025-11-13 16:15:53.642 error: 	1--Se produjo un error interno del servidor Unexpected non-whitespace character after JSON at position 2 (line 1 column 3)

@@ -1,0 +1,6 @@
+2025-11-13 11:23:27.254 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'codigo')
+2025-11-13 11:36:41.084 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'codigo')
+2025-11-13 11:47:40.637 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'codigo')
+2025-11-13 11:48:08.276 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'titulo')
+2025-11-13 11:52:08.002 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'ticketData')
+2025-11-13 11:53:04.605 error: 	1--Se produjo un error interno del servidor Cannot read properties of undefined (reading 'payload')

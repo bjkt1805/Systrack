@@ -14,6 +14,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { NgxSonnerToaster } from 'ngx-sonner'
 import { HttpErrorInterceptorService } from './share/interceptor/http-error-interceptor.service';
 import { AsignacionModule } from './asignacion/asignacion-module';
+import { HttpAuthInterceptorService } from './share/interceptor/http-auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,10 @@ import { AsignacionModule } from './asignacion/asignacion-module';
     {
       provide: HTTP_INTERCEPTORS, 
       useClass: HttpErrorInterceptorService,
+      multi: true
+    }, 
+    { provide: HTTP_INTERCEPTORS,
+      useClass: HttpAuthInterceptorService,
       multi: true
     }
   ],

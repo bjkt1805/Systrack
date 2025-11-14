@@ -4,14 +4,15 @@ import { TicketAdmin } from './ticket-admin/ticket-admin';
 import { TicketDetail } from './ticket-detail/ticket-detail';
 import { TicketIndex } from './ticket-index/ticket-index';
 import { TicketForm } from './ticket-form/ticket-form';
+import { authGuard } from '../share/guards/auth.guard';
 
 const routes: Routes = [
 
   // Ruta para la vista de lista de tickets
   { path: 'ticket', component: TicketIndex },
 
-  // Ruta para la vista de administración de tickets
-  { path: 'ticket-admin', component: TicketAdmin },
+  // Ruta para la vista de administración de tickets (ESTO SE PUEDE USAR PARA EL COMPONENTE DE REPORTES)
+  { path: 'ticket-admin', component: TicketAdmin, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
 
   // Ruta para el componente de creación de ticket
   { path: 'ticket/create', component: TicketForm },
