@@ -247,7 +247,7 @@ model Notificacion {
   emisorId   Int?
   receptorId Int
   ticketId   Int?
-  estado     EstadoNotificacion @default(PENDIENTE)
+  estado     EstadoNotificacion @default(NO_LEIDA)
   mensaje    String?
   creadoAt   DateTime           @default(now()) @db.DateTime(0)
   leidoAt    DateTime?          @db.DateTime(0)
