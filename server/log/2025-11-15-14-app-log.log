@@ -1,0 +1,27 @@
+2025-11-15 14:27:15.974 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-15 14:28:04.815 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-15 14:28:22.789 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
