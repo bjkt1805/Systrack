@@ -18,7 +18,7 @@
           <p class="tech-card__subtitle">
             <mat-icon>email</mat-icon>
             {{ datos()?.correo || 'Sin correo' }}
-            <span class="separator-dot" *ngIf="datos()?.correo && datos()?.estadoTecnico">•</span>
+            <span class="separator-dot">•</span>
             <span class="status-badge" [ngClass]="{
               'status-badge--active': datos()?.estadoTecnico === 'DISPONIBLE',
               'status-badge--inactive': datos()?.estadoTecnico !== 'DISPONIBLE'
@@ -48,7 +48,7 @@
             <span class="value">{{ datos()?.nombreUsuario }}</span>
           </div>
 
-          <div class="info-item" *ngIf="datos()?.correo">
+          <div class="info-item">
             <span class="label">Correo Electrónico</span>
             <span class="value">{{ datos()?.correo }}</span>
           </div>
@@ -74,7 +74,7 @@
       </section>
 
       <!-- SECCIÓN: ESPECIALIDADES -->
-      <section class="info-section" *ngIf="datos()?.especialidades?.length">
+      <section class="info-section">
         <h3 class="section-title">
           <mat-icon>workspace_premium</mat-icon>
           Especialidades ({{ datos()?.especialidades?.length }})
@@ -91,7 +91,7 @@
       </section>
 
       <!-- SECCIÓN: ESTADÍSTICAS DE DESEMPEÑO -->
-      <section class="info-section" *ngIf="datos()?.cargaTrabajo !== undefined">
+      <section class="info-section">
         <h3 class="section-title">
           <mat-icon>analytics</mat-icon>
           Estadísticas de Desempeño
@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <div class="sla-card" *ngIf="datos()?.estadoTecnico">
+          <div class="sla-card">
             <div class="sla-icon" [ngClass]="{
               'response': datos()?.estadoTecnico === 'DISPONIBLE',
               'resolution': datos()?.estadoTecnico !== 'DISPONIBLE'
