@@ -316,8 +316,8 @@ enum TipoNotificacion {
 }
 
 enum EstadoNotificacion {
-  PENDIENTE
-  ATENDIDA
+  LEIDA
+  NO_LEIDA
 }
 
 enum EstadoTecnico {
