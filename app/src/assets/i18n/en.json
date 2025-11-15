@@ -1,0 +1,23 @@
+{
+  "INICIO": {
+    "TITULO": "Ticket System",
+    "BIENVENIDA": "Welcome",
+    "SUBTITULO": "Ticket Management System",
+    "PANEL": "Panel",
+    "TICKETS": "Tickets",
+    "USUARIOS": "Users",
+    "ARTICULOS": "Articles",
+    "STAFF": "Staff",
+    "CONFIGURACION": "Settings",
+    "MISTIQUETES": "My Tickets", 
+    "NUEVOSTIQUETES": "New Tickets",
+    "TODOSLOSTIQUETES": "All Tickets",
+    "RESPUESTASPERSONALIZADAS": "Personalized responses",
+    "DIRECCION": "Address",
+    "TELEFONO": "Phone", 
+    "SIGUENOS": "Follow us",
+    "DERECHOSRESERVADOS": "All rights reserved.",
+    "CONTACTO": "Contact"
+
+  }
+}

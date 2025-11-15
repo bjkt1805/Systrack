@@ -1,0 +1,23 @@
+{
+  "INICIO": {
+    "TITULO": "Sistema de Tickets",
+    "BIENVENIDA": "Bienvenido(a)",
+    "SUBTITULO": "Sistema de Gestión de Tiquetes",
+    "PANEL": "Panel",
+    "TICKETS": "Tiquetes",
+    "USUARIOS": "Usuarios",
+    "ARTICULOS": "Artículos",
+    "STAFF": "Personal",
+    "CONFIGURACION": "Configuración",
+    "MISTIQUETES": "Mis Tiquetes",
+    "NUEVOSTIQUETES": "Tiquetes Nuevos",
+    "TODOSLOSTIQUETES": "Todos los Tiquetes",
+    "RESPUESTASPERSONALIZADAS": "Respuestas Personalizadas",
+    "DIRECCION": "Dirección",
+    "TELEFONO": "Teléfono",
+    "SIGUENOS": "Síguenos",
+    "DERECHOSRESERVADOS": "Todos los derechos reservados.",
+    "CONTACTO": "Contacto"
+
+  }
+}
