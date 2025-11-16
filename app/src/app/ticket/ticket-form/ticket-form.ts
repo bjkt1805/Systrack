@@ -546,7 +546,7 @@ export class TicketForm {
     const payload = {
 
       // Enviar todos los datos del tiquete en el payload 
-      codigo: '', // El código se genera en el backend (formato INC-YYYY-<id>)
+      codigo: this.ticketForm.get('codigo')?.value, // El código se genera en el backend (formato INC-YYYY-<id>)
       titulo: this.ticketForm.get('titulo')?.value,
       descripcion: this.ticketForm.get('descripcion')?.value,
       prioridad: this.ticketForm.get('prioridad')?.value,

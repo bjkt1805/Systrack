@@ -1,0 +1,48 @@
+2025-11-15 18:26:03.951 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-15 18:31:42.703 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create(
+Unique constraint failed on the constraint: `Ticket_codigo_key`
+2025-11-15 18:40:44.924 error: 	1--Tiquete no encontrado Tiquete no encontrado
+2025-11-15 18:42:05.046 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.ticket.create()` invocation in
+C:\Systrack\server\source\controllers\ticketController.ts:370:50
+
+  367 console.log("contenido del body:", request.body);
+  368 
+  369 const imageFiles = request.files as Express.Multer.File[]; // Obtener archivos de imagen si existen (manejarlos mediante Multer)
+→ 370 const newTicket = await this.prisma.ticket.create({
+        data: {
+          titulo: "Prueba",
+          descripcion: "Este es un caso de prueba",
+          estado: undefined,
+          prioridad: "MEDIA",
+          solicitanteId: 9,
+          categoriaId: 1,
+          usuarioAsignadoId: null,
+          fechaLimiteRespuesta: "2025-11-16T04:41:31.668Z",
+          fechaLimiteResolucion: "2025-11-17T00:41:31.668Z",
+          respondidoAt: null,
+          resueltoAt: null,
+          cerradoAt: null,
+          cerradoPorId: null,
+          cumplioRespuesta: null,
+          cumplioResolucion: null,
+      +   codigo: String
+        }
+      })
+
+Argument `codigo` is missing.
