@@ -45,7 +45,7 @@
                     <!-- NOMBRE DE CATEGORÍA -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Nombre de Categoría </mat-label>
-                        <input matInput formControlName="nombre" placeholder="Ej: Desarrollo">
+                        <input matInput formControlName="nombre" placeholder="Ej: Desarrollo" minlength="5" maxlength="25">
                         <mat-icon matPrefix>category</mat-icon>
                         @if (categoriaForm.get('nombre')?.invalid &&
                         categoriaForm.get('nombre')?.touched) {
@@ -63,7 +63,7 @@
                     <!-- DESCRIPCIÓN -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Descripción </mat-label>
-                        <input matInput formControlName="descripcion" placeholder="Ej: Desarrollo de software">
+                        <input matInput formControlName="descripcion" placeholder="Ej: Desarrollo de software" minlength="3" maxlength="200">
                         <mat-icon matPrefix>description</mat-icon>
                         @if (categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched) {
                         <mat-error>

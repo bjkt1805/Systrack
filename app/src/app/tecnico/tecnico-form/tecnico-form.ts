@@ -223,6 +223,18 @@ removeEspecialidad(index: number) {
     // Si existe un archivo seleccionado, leerlo y generar vista previa
     if (input.files?.[0]) {
 
+      // Validar primero el tipo de archivo 
+      if (!input.files?.[0].type.startsWith('image/')) {
+        this.noti.error('Tipo de archivo inválido', 'Solo se permiten archivos de imagen.', 3000);
+        return;
+      }
+
+      // Validar el tamaño del archivo (2 MB máximo)
+      if (input.files?.[0].size > 2 * 1024 * 1024) {
+        this.noti.error('Archivo demasiado grande', 'Tamaño máximo del archivo: 2 MB.', 3000);
+        return;
+      }
+
       // Asignar el archivo seleccionado a currentFile
       this.currentFile = input.files[0];
 

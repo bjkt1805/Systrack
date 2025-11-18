@@ -45,7 +45,7 @@
                     <!-- NOMBRE DE USUARIO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Nombre de Usuario </mat-label>
-                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez">
+                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez" minlength="5" maxlength="20">
                         <mat-icon matPrefix>account_circle</mat-icon>
                         @if (tecnicoForm.get('nombreUsuario')?.invalid && tecnicoForm.get('nombreUsuario')?.touched) {
                         <mat-error>
@@ -62,7 +62,7 @@
                     <!-- NOMBRE COMPLETO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Nombre Completo </mat-label>
-                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González">
+                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González" minlength="3" maxlength="50">
                         <mat-icon matPrefix>badge</mat-icon>
                         @if (tecnicoForm.get('nombreCompleto')?.invalid && tecnicoForm.get('nombreCompleto')?.touched) {
                         <mat-error>
@@ -96,7 +96,7 @@
                     <!-- TELÉFONO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Teléfono (+506) </mat-label>
-                        <input matInput formControlName="telefono" placeholder="88888888">
+                        <input matInput formControlName="telefono" placeholder="88888888" min="8" max="8">
                         <mat-icon matPrefix>phone</mat-icon>
                         @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
                         <mat-error>
