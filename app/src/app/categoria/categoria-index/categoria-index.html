@@ -58,7 +58,7 @@
           <mat-card-content class="card-content">
             
             <!-- Descripción -->
-            <div class="info-block" *ngIf="item.descripcion">
+            <div class="info-block">
               <span class="info-label">
                 <mat-icon>description</mat-icon>
                 Descripción
@@ -67,7 +67,7 @@
             </div>
 
             <!-- SLA Info -->
-            <div class="info-block" *ngIf="item.sla">
+            <div class="info-block">
               <span class="info-label">
                 <mat-icon>schedule</mat-icon>
                 SLA
@@ -97,10 +97,10 @@
             </div>
 
             <!-- Etiquetas -->
-            <div class="info-block" *ngIf="item.etiquetas && item.etiquetas.length > 0">
+            <div class="info-block">
               <span class="info-label">
                 <mat-icon>label</mat-icon>
-                Etiquetas ({{ item.etiquetas.length }})
+                  Etiquetas ({{ item.etiquetas?.length ?? 0 }})
               </span>
               <div class="chips-container">
                 @for (etiqueta of item.etiquetas; track etiqueta.id) {
@@ -113,10 +113,10 @@
             </div>
 
             <!-- Especialidades -->
-            <div class="info-block" *ngIf="item.especialidades && item.especialidades.length > 0">
+            <div class="info-block">
               <span class="info-label">
                 <mat-icon>workspace_premium</mat-icon>
-                Especialidades ({{ item.especialidades.length }})
+                Especialidades ({{ item.especialidades?.length ?? 0 }})
               </span>
               <div class="chips-container">
                 @for (especialidad of item.especialidades; track especialidad.id) {
