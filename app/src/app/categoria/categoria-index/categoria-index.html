@@ -95,39 +95,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Etiquetas -->
-            <div class="info-block">
-              <span class="info-label">
-                <mat-icon>label</mat-icon>
-                  Etiquetas ({{ item.etiquetas?.length ?? 0 }})
-              </span>
-              <div class="chips-container">
-                @for (etiqueta of item.etiquetas; track etiqueta.id) {
-                  <span class="chip chip-primary">
-                    <mat-icon>label</mat-icon>
-                    {{etiqueta.nombre}}
-                  </span>
-                }
-              </div>
-            </div>
-
-            <!-- Especialidades -->
-            <div class="info-block">
-              <span class="info-label">
-                <mat-icon>workspace_premium</mat-icon>
-                Especialidades ({{ item.especialidades?.length ?? 0 }})
-              </span>
-              <div class="chips-container">
-                @for (especialidad of item.especialidades; track especialidad.id) {
-                  <span class="chip chip-secondary">
-                    <mat-icon>star</mat-icon>
-                    {{especialidad.nombre}}
-                  </span>
-                }
-              </div>
-            </div>
-
           </mat-card-content>
 
           <!-- ACCIONES -->
