@@ -14,6 +14,8 @@ export const authorizeRoles = (...roles: Rol[]) => {
     //Extrae al usuario de req.user, que fue previamente agregado por el middleware authenticateJWT
     const user = req.user as { rol: Rol };
 
+    // Verifica si el rol del usuario está en la lista de roles permitidos
+    // Si no lo está, responder con 403 forbidden
     if (!user || !roles.includes(user.rol)) {
       res.status(403).json({
         success: false,

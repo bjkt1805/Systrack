@@ -1,0 +1,90 @@
+<div class="login-container">
+    <div class="login-card">
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="logo-container">
+                <mat-icon class="logo-icon">support_agent</mat-icon>
+            </div>
+            <h1 class="login-title">Bienvenido a SysTrack</h1>
+            <p class="login-subtitle">Inicia sesión para continuar</p>
+        </div>
+
+        <!-- Formulario -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+            <!-- Campo Email -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com"
+                    autocomplete="email">
+                <mat-icon matPrefix>email</mat-icon>
+                <mat-error>
+                    @if (loginForm.get('email')?.errors?.['required']){
+                    El correo es requerido
+                    }
+                    @if (loginForm.get('email')?.errors?.['pattern']) {
+                    Formato de correo inválido
+                    }
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Campo contraseña -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                    placeholder="••••••••" autocomplete="current-password" minlength="6" maxlength="20">
+                <mat-icon matPrefix>lock</mat-icon>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
+                    [attr.aria-label]="'Ocultar contraseña'" [attr.aria-pressed]="hidePassword">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error>
+                    @if (loginForm.get('password')?.errors?.['required']){
+                    La contraseña es requerida
+                    }
+                    @if (loginForm.get('password')?.errors?.['minlength']) {
+                    La contraseña debe tener al menos 6 caracteres
+                    }
+                    @if (loginForm.get('password')?.errors?.['maxlength']) {
+                    La contraseña no debe exceder los 20 caracteres
+                    }
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Contenedor de botones -->
+            <div class="button-container">
+
+                <!-- Botón para hacer submit al form de login -->
+                <button mat-raised-button color="primary" type="submit" class="btn-submit full-width"
+                    [disabled]="loginForm.invalid || loading">
+                    <mat-icon style="color: white;">login</mat-icon>
+                    <!-- <mat-spinner diameter="20" class="spinner-inline"></mat-spinner> -->
+                    <span style="color: white;">{{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
+                </button>
+
+                <!-- Botón para limpiar y resetear el formulario -->
+                <button mat-stroked-button type="button" class="btn-reset full-width" (click)="onReset()"
+                    [disabled]="loading">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Limpiar</span>
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>o</span>
+            </div>
+
+            <!-- Link para ir a registrar el usuario -->
+            <div class="register-link">
+                <p>¿No tienes una cuenta?</p>
+                <button mat-button color="accent" type="button" (click)="goToRegister()" [disabled]="loading">
+                    Regístrate aquí
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

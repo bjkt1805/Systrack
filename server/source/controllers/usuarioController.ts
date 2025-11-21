@@ -11,25 +11,37 @@ export class UsuarioController {
 
     prisma = new PrismaClient();
 
-    // Crear usuario nuevo con contraseña encriptada (bcrypt.hash())
+    /**
+     * Crear usuario nuevo con contraseña encriptada (bcrypt.hash())
+     * @param req 
+     * @param res 
+     * @param next 
+     */
     register = async (req: Request, res: Response, next: NextFunction) => {
         try {
+
+            // Extraer los datos del usuario desde el cuerpo de la solicitud
             const { nombreUsuario, nombreCompleto, telefono, correo, password, rol, foto } = req.body;
 
+            // Generar un hash de la contraseña utilizando bcrypt
             const salt = await bcrypt.genSalt(10);
+
+            // Encriptar la contraseña con el hash generado
             const hash = await bcrypt.hash(password, salt);
 
+            // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
             const user = await prisma.usuario.create({
                 data: {
                     nombreUsuario,
                     nombreCompleto,
                     telefono,
                     correo,
-                    contrasenaHash: hash,
-                    rol: Rol[rol as keyof typeof Rol],
+                    contrasenaHash: hash, // Almacenar el hash de la contraseña en la BD
+                    rol: Rol[rol as keyof typeof Rol], // Asegurarse de que el rol sea del tipo enum Rol
                 },
             });
 
+            // Responder con 201 con éxito de usuario creado
             res.status(201).json({
                 success: true,
                 message: "Usuario creado",
@@ -40,22 +52,37 @@ export class UsuarioController {
         }
     };
 
+
+    /**
+     * Método para manejar el inicio de sesión de usuarios utilizando Passport.js
+     * @param req 
+     * @param res 
+     * @param next 
+     */
     login = (req: Request, res: Response, next: NextFunction) => {
+        
+        // Utilizar la estrategia de autenticación "local" de Passport.js
         passport.authenticate(
             "local",
-            { session: false },
+            { session: false }, // No utilizar sesiones, ya que se usará JWT
             (
-                err: Error | null,
-                user: Express.User | false | null,
-                info: { message?: string }
+                err: Error | null, // Tipo de error
+                user: Express.User | false | null, // Usuario autenticado o false si falla
+                info: { message?: string } // Información adicional sobre la autenticación
             ) => {
-                if (err) return next(err);
+                if (err) return next(err); // Manejar errores de autenticación
+                
+                // Si no se encuentra el usuario, responder con error 401 (no autenticado)
                 if (!user) {
                     return res
                         .status(401)
                         .json({ success: false, message: info.message });
                 }
+
+                // Si la autenticación es exitosa, generar un token JWT para el usuario
                 const token = generateToken(user as Usuario);
+
+                // Responder con el token JWT generado
                 return res.json({
                     success: true,
                     message: "Inicio de sesión exitoso",
@@ -64,9 +91,20 @@ export class UsuarioController {
             }
         )(req, res, next);
     };
+
+    /**
+     * Método para devolver la información del usuario autenticado
+     * @param req 
+     * @param res 
+     * @param next 
+     */
     userAuth = (req: Request, res: Response, next: NextFunction) => {
         try {
+
+            // Extraer el usuario autenticado del objeto de solicitud (establecido por Passport.js)
             const usuario = req.user as Usuario;
+
+            // Responder con la información del usuario autenticado
             res.json(usuario);
 
         } catch (error) {

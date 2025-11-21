@@ -48,14 +48,30 @@ export class AuthenticationService {
    * - Guarda token en LocalStorage
    * - Actualiza signal
    */
-  loginUser(credentials: { email: string; password: string }): Observable<{ token: string }> {
+  loginUser(credentials: { email: string; password: string }): Observable<{ success: boolean }> {
+    
+    // Mapear los campos del frontend a los esperados por el backend
+
+    // Crear objeto con el correo y la contraseña hasheada
+    const payload = {
+      correo: credentials.email,
+      contrasenaHash: credentials.password,
+    };
+
+    // Realizar la petición POST al endpoint de login
     return this.http
-      .post<{ token: string }>(`${this.apiUrl}/usuario/login`, credentials)
+      .post<{ success: boolean; message: string; token: string }>(`${this.apiUrl}/usuario/login`, payload)
       .pipe(
-        tap(({ token }) => {
-          const strToken = String(token);
-          localStorage.setItem(this.tokenKey, strToken);
-          this.tokenUser.set(strToken);
+
+        // Utilizar tap para realizar efectos secundarios sin alterar el flujo del observable
+        tap((response) => {
+
+          // Revisar la respuesta del servidor, si es exitosa y contiene token
+          if (response.success && response.token) {
+            const strToken = String(response.token); // Castear el token a string
+            localStorage.setItem(this.tokenKey, strToken); // Guardar token en LocalStorage del navegador
+            this.tokenUser.set(strToken); // Actualizar signal "tokenUser" con el nuevo token
+          }
         })
       );
   }
@@ -78,18 +94,14 @@ export class AuthenticationService {
 
   /**
    * LOGOUT
-   * - Limpia signals
-   * - Limpia LocalStorage
-   * - Vacía carrito
+   * - Limpiar signals
+   * - Limpia LocalStorage del navegador
    */
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     this.tokenUser.set(null);
     this.usuario.set(null);
 
-    // Limpia carrito del usuario que cerró sesión
-    // this.cartService.deleteCart();
-
-    this.router.navigate(['/login']);
+    this.router.navigate(['/usuario/login']);
   }
 }

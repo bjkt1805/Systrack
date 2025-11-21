@@ -36,13 +36,11 @@ export const authGuard: CanActivateFn = (
     map(user => {
       if (!user) return router.createUrlTree(['/usuario/login']);
 
-      // const userRole =
-      //   typeof user.rol === 'string'
-      //     ? user.rol
-      //     : user.rol?.nombre ?? '';
-      
-      const userRole = user.rol;
-
+      const userRole =
+        typeof user.rol === 'string'
+          ? user.rol
+          : user.rol ?? '';
+    
       const rolesAllowed: string[] = route.data['roles'] ?? [];
 
       if (rolesAllowed.length > 0 && !rolesAllowed.includes(userRole)) {

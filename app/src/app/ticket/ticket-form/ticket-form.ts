@@ -285,7 +285,7 @@ export class TicketForm {
       slaRespuesta: this.formatDateTime(this.fechaLimiteRespuesta),
       slaResolucion: this.formatDateTime(this.fechaLimiteResolucion)
     });
-  }
+          }
 
   /**
    * Formatear una fecha (hora de Costa Rica)para mostrarla en el formulario

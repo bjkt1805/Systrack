@@ -1,0 +1,242 @@
+<div class="register-container">
+
+    <div class="register-card">
+        <!-- Header -->
+        <div class="register-header">
+            <div class="logo-container">
+                <mat-icon class="logo-icon">person_add</mat-icon>
+            </div>
+            <h1 class="register-title">Crear Cuenta</h1>
+            <p class="register-subtitle">Únete a SysTrack hoy</p>
+        </div>
+
+        <!-- Indicador de progreso-->
+        <div class="progress-indicator">
+            <div class="progress-step" [class.active]="registerForm.get('nombreUsuario')?.valid">
+                <div class="step-circle">1</div>
+                <span class="step-label">Datos básicos</span>
+            </div>
+            <div class="progress-line" [class.active]="registerForm.get('correo')?.valid"></div>
+            <div class="progress-step" [class.active]="registerForm.get('correo')?.valid">
+                <div class="step-circle">2</div>
+                <span class="step-label">Contacto</span>
+            </div>
+            <div class="progress-line"
+                [class.active]="registerForm.get('password')?.valid && registerForm.get('confirmpassword')?.valid">
+            </div>
+            <div class="progress-step"
+                [class.active]="registerForm.get('password')?.valid && registerForm.get('confirmpassword')?.valid">
+                <div class="step-circle">3</div>
+                <span class="step-label">Seguridad</span>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="register-form">
+
+            <!-- Sección: Datos Básicos -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <mat-icon>person</mat-icon>
+                    Datos Básicos
+                </h3>
+
+                <!-- Nombre de Usuario -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre de Usuario</mat-label>
+                    <input matInput formControlName="nombreUsuario" placeholder="usuario123" autocomplete="username" minlength="5" maxlength="20">
+                    <mat-icon matPrefix>account_circle</mat-icon>
+                    <mat-hint>Mínimo 5 caracteres</mat-hint>
+                    <mat-error>
+                        @if(registerForm.get('nombreUsuario')?.hasError('required')) {
+                        El nombre de usuario es requerido
+                        }
+                        @if(registerForm.get('nombreUsuario')?.hasError('minlength')) {
+                        Debe tener al menos 5 caracteres
+                        }
+                        @if(registerForm.get('nombreUsuario')?.hasError('maxlength')) {
+                        Debe tener al menos 20 caracteres
+                        }
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Nombre Completo -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre Completo</mat-label>
+                    <input matInput formControlName="nombreCompleto" placeholder="Juan Pérez" autocomplete="name">
+                    <mat-icon matPrefix>badge</mat-icon>
+                    <mat-error>
+                        @if(registerForm.get('nombreCompleto')?.hasError('required')) {
+                        El nombre completo es requerido
+                        }
+                        @if(registerForm.get('nombreCompleto')?.hasError('minlength')) {
+                        Debe tener al menos 3 caracteres
+                        }
+                        @if(registerForm.get('nombreCompleto')?.hasError('maxlength')) {
+                        Debe tener al menos 50 caracteres
+                        }
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Sección: Información de Contacto -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <mat-icon>contact_mail</mat-icon>
+                    Información de Contacto
+                </h3>
+
+                <!-- Correo Electrónico -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Correo Electrónico</mat-label>
+                    <input matInput type="email" formControlName="correo" placeholder="ejemplo@correo.com"
+                        autocomplete="email">
+                    <mat-icon matPrefix>email</mat-icon>
+                    <mat-error>
+                        @if(registerForm.get('correo')?.hasError('required')) {
+                        El correo es requerido
+                        }
+                        @if(registerForm.get('correo')?.hasError('pattern')) {
+                        Formato de correo inválido
+                        }
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Teléfono -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Teléfono (Opcional)</mat-label>
+                    <input matInput type="tel" formControlName="telefono" placeholder="+506 1234-5678" autocomplete="tel">
+                    <mat-icon matPrefix>phone</mat-icon>
+                    <mat-hint>Incluya código de país si aplica</mat-hint>
+                    <mat-error>
+                
+                        @if (registerForm.get('telefono')?.errors?.['required']) {
+                        El teléfono es requerido
+                        }
+                        @if (registerForm.get('telefono')?.errors?.['pattern']) {
+                        Formato de teléfono inválido
+                        }
+                        @if ((registerForm.get('telefono')?.errors?.['minlength']) || registerForm.get('telefono')?.errors?.['maxlength'])
+                        {
+                        Debe ser de 8 caracteres
+                        }
+                
+                    </mat-error>
+                </mat-form-field>
+                </div>
+
+            <!-- Sección: Seguridad -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <mat-icon>security</mat-icon>
+                    Seguridad
+                </h3>
+
+                <!-- Contraseña -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                        placeholder="••••••••" autocomplete="new-password">
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
+                        [attr.aria-label]="'Ocultar contraseña'">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-hint>Mínimo 6 caracteres</mat-hint>
+                    <mat-error>
+                    
+                        @if (registerForm.get('password')?.errors?.['required']) {
+                        La contraseña es requerida
+                        }
+
+                        @if (registerForm.get('password')?.errors?.['minlength']) {
+                        Debe tener al menos 6 caracteres
+                        }
+
+                        @if (registerForm.get('password')?.errors?.['maxlength']) {
+                        Debe tener como máximo 20 caracteres
+                        }
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Confirmar Contraseña -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Confirmar Contraseña</mat-label>
+                    <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmpassword"
+                        placeholder="••••••••" autocomplete="new-password">
+                    <mat-icon matPrefix>lock_outline</mat-icon>
+                    <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button"
+                        [attr.aria-label]="'Ocultar contraseña'">
+                        <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error>
+                        @if(registerForm.get('confirmpassword')?.hasError('required')) {
+                        Confirme su contraseña
+                        }
+                        @if(registerForm.hasError('passwordsMismatch') && registerForm.get('confirmpassword')?.touched) {
+                        Las contraseñas no coinciden }
+                    
+                    </mat-error>
+                        
+                </mat-form-field>
+
+                <!-- Indicador de fortaleza de contraseña -->
+                <div class="password-strength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" [class.weak]="registerForm.get('password')?.value.length < 8"
+                            [class.medium]="registerForm.get('password')?.value.length >= 8 && registerForm.get('password')?.value.length < 12"
+                            [class.strong]="registerForm.get('password')?.value.length >= 12"></div>
+                    </div>
+                    <span class="strength-text">
+                        <ng-container>
+                            @if(registerForm.get('password')?.value.length < 8) {
+                                Débil
+                            }
+                        </ng-container>
+                        <ng-container>
+                            @if(registerForm.get('password')?.value.length >= 8 && registerForm.get('password')?.value.length < 12) { 
+                                Media
+                         }
+                        </ng-container>
+                        <ng-container>
+                            @if(registerForm.get('password')?.value.length >= 12) {
+                                Fuerte
+                            }
+                        </ng-container>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="submit" class="btn-submit full-width"
+                    [disabled]="registerForm.invalid || loading">
+                    <mat-icon style="color: white;">person_add</mat-icon>
+                    <!-- <mat-spinner diameter="20" class="spinner-inline"></mat-spinner> -->
+                    <span style="color: white">{{ loading ? 'Registrando...' : 'Crear Cuenta' }}</span>
+                </button>
+
+                <button mat-stroked-button type="button" class="btn-reset full-width" (click)="onReset()"
+                    [disabled]="loading">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Limpiar Formulario</span>
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>o</span>
+            </div>
+
+            <!-- Link a login -->
+            <div class="login-link">
+                <p>¿Ya tienes una cuenta?</p>
+                <button mat-button color="accent" type="button" (click)="goToLogin()" [disabled]="loading">
+                    Inicia sesión aquí
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
