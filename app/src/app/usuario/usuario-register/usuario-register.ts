@@ -48,7 +48,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.initForm();        // Inicializa el formulario reactivo
       this.debugFormulario(); // Debuggear el formulario
-      this.getRoles();        // Cargar roles desde el backend
+      // this.getRoles();        // Cargar roles desde el backend
 
     }
 
@@ -61,7 +61,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
       nombreUsuario: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]], // Nombre de usuario requerido, mínimo 5, máximo 20 caracteres
       nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]], // Nombre completo requerido, mínimo 3, máximo 50 caracteres
       correo: ['', [Validators.required, Validators.pattern(this.emailPattern)]], // Correo electrónico requerido con patrón de validación
-      telefono: ['', [Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(15)]], // Teléfono opcional con patrón de validación, mínimo 8, máximo 15 caracteres
+      telefono: ['', [Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(8)]], // Teléfono opcional con patrón de validación, mínimo 8, máximo 15 caracteres
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]], // Contraseña requerida, mínimo 6 caracteres, máximo 20 caracteres
       confirmpassword: ['', [Validators.required]], // Confirmación de contraseña requerida
       rol: ['CLIENTE'], // Valor por defecto para el usuario "CLIENTE"
@@ -73,13 +73,13 @@ export class UsuarioRegister implements OnInit, OnDestroy {
    * Función para obtener los roles mediante el servicio desde
    * el backend
    */
-  getRoles() {
+  // getRoles() {
 
-    // Suscribirse al servicio de roles y asignar la respuesta a la señal roles
-    this.rolService.get().subscribe((roles: RolModel[]) => {
-      this.roles.set(roles);
-    });
-  }
+  //   // Suscribirse al servicio de roles y asignar la respuesta a la señal roles
+  //   this.rolService.get().subscribe((roles: RolModel[]) => {
+  //     this.roles.set(roles);
+  //   });
+  // }
 
   /**
    * Función para enviar información al backend para registrar un nuevo usuario
@@ -149,7 +149,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           // Manejo de errores http específicos
 
           // Si se recibe un error 400 (Bad Request) desde el API
-          if (error.status === 400) {
+          if (error.status === 400 || error.status === 500) {
 
             // Si el mensaje del error incluye 'nombreUsuario' asignarlo a errorMessage
             if (error.error?.message?.includes('nombreUsuario')) {

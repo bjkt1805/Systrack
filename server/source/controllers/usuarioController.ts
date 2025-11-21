@@ -47,7 +47,36 @@ export class UsuarioController {
                 message: "Usuario creado",
                 data: user,
             });
-        } catch (error) {
+        } catch (error: any) {
+
+            // En este caso, al haber campos unique en usuario como 
+            // nombreUsuario y correo, si se intenta crear un usuario con
+            // un nombre o correo ya existente, Prisma lanzará un error de violación
+            // Hay que capturarlo y devolver un error 400 (Bad Request). El código 
+            // de error es P2002
+
+            if (error.code === 'P2002') {
+
+            // Obtener el campo que causó la violación de unicidad
+            const campo = error.meta.target;
+
+            // Crear un mensaje de error específico según el campo
+            let mensaje = '';
+            if (campo.includes('nombreUsuario')) {
+                mensaje = 'El nombre de usuario ya está en uso.';
+            }
+            else if (campo.includes('correo')) {
+                mensaje = 'El correo electrónico ya está registrado.';
+            }
+
+            // Retornar un error 400 (bad request al frontend)
+            return res.status(400).json({
+                success: false,
+                message: mensaje,
+                campo
+            });
+        }
+
             next(error);
         }
     };

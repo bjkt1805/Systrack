@@ -27,6 +27,11 @@
   gap: 6px;
 }
 
+.footer__block--center {
+  justify-items: center;
+  text-align: center;
+}
+
 .footer__block--right {
   justify-items: end;
   text-align: right;
