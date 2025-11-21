@@ -6,15 +6,15 @@
         <mat-icon class="page-icon">category</mat-icon>
       </div>
       <div class="title-group">
-        <h1 class="page-title">Categorías</h1>
-        <p class="page-subtitle">Gestiona todas las categorías del sistema</p>
+        <h1 class="page-title">{{ 'CATEGORIA_INDEX.TITULO' | translate }}</h1>
+        <p class="page-subtitle">{{ 'CATEGORIA_INDEX.SUBTITULO' | translate }}</p>
       </div>
   
       <!-- BOTÓN AGREGAR CATEGORÍA -->
       <div class="header-actions">
         <button mat-raised-button color="primary" class="btn-create" (click)="crearCategoria()">
           <mat-icon>category_add</mat-icon>
-          Agregar Categoría
+          {{ 'CATEGORIA_INDEX.AGREGAR' | translate }}
         </button>
       </div>
     </div>
@@ -23,14 +23,14 @@
   <!-- BÚSQUEDA Y FILTROS -->
   <div class="filters-section">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Buscar categorías</mat-label>
-      <input matInput placeholder="Nombre, descripción...">
+      <mat-label>{{ 'CATEGORIA_INDEX.BUSCAR' | translate }}</mat-label>
+      <input matInput [placeholder]="'CATEGORIA_INDEX.BUSCARPLACEHOLDER' | translate"/>
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
     
     <button mat-stroked-button class="filter-btn">
       <mat-icon>filter_list</mat-icon>
-      Filtros
+      {{ 'CATEGORIA_INDEX.FILTROS' | translate }}
     </button>
   </div>
 
@@ -61,7 +61,7 @@
             <div class="info-block">
               <span class="info-label">
                 <mat-icon>description</mat-icon>
-                Descripción
+                {{ 'CATEGORIA_INDEX.DESCRIPCION' | translate }}
               </span>
               <p class="info-text">{{ item.descripcion }}</p>
             </div>
@@ -74,21 +74,21 @@
               </span>
               <div class="sla-info">
                 <div class="sla-item">
-                  <span class="sla-label">Nombre</span>
+                  <span class="sla-label">{{ 'CATEGORIA_INDEX.NOMBRE' | translate }}</span>
                   <span class="sla-value">{{ item.sla.nombre }}</span>
                 </div>
                 <div class="sla-metrics">
                   <div class="metric">
                     <mat-icon class="metric-icon">reply</mat-icon>
                     <div class="metric-content">
-                      <span class="metric-label">Respuesta</span>
+                      <span class="metric-label">{{ 'CATEGORIA_INDEX.RESPUESTA' | translate }}</span>
                       <span class="metric-value">{{ item.sla.maxMinutosRespuesta }} min</span>
                     </div>
                   </div>
                   <div class="metric">
                     <mat-icon class="metric-icon">check_circle</mat-icon>
                     <div class="metric-content">
-                      <span class="metric-label">Resolución</span>
+                      <span class="metric-label">{{ 'CATEGORIA_INDEX.RESOLUCION' | translate }}</span>
                       <span class="metric-value">{{ item.sla.maxMinutosResolucion }} min</span>
                     </div>
                   </div>
@@ -102,11 +102,11 @@
             <div class="actions-left">
               <button mat-button color="primary" (click)="detalle(item.id)">
                 <mat-icon>visibility</mat-icon>
-                Ver Detalles
+                {{ 'CATEGORIA_INDEX.VERDETALLES' | translate }}
               </button>
             </div>
             <div class="actions-right">
-              <button mat-icon-button color="accent" (click)="actualizarCategoria(item.id)" matTooltip="Editar categoría"
+              <button mat-icon-button color="accent" (click)="actualizarCategoria(item.id)" matTooltip="{{ 'CATEGORIAS.EDITAR' | translate }}"
                 class="btn-edit">
                 <mat-icon>edit</mat-icon>
               </button>
@@ -123,11 +123,11 @@
       <div class="empty-icon">
         <mat-icon>category_off</mat-icon>
       </div>
-      <h2 class="empty-title">No hay categorías</h2>
-      <p class="empty-text">Comienza creando tu primera categoría para organizar mejor tu sistema.</p>
+      <h2 class="empty-title">{{ 'CATEGORIA_INDEX.NOHAYCATEGORIAS' | translate }}</h2>
+      <p class="empty-text">{{ 'CATEGORIA_INDEX.COMIENZA' | translate }}</p>
       <button mat-raised-button color="primary">
         <mat-icon>add</mat-icon>
-        Crear Primera Categoría
+        {{ 'CATEGORIA_INDEX.CREARPRIMERA' | translate }}
       </button>
     </div>
   }

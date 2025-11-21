@@ -23,47 +23,48 @@
     <nav class="menu-grid" role="navigation" aria-label="Menú principal">
       <a class="menu-item" routerLink="/panel" routerLinkActive="active">
         <mat-icon aria-hidden="true">dashboard</mat-icon>
-        <span>Panel</span>
+        <span>{{ 'INICIO.PANEL' | translate }}</span>
       </a>
       <a class="menu-item primary" routerLink="/tickets" routerLinkActive="active-primary">
         <mat-icon aria-hidden="true">confirmation_number</mat-icon>
-        <span>Tickets</span>
+        <span>{{ 'INICIO.TICKETS' | translate }}</span>
       </a>
       <a class="menu-item" routerLink="/usuarios" routerLinkActive="active">
         <mat-icon aria-hidden="true">person</mat-icon>
-        <span>Usuarios</span>
+        <span>{{ 'INICIO.USUARIOS' | translate }}</span>
       </a>
       <a class="menu-item" routerLink="/articulos" routerLinkActive="active">
         <mat-icon aria-hidden="true">article</mat-icon>
-        <span>Artículos</span>
+        <span>{{ 'INICIO.ARTICULOS' | translate }}</span>
       </a>
       <a class="menu-item" routerLink="/staff" routerLinkActive="active">
         <mat-icon aria-hidden="true">groups</mat-icon>
-        <span>Staff</span>
+        <span>{{ 'INICIO.STAFF' | translate }}</span>
       </a>
       <a class="menu-item" routerLink="/configuracion" routerLinkActive="active">
         <mat-icon aria-hidden="true">settings</mat-icon>
-        <span>Configuración</span>
+        <span>{{ 'INICIO.CONFIGURACION' | translate }}</span>
       </a>
     </nav>
 
     <div class="submenu" role="navigation" aria-label="Filtros de tickets">
       <button mat-button class="submenu-item active" aria-pressed="true">
         <mat-icon>person</mat-icon>
-        Mis Tickets
+        {{ 'INICIO.MISTIQUETES' | translate }}
       </button>
       <button mat-button class="submenu-item" aria-pressed="false">
         <mat-icon>fiber_new</mat-icon>
-        Nuevos Tickets
+        {{ 'INICIO.NUEVOSTIQUETES' | translate }}
       </button>
       <button mat-button class="submenu-item" aria-pressed="false">
         <mat-icon>list_alt</mat-icon>
-        Todos los Tickets
+        {{ 'INICIO.TODOSLOSTIQUETES' | translate }}
       </button>
       <button mat-button class="submenu-item" aria-pressed="false">
         <mat-icon>forum</mat-icon>
-        Respuestas Personalizadas
+        {{ 'INICIO.RESPUESTASPERSONALIZADAS' | translate }}
       </button>
     </div>
   </div>
 </div>
+<br><br>

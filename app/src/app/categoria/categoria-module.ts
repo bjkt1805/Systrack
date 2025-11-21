@@ -25,6 +25,8 @@ import { CategoriaIndex } from './categoria-index/categoria-index';
 import { CategoriaDetail } from './categoria-detail/categoria-detail';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CategoriaForm } from './categoria-form/categoria-form';
+import { TranslateModule } from '@ngx-translate/core';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { CategoriaForm } from './categoria-form/categoria-form';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
-    ReactiveFormsModule
+    TranslateModule,
+    ReactiveFormsModule,
+
   ]
 })
 export class CategoriaModule { }
