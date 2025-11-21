@@ -14,6 +14,7 @@
     "TODOSLOSTIQUETES": "Todos los Tiquetes",
     "RESPUESTASPERSONALIZADAS": "Respuestas Personalizadas"
   },
+  
   "HEADER": {
     "INICIO": "Inicio",
     "LISTADOS": "Listados",
@@ -123,5 +124,61 @@
     "CANCELAR": "Cancelar",
     "CREAR_TECNICO": "Crear Técnico",
     "ACTUALIZAR_TECNICO": "Actualizar Técnico"
+  }, 
+
+   "CATEGORIA_INDEX": {
+    "TITULO": "Categorias",
+    "SUBTITULO": "Gestiona todas las categorías del sistema",
+    "AGREGAR": "Agregar Categoría",
+    "BUSCAR": "Buscar Categorías", 
+    "BUSCARPLACEHOLDER": "Nombre, descripción...",
+    "FILTROS": "Filtros", 
+    "DESCRIPCION": "Descripción",
+    "NOMBRE": "Nombre",
+    "SLA": "SLA", 
+    "RESPUESTA": "Respuesta",
+    "RESOLUCION": "Resolución",
+    "VERDETALLES": "Ver Detalles",
+    "EDITAR": "Editar Categoría",
+    "NOHAYCATEGORIAS": "No hay categorías",
+    "COMIENZA": "Comienza creando la primera categoría",
+    "CREARPRIMERA": "Crear Primera Categoría"
+  }, 
+
+  "CATEGORIA_CREATE": {
+    "TITULO": "Categoría",
+    "SUBTITULO_CREAR": "Complete la información para agregar una nueva categoría al sistema",
+    "SUBTITULO_EDITAR": "Modifique la información de la categoría seleccionada",
+    "REGRESAR": "Regresar",
+    "INFO": "Información requerida para la categoría",
+    "NOMBRE": "Nombre de la categoría",
+    "NOMBRE_PLACEHOLDER": "Ej: Desarrollo",
+    "NOMBRE_REQUERIDO": "El nombre de la categoría es requerido",
+    "NOMBRE_MINIMO": "El nombre debe tener al menos 5 caracteres",
+    "DESCRIPCION": "Descripción",
+    "DESCRIPCION_PLACEHOLDER": "Ej: Desarrollo de software",
+    "DESCRIPCION_REQUERIDA": "La descripción es requerida",
+    "DESCRIPCION_MINIMO": "Mínimo 3 caracteres",
+    "ESPECIALIDADES": "Especialidades",
+    "AGREGARESPECIALIDAD": "Agregar especialidad",
+    "ELIMINARESPECIALIDAD": "Eliminar Especialidad",
+    "NOHAYESPECIALIDADES": "No hay especialidades agregadas. Haga clic en el botón \"+\" para agregar una.",
+    "ESPECIALIDAD": "Especialidad",
+    "SELECCIONEESPECIALIDAD": "Seleccione una especialidad",
+    "ETIQUETAS": "Etiquetas",
+    "AGREGARETIQUETA": "Agregar Etiqueta",
+    "ELIMINARETIQUETA": "Eliminar Etiqueta",
+    "NOHAYETIQUETAS": "No hay etiquetas agregadas. Haga clic en el botón \"+\" para agregar una.",
+    "ETIQUETA": "Etiqueta",
+    "SELECCIONETIQUETA": "Seleccione una etiqueta",
+    "SELECCIONESLA": "Seleccione un SLA",
+    "SLA_REQUIRED": "Debe seleccionar un SLA",
+    "RESPUESTA": "Respuesta",
+    "RESOLUCION": "Resolución",
+    "LIMPIAR": "Limpiar Formulario",
+    "CANCELAR": "Cancelar",
+    "CREAR_CATEGORIA": "Crear Categoría", 
+    "ACTUALIZAR_CATEGORIA": "Actualizar Categoría"
+
   }
 }
