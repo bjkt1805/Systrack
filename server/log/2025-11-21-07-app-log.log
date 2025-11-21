@@ -1,0 +1,11 @@
+2025-11-21 07:54:35.803 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `this.prisma.especialidad.findMany()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\controllers\especialidadController.ts:12:60
+
+   9 get = async (request: Request, response: Response, next: NextFunction) => {
+  10     try {
+  11         //Select * from especialidad
+→ 12         const listado = await this.prisma.especialidad.findMany(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.

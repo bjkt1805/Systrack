@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-
 // Importar el servicio de Traducción (TranslationService)
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,7 +24,7 @@ export class App {
     translate.use('en'); // Cambiarlo a esp
   }
 
-  cambiarIdioma(lang: 'en' | 'es') {
+  cambiarIdioma(lang: 'es' | 'en') {
     this.translate.use(lang);
   }
 }

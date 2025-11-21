@@ -25,6 +25,7 @@ import { TecnicoIndex } from './tecnico-index/tecnico-index';
 import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TecnicoForm } from './tecnico-form/tecnico-form';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { TecnicoForm } from './tecnico-form/tecnico-form';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class TecnicoModule { }

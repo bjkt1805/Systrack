@@ -8,17 +8,17 @@
     <div class="footer__block">
       <h6 class="footer__title">Systrack</h6>
       <p class="footer__text">
-        Dirección: San Juan, Santa Bárbara, Heredia, Costa Rica
+        {{ 'FOOTER.DIRECCION' | translate }}: San Juan, Santa Bárbara, Heredia, Costa Rica
       </p>
       <p class="footer__text">
-        Teléfono:
-        <a href="tel:+50672969719" class="footer__link">+506 72969719</a>
+        {{ 'FOOTER.TELEFONO' | translate }}:
+        <a href="{{ 'FOOTER.TELEFONO' | translate }}: +50672969719" class="footer__link">+506 72969719</a>
       </p>
     </div>
 
     <!-- Columna 2: Redes sociales -->
     <div class="footer__block footer__block--center">
-      <h6 class="footer__subtitle">Síguenos</h6>
+      <h6 class="footer__subtitle">{{ 'FOOTER.SIGUENOS' | translate }}:</h6>
       <div class="footer__social">
         <a class="footer__icon" href="https://www.facebook.com" target="_blank" aria-label="Facebook" matTooltip="Facebook">
           <mat-icon>facebook</mat-icon>
@@ -35,10 +35,10 @@
     <!-- Columna 3: Créditos y enlaces -->
     <div class="footer__block footer__block--right">
       <p class="footer__legal">
-        © {{ today | date: 'yyyy' }}, Systrack. Todos los derechos reservados.
+        © {{ today | date: 'yyyy' }}, Systrack. {{ 'FOOTER.DERECHOSRESERVADOS' | translate }}
       </p>
       <p class="footer__links">
-        <a class="footer__link" routerLink="/contacto">Contacto</a>
+        <a class="footer__link" routerLink="/contacto">{{ 'FOOTER.CONTACTO' | translate }}</a>
     </p>
     <p class="footer__signature">Bryan Kellerman
         <span class="sep" aria-hidden="true">| </span>Warner Salazar
@@ -46,5 +46,4 @@
 
     </div>
   </div>
-
 </mat-toolbar>
