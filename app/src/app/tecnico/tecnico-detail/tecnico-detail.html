@@ -17,14 +17,14 @@
           <h1 class="tech-card__name">{{ datos()?.nombreUsuario }}</h1>
           <p class="tech-card__subtitle">
             <mat-icon>email</mat-icon>
-            {{ datos()?.correo || 'Sin correo' }}
+            {{ datos()?.correo || ('TECNICO_DETALLE.SIN_CORREO' | translate) }}
             <span class="separator-dot">•</span>
             <span class="status-badge" [ngClass]="{
               'status-badge--active': datos()?.estadoTecnico === 'DISPONIBLE',
               'status-badge--inactive': datos()?.estadoTecnico !== 'DISPONIBLE'
             }">
               <mat-icon>{{ datos()?.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'cancel' }}</mat-icon>
-              {{ datos()?.estadoTecnico || 'Sin estado' }}
+              {{ datos()?.estadoTecnico || ('TECNICO_DETALLE.SIN_ESTADO' | translate) }}
             </span>
           </p>
         </div>
@@ -39,22 +39,22 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>person</mat-icon>
-          Información Personal
+          {{ 'TECNICO_DETALLE.INFORMACION_PERSONAL' | translate }}
         </h3>
         
         <div class="info-grid">
           <div class="info-item">
-            <span class="label">Nombre de Usuario</span>
+            <span class="label">{{ 'TECNICO_DETALLE.NOMBRE_USUARIO' | translate }}</span>
             <span class="value">{{ datos()?.nombreUsuario }}</span>
           </div>
 
           <div class="info-item">
-            <span class="label">Correo Electrónico</span>
+            <span class="label">{{ 'TECNICO_DETALLE.CORREO' | translate }}</span>
             <span class="value">{{ datos()?.correo }}</span>
           </div>
 
           <div class="info-item">
-            <span class="label">Estado</span>
+            <span class="label">{{ 'TECNICO_DETALLE.ESTADO' | translate }}</span>
             <span class="value">
               <span class="status-badge" [ngClass]="{
                 'status-badge--active': datos()?.estadoTecnico === 'DISPONIBLE',
@@ -67,7 +67,7 @@
           </div>
 
           <div class="info-item">
-            <span class="label">Carga de Trabajo</span>
+            <span class="label">{{ 'TECNICO_DETALLE.CARGA_TRABAJO' | translate }}</span>
             <span class="value">{{ datos()?.cargaTrabajo || 0 }} tickets</span>
           </div>
         </div>
@@ -77,7 +77,7 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>workspace_premium</mat-icon>
-          Especialidades ({{ datos()?.especialidades?.length }})
+          {{ 'TECNICO_DETALLE.ESPECIALIDADES' | translate }} ({{ datos()?.especialidades?.length }})
         </h3>
         
         <div class="chips-container">
@@ -94,7 +94,7 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>analytics</mat-icon>
-          Estadísticas de Desempeño
+          {{ 'TECNICO_DETALLE.ESTADISTICAS' | translate }}
         </h3>
         
         <div class="sla-grid">
@@ -103,7 +103,7 @@
               <mat-icon>assignment</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">Tickets Asignados</span>
+              <span class="sla-label">{{ 'TECNICO_DETALLE.TICKETS_ASIGNADOS' | translate }}</span>
               <span class="sla-value">{{ datos()?.cargaTrabajo || 0 }}</span>
             </div>
           </div>
@@ -116,7 +116,7 @@
               <mat-icon>{{ datos()?.estadoTecnico === 'DISPONIBLE' ? 'check_circle' : 'hourglass_empty' }}</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">Estado Actual</span>
+              <span class="sla-label">{{ 'TECNICO_DETALLE.ESTADO_ACTUAL' | translate }}</span>
               <span class="sla-value">{{ datos()?.estadoTecnico }}</span>
             </div>
           </div>
@@ -129,7 +129,7 @@
     <mat-card-footer class="tech-card__footer">
       <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Regresar
+        {{ 'TECNICO_DETALLE.REGRESAR' | translate }}
       </button>
     </mat-card-footer>
   </mat-card>
@@ -142,11 +142,11 @@
       <div class="empty-icon">
         <mat-icon>person_off</mat-icon>
       </div>
-      <h2 class="empty-title">Técnico no encontrado</h2>
-      <p class="empty-text">No se pudo cargar la información de este técnico.</p>
+      <h2 class="empty-title">{{ 'TECNICO_DETALLE.NO_ENCONTRADO_TITULO' | translate }}</h2>
+      <p class="empty-text">{{ 'TECNICO_DETALLE.NO_ENCONTRADO_TEXTO' | translate }}</p>
       <button mat-raised-button color="primary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Volver al Listado
+        {{ 'TECNICO_DETALLE.VOLVER_LISTADO' | translate }}
       </button>
     </mat-card-content>
   </mat-card>

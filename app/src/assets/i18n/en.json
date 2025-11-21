@@ -12,12 +12,64 @@
     "MISTIQUETES": "My Tickets", 
     "NUEVOSTIQUETES": "New Tickets",
     "TODOSLOSTIQUETES": "All Tickets",
-    "RESPUESTASPERSONALIZADAS": "Personalized responses",
+    "RESPUESTASPERSONALIZADAS": "Personalized responses"
+  },
+  "HEADER": {
+    "INICIO": "Home",
+    "LISTADOS": "Lists",
+    "PROCESOS": "Processes",
+    "REPORTES": "Reports",
+    "IDIOMA": "Language",
+    "USUARIO": "User",
+    "TECNICOS": "Technicians",
+    "CATEGORIAS": "Categories",
+    "TICKETS": "Tickets",
+    "ASIGNACIONES": "Assignments",
+    "TRAZABILIDAD": "Traceability of tickets",
+    "GESTION": "Management of ticket assignments",
+    "REPORTE": "Report",
+    "IDIOMA1": "Spanish",
+    "IDIOMA2": "English",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout"
+  },
+  "FOOTER": {
     "DIRECCION": "Address",
-    "TELEFONO": "Phone", 
+    "TELEFONO": "Phone",
     "SIGUENOS": "Follow us",
     "DERECHOSRESERVADOS": "All rights reserved.",
     "CONTACTO": "Contact"
-
+  },
+    "TECNICOS": {
+    "TITULO": "Technicians",
+    "SUBTITULO": "Manage all technicians in the system",
+    "AGREGAR": "Add Technician",
+    "BUSCAR": "Search technicians",
+    "BUSCARPLACEHOLDER": "Name, email...",
+    "FILTROS": "Filters",
+    "CORREO": "Email",
+    "ESTADO": "Status",
+    "VER_DETALLES": "View Details",
+    "EDITAR": "Edit Technician",
+    "VACIO_TITULO": "No technicians",
+    "VACIO_TEXTO": "Start by adding your first technician to manage the system.",
+    "AGREGAR_PRIMERO": "Add First Technician"
+  },
+  "TECNICO_DETALLE": {
+    "SIN_CORREO": "No email",
+    "SIN_ESTADO": "No status",
+    "INFORMACION_PERSONAL": "Personal Information",
+    "NOMBRE_USUARIO": "Username",
+    "CORREO": "Email",
+    "ESTADO": "Status",
+    "CARGA_TRABAJO": "Workload",
+    "ESPECIALIDADES": "Specialties",
+    "ESTADISTICAS": "Performance Statistics",
+    "TICKETS_ASIGNADOS": "Assigned Tickets",
+    "ESTADO_ACTUAL": "Current Status",
+    "REGRESAR": "Back",
+    "NO_ENCONTRADO_TITULO": "Technician not found",
+    "NO_ENCONTRADO_TEXTO": "Could not load information for this technician.",
+    "VOLVER_LISTADO": "Back to List"
   }
 }

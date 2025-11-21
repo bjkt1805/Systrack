@@ -6,8 +6,8 @@
         <mat-icon class="page-icon">engineering</mat-icon>
       </div>
       <div class="title-group">
-        <h1 class="page-title">Técnicos</h1>
-        <p class="page-subtitle">Gestiona todos los técnicos del sistema</p>
+        <h1 class="page-title">{{ 'HEADER.TECNICOS' | translate }}</h1>
+        <p class="page-subtitle">{{ 'TECNICOS.SUBTITULO' | translate }}</p>
       </div>
     </div>
 
@@ -16,7 +16,7 @@
     <div class="header-actions">
       <button mat-raised-button color="primary" class="btn-create" (click)="crearTecnico()">
         <mat-icon>person_add</mat-icon>
-        Agregar Técnico
+        {{ 'TECNICOS.AGREGAR' | translate }}
       </button>
     </div>
   </div>
@@ -25,14 +25,14 @@
   <!-- BÚSQUEDA Y FILTROS -->
   <div class="filters-section">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Buscar técnicos</mat-label>
-      <input matInput placeholder="Nombre, correo...">
+      <mat-label>{{ 'TECNICOS.BUSCAR' | translate }}</mat-label>
+      <input matInput placeholder="{{ 'TECNICOS.BUSCARPLACEHOLDER' | translate }}">
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <button mat-stroked-button class="filter-btn">
       <mat-icon>filter_list</mat-icon>
-      Filtros
+      {{ 'TECNICOS.FILTROS' | translate }}
     </button>
   </div>
 
@@ -63,7 +63,7 @@
         <div class="info-block">
           <span class="info-label">
             <mat-icon>email</mat-icon>
-            Correo Electrónico
+            {{ 'TECNICOS.CORREO' | translate }}
           </span>
           <p class="info-text">{{ item.correo }}</p>
         </div>
@@ -72,7 +72,7 @@
         <div class="info-block">
           <span class="info-label">
             <mat-icon>toggle_on</mat-icon>
-            Estado
+            {{ 'TECNICOS.ESTADO' | translate }}
           </span>
           <div class="status-container">
             <span class="status-badge"
@@ -90,11 +90,11 @@
         <div class="actions-left">
           <button mat-button color="primary" (click)="detalle(item.id)" class="btn-detail">
             <mat-icon>visibility</mat-icon>
-            Ver Detalles
+            {{ 'TECNICOS.VER_DETALLES' | translate }}
           </button>
         </div>
         <div class="actions-right">
-          <button mat-icon-button color="accent" (click)="actualizarTecnico(item.id)" matTooltip="Editar técnico"
+          <button mat-icon-button color="accent" (click)="actualizarTecnico(item.id)" matTooltip="{{ 'TECNICOS.EDITAR' | translate }}"
             class="btn-edit">
             <mat-icon>edit</mat-icon>
           </button>
@@ -111,11 +111,11 @@
     <div class="empty-icon">
       <mat-icon>engineering_off</mat-icon>
     </div>
-    <h2 class="empty-title">No hay técnicos</h2>
-    <p class="empty-text">Comienza agregando tu primer técnico para gestionar el sistema.</p>
+    <h2 class="empty-title">{{ 'TECNICOS.VACIO_TITULO' | translate }}</h2>
+    <p class="empty-text">{{ 'TECNICOS.VACIO_TEXTO' | translate }}</p>
     <button mat-raised-button color="primary" (click)="crearTecnico()" class="btn-create-empty">
       <mat-icon>add</mat-icon>
-      Agregar Primer Técnico
+      {{ 'TECNICOS.AGREGAR_PRIMERO' | translate }}
     </button>
   </div>
   }
