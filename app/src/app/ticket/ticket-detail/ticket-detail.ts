@@ -190,7 +190,7 @@ export class TicketDetail {
     // Si no hay estados disponibles, salir del método
     if (estadosDisponibles.length === 0) return;
 
-    
+  }
 
   /**
    * Función para formatear una fecha en formato DD/MM/AAAA hh:mm AM/PM
