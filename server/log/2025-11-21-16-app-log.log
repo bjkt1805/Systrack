@@ -1,0 +1,20 @@
+2025-11-21 16:33:05.085 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findFirst()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\controllers\tecnicoController.ts:112:49
+
+  109 }
+  110 
+  111 // Busca el técnico por su 'id' en la DB
+→ 112 const tecnico = await this.prisma.usuario.findFirst(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 17)
+2025-11-21 16:33:05.124 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `this.prisma.especialidad.findMany()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\controllers\especialidadController.ts:12:60
+
+   9 get = async (request: Request, response: Response, next: NextFunction) => {
+  10     try {
+  11         //Select * from especialidad
+→ 12         const listado = await this.prisma.especialidad.findMany(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
