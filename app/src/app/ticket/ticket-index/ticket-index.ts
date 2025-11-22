@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TicketModel } from '../../share/models/TicketModel';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
-  
+import { AuthenticationService } from '../../share/services/app/authentication.service';
+
 @Component({
   selector: 'app-ticket-index',
   standalone: false,
@@ -15,7 +16,7 @@ import { UsuarioService } from '../../share/services/api/usuario.service';
 })
 
 // A la hora de exportar la clase, se implementa OnInit
-export class TicketIndex implements OnInit{
+export class TicketIndex implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -29,13 +30,27 @@ export class TicketIndex implements OnInit{
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  // Inyectar el servicio de autenticación
+  private authService = inject(AuthenticationService);
+
+  /**
+ * Signals para manejar la autenticación de usuario 
+ */
+  readonly isAuthenticated = this.authService.authenticated;
+  readonly currentUser = this.authService.usuario;
+
+  // Acceder al id del usuario 
+  getCurrentUserId(): number | null | undefined {
+    return this.currentUser()?.id;
+  }
+
   // ===== VARIABLES DEL USUARIO LOGUEADO ID (HARDCODEADA) =====
   // Esta variable simula el usuario logueado
   // Posteriormente se obtendrá del servicio de autenticación
-  USUARIO_LOGUEADO_ID: number = 1;
+  USUARIO_LOGUEADO_ID = this.getCurrentUserId() || 1; // Valor por defecto 1 si es null
 
   // Signal para obtener el usuario logueado completo
-  usuarioLogueado = signal<any>(null); 
+  usuarioLogueado = signal<any>(null);
 
   // Signal para estado de carga del usuario
   cargandoUsuario = signal<boolean>(false);
@@ -51,7 +66,7 @@ export class TicketIndex implements OnInit{
 
   // Columnas a utilizar en la tabla
   displayedColumns = ['titulo', 'descripcion', 'estado', 'prioridad', 'acciones'];
-  
+
   // ngOnInit para inicializar el paginador y sus labels en español
   // junto con la carga de usuarios desde el servicio y luego asignarlos a la signal
 
@@ -96,7 +111,7 @@ export class TicketIndex implements OnInit{
         }
       });
   }
- 
+
   // Método que se ejecuta cuando cambia la página en el paginador
   onPageChange(event: PageEvent): void {
     // El paginador ya actualiza automáticamente pageIndex y pageSize

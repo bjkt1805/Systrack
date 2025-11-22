@@ -5,6 +5,11 @@ import { TicketService } from '../../share/services/api/ticket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TicketImageViewDialog } from '../ticket-image-view-dialog/ticket-image-view-dialog';
 
+// importar dialogo de TicketEstado
+// import {TicketEstadoDialog} from '../ticket-estado-dialog/ticket-estado-dialog';
+import { AuthenticationService } from '../../share/services/app/authentication.service';
+import { EstadoTicket } from '../../share/models/EnumsModel';
+
 @Component({
   selector: 'app-ticket-detail',
   standalone: false,
@@ -28,6 +33,37 @@ export class TicketDetail {
   // Para mostrar un dialog con las imagenes del historial del ticket
   private imageDialog = inject(MatDialog);
 
+  // Inyectar el servicio de autenticación
+  private authService = inject(AuthenticationService);
+
+  /**
+ * Signals para manejar la autenticación de usuario 
+ */
+  readonly isAuthenticated = this.authService.authenticated;
+  readonly currentUser = this.authService.usuario;
+
+  // Mapa para manejar el flujo de estados del estado
+  // Por ejemplo, pasar de Pendiente a Asignado
+  // Luego pasar de Asignado a En_Proceso, etc. 
+  // Record ayuda a mapear un objeto mediante llave (EstadoTicket) y tipo de 
+  // valor asociado a esas llaves (EstadoTicket[])
+  private readonly FLUJO_ESTADOS: Record<EstadoTicket, EstadoTicket[]> = {
+    [EstadoTicket.PENDIENTE]: [EstadoTicket.ASIGNADO],
+    [EstadoTicket.ASIGNADO]: [EstadoTicket.EN_PROCESO],
+    [EstadoTicket.EN_PROCESO]: [EstadoTicket.RESUELTO],
+    [EstadoTicket.RESUELTO]: [EstadoTicket.CERRADO],
+    [EstadoTicket.CERRADO]: []
+  };
+
+  // Mapa/record para los íconos de estado del tiquete 
+  private readonly ESTADOS_ICONS: Record<string, string> = {
+    'PENDIENTE': 'pending',
+    'ASIGNADO': 'person_add',
+    'EN_PROCESO': 'autorenew',
+    'RESUELTO': 'check_circle',
+    'CERRADO': 'lock'
+  }
+
   constructor() {
 
     // Para obtener el id/parámetro de la ruta
@@ -40,6 +76,7 @@ export class TicketDetail {
     }
   }
 
+
   // Obtener ticket y actualizar la Signal
   obtenerTicket(id: number) {
     this.ticketService.getById(id).subscribe((data: TicketModel) => {
@@ -48,12 +85,119 @@ export class TicketDetail {
     });
   }
 
- /**
-  * Función para formatear una fecha en formato DD/MM/AAAA hh:mm AM/PM
-  * que recibe la fecha como parámetro 
-  * @param fecha 
-  * @returns 
-  */
+  // Obtener el ícono según el estado del tiquete
+  getEstadoIcon(estado: string | undefined): string {
+    return this.ESTADOS_ICONS[estado || ''] || 'help'; // retornar 
+  }
+
+  /**
+   * Signal computada para verificar si el usuario puede actualizar el estado del ticket 
+   */
+  puedeActualizarEstado = computed(() => {
+
+    // Obtener la información del tiquete (signal datos)
+    const ticket = this.datos();
+
+    // Obtener el usuario autenticado 
+    const usuario = this.currentUser();
+
+    // Si no hay tiquete ni usuario devolver false 
+    if (!ticket || !usuario) return false;
+
+    // Si el estado del tiquete es CERRADO, devolver false (no se puede actualizar)
+    if (ticket.estado === EstadoTicket.CERRADO) return false;
+
+    // Obtener los siguientes estados disponibles (basado en el estado actual del tiquete)
+    // Por ejemplo, si el tiquete está en estado Pendiente, debe devolverse Asignado
+    // En Proceso, Resuelto, Cerrado 
+    const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+
+    // Si la longitud de "siguientesEstadosTicket" es 0 devolver false 
+    if (siguientesEstadosTicket.length === 0) return false;
+
+    // Verificar el permiso sobre el siguiente estado del tiquete 
+    for (const siguienteEstado of siguientesEstadosTicket) {
+
+      // Si el usuario tiene permiso para cambiar el estado del tiquete, devolver true
+      if (this.tienePermisoParaEstado(siguienteEstado, ticket, usuario)) {
+        return true;
+      }
+    }
+
+    // Devolver false por defecto
+    return false;
+  });
+
+  /**
+   * Método para verificar si el usuario tiene permiso para cambiar a un estado específico
+   */
+  private tienePermisoParaEstado(estadoNuevo: EstadoTicket, ticket: TicketModel, usuario: any): boolean {
+
+    // Obtener el id de usuario y el rol a partir del usuario 
+    const { id: usuarioId, rol } = usuario;
+
+    // SOLO LOS TÉCNICOS PUEDEN CAMBIAR EL TIQUETE A EN_PROCESO O RESUELTO
+    // A partir del record FLUJO_ESTADOS se revisa si EstadoTicket 
+    // es "EN_PROCESO" o "RESUELTO"
+    if ([EstadoTicket.EN_PROCESO, EstadoTicket.RESUELTO].includes(estadoNuevo)) {
+
+      // retornar true si el rol es TECNICO
+      return rol === 'TECNICO';
+    }
+
+    // SOLO EL CLIENTE QUE CREÓ EL TIQUETE O EL ADMIN PUEDEN CERRARLO
+    if (estadoNuevo === EstadoTicket.CERRADO) {
+
+      //retornar true si el id de usuario es el del solicitanteId del tiquete 
+      // o si el rol es ADMIN 
+      return ticket.solicitanteId === usuarioId || rol === 'ADMIN'
+    }
+
+    // TÉCNICO O ADMIN PUEDEN CAMBIAR EL ESTADO DEL TIQUETE A ASIGNADO
+    if (estadoNuevo === EstadoTicket.ASIGNADO) {
+
+      // retornar true si el rol del usuario es TECNICO o ADMIN 
+      return rol === 'TECNICO' || rol === 'ADMIN';
+    }
+
+    // devoler false por defecto
+    return false;
+
+  }
+
+  /**
+   * Método para abrir el diálogo de cambio de estado del ticket
+   */
+  abrirDialogoCambioEstado(): void {
+
+    // Obtener el tiquete
+    const ticket = this.datos();
+
+    // Obtener el usuario autenticado
+    const usuario = this.currentUser();
+
+    // Si no hay tiquete o usuario, salir del método
+    if (!ticket || !usuario) return;
+
+    // Obtener los siguientes estados disponibles 
+    const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+
+    // Filtrar los estados a los que el usuario tiene permiso para cambiar
+    const estadosDisponibles = siguientesEstadosTicket.filter(estado =>
+      this.tienePermisoParaEstado(estado, ticket, usuario) // invocar el método de permiso
+    );
+
+    // Si no hay estados disponibles, salir del método
+    if (estadosDisponibles.length === 0) return;
+
+  }
+
+  /**
+   * Función para formatear una fecha en formato DD/MM/AAAA hh:mm AM/PM
+   * que recibe la fecha como parámetro 
+   * @param fecha 
+   * @returns 
+   */
 
   // Fecha en formato DD/MM/AAAA hh:mm AM/PM
   fechaFormateada(fecha: Date | null | undefined): string {
@@ -166,7 +310,7 @@ export class TicketDetail {
     return `${diffMinutos} min${diffMinutos === 1 ? '' : 's'}`;
 
   });
-  
+
 
   // Cumplimiento de respuesta (signal computed fuertemente tipado )
   cumplioRespuesta = computed<null | boolean>(() => {
@@ -245,7 +389,7 @@ export class TicketDetail {
   // Método para obtener las imágenes asociadas al historial del ticket 
   // Tipado fuerte para la imagen
   openImage(img: { url?: string } | null | undefined) {
-    
+
     // Si no hay url de imagen, salir del método (no abrir el dialog)
     if (!img?.url) return;
 

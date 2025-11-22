@@ -1,0 +1,45 @@
+2025-11-21 10:11:04.619 error: 	1--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\usuarioController.ts:33:47
+
+  30 const hash = await bcrypt.hash(password, salt);
+  31 
+  32 // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
+→ 33 const user = await prisma.usuario.create(
+Unique constraint failed on the constraint: `Usuario_nombreUsuario_key`
+2025-11-21 10:18:47.827 error: 	1--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\usuarioController.ts:33:47
+
+  30 const hash = await bcrypt.hash(password, salt);
+  31 
+  32 // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
+→ 33 const user = await prisma.usuario.create(
+Unique constraint failed on the constraint: `Usuario_nombreUsuario_key`
+2025-11-21 10:21:15.940 error: 	1--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\usuarioController.ts:33:47
+
+  30 const hash = await bcrypt.hash(password, salt);
+  31 
+  32 // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
+→ 33 const user = await prisma.usuario.create(
+Unique constraint failed on the constraint: `Usuario_nombreUsuario_key`
+2025-11-21 10:32:43.167 error: 	1--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\usuarioController.ts:33:47
+
+  30 const hash = await bcrypt.hash(password, salt);
+  31 
+  32 // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
+→ 33 const user = await prisma.usuario.create(
+Unique constraint failed on the constraint: `Usuario_nombreUsuario_key`
+2025-11-21 10:40:30.431 error: 	1--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.create()` invocation in
+C:\Systrack\server\source\controllers\usuarioController.ts:33:47
+
+  30 const hash = await bcrypt.hash(password, salt);
+  31 
+  32 // Crear el nuevo usuario en la base de datos con los datos proporcionados y la contraseña encriptada
+→ 33 const user = await prisma.usuario.create(
+Unique constraint failed on the constraint: `Usuario_nombreUsuario_key`

@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NotificationService } from '../services/app/notification.service';
 
@@ -64,7 +64,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
           }
         }
         this.noti.error('Error '+error.status,message,5000)
-        throw new Error(error.message);
+
+        // throw new Error(error.message);
+
+        //Cambio a return throwError(() => error); para preservar error original
+        return throwError(() => error);
       })
     );
   }

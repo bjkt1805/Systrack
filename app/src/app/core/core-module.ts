@@ -11,6 +11,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
+import { CdkAutofill } from "@angular/cdk/text-field";
 
 @NgModule({
   declarations: [Header, Footer],
@@ -24,8 +25,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MatMenuModule,
     MatBadgeModule,
     MatDividerModule,
-    TranslateModule
-  ],
+    TranslateModule,
+    CdkAutofill
+],
   exports: [Header, Footer],
 })
 export class CoreModule { }

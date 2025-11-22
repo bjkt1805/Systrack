@@ -161,6 +161,164 @@
   width: 100%;
 }
 
+/* ======  SECCIÓN DE CONTRASEÑA ====== */
+.password-toggle {
+  margin-left: auto;
+}
+
+/* ====== INDICADOR DE FORTALEZA DE CONTRASEÑA ====== */
+.password-strength {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, var(--mat-sys-surface));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.strength-bar {
+  flex: 1;
+  height: 8px;
+  background: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de brillo animado */
+.strength-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.strength-fill.weak {
+  width: 33%;
+  background: linear-gradient(90deg, #f44336, #e53935);
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
+}
+
+.strength-fill.medium {
+  width: 66%;
+  background: linear-gradient(90deg, #ff9800, #fb8c00);
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+}
+
+.strength-fill.strong {
+  width: 100%;
+  background: linear-gradient(90deg, #4caf50, #43a047);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+.strength-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 80px;
+  transition: all 0.3s ease;
+}
+
+.strength-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+/* Colores dinámicos del texto según fortaleza */
+.strength-fill.weak ~ .strength-text {
+  color: #f44336;
+}
+
+.strength-fill.medium ~ .strength-text {
+  color: #ff9800;
+}
+
+.strength-fill.strong ~ .strength-text {
+  color: #4caf50;
+}
+
+/* ====== MENSAJE INFORMATIVO DE CONTRASEÑA ====== */
+.password-info {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.password-info mat-icon {
+  color: var(--mat-sys-primary);
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.password-info p {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 80%, transparent);
+  line-height: 1.5;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 /* ====== CAMPO CHECKBOX ====== */
 .checkbox-field {
   grid-column: 1 / -1;

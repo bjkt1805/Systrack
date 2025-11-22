@@ -19,6 +19,7 @@ export class UsuarioService extends BaseAPI<UsuarioModel> {
      * Función para registrar un nuevo usuario
      */
     registerUser(userData: any) {
-        return this.http.post<UsuarioModel>(`${this.urlAPI}/register`, userData);
+        console.log(`[SERVICIO] Enviando soliticud de registro de usuario a: ${this.urlAPI}/${environment.endPointUsuario}/register`, userData);
+        return this.http.post<UsuarioModel>(`${this.urlAPI}/${environment.endPointUsuario}/register`, userData);
     }
 }

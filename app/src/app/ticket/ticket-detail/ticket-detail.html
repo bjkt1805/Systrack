@@ -15,6 +15,21 @@
           </p>
         </div>
       </div>
+
+      <!--  BOTÓN PARA CAMBIAR ESTADO DEL TIQUETE-->
+      @if (puedeActualizarEstado()) {
+      <div class="header-actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="abrirDialogoCambioEstado()"
+          class="btn-update-estado">
+          <mat-icon>swap_horiz</mat-icon>
+          Actualizar Estado
+        </button>
+      </div>
+      }
+
     </mat-card-header>
 
     <mat-divider></mat-divider>
@@ -36,8 +51,13 @@
 
           <div class="info-row">
             <span class="info-label">Estado</span>
-            <span class="info-value">{{ datos()?.estado }}</span>
-          </div>
+            <!-- Badge visual del estado actual del tiquete -->
+            <span class="info-value">
+              <span class="estado-badge" [class]="'estado-' + datos()?.estado?.toLowerCase()">
+                <mat-icon>{{ getEstadoIcon(datos()?.estado) }}</mat-icon>
+                {{ datos()?.estado }}
+              </span>
+            </span>          </div>
 
           <div class="info-row">
             <span class="info-label">Prioridad</span>

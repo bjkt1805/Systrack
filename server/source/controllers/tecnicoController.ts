@@ -1,4 +1,5 @@
 import { PrismaClient, Rol, EstadoTecnico } from "../../generated/prisma";
+import bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/custom.error";
 
@@ -179,13 +180,21 @@ export class TecnicoController {
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
       const body = request.body // Obtener datos del cuerpo de la solicitud
+
+      // Generar un hash de la contraseña utilizando bcrypt
+      const salt = await bcrypt.genSalt(10);
+
+      // Encriptar la contraseña con el hash generado
+      const hash = await bcrypt.hash(body.password, salt);
+
+
       const newTecnico = await this.prisma.usuario.create({
         data: {
           nombreUsuario: body.nombreUsuario,
           nombreCompleto: body.nombreCompleto,
           telefono: body.telefono,
           correo: body.correo,
-          contrasenaHash: body.contrasennaHash,
+          contrasenaHash: hash, // Almacenar el hash de la contraseña en la BD
           rol: body.rol,
           estadoTecnico: body.estadoTecnico,
           cargaTrabajo: body.cargaTrabajo,
@@ -196,8 +205,39 @@ export class TecnicoController {
           },
         },
       });
+      // Responder con 201 con éxito de técnico creado
       response.status(201).json(newTecnico);
-    } catch (error) {
+
+    } catch (error: any) {
+
+      // En este caso, al haber campos unique en técnico como 
+      // nombreUsuario y correo, si se intenta crear un técnico con
+      // un nombre o correo ya existente, Prisma lanzará un error de violación
+      // Hay que capturarlo y devolver un error 400 (Bad Request). El código 
+      // de error es P2002
+
+      if (error.code === 'P2002') {
+
+        // Obtener el campo que causó la violación de unicidad
+        const campo = error.meta.target;
+
+        // Crear un mensaje de error específico según el campo
+        let mensaje = '';
+        if (campo.includes('nombreUsuario')) {
+          mensaje = 'El nombre de usuario ya está en uso.';
+        }
+        else if (campo.includes('correo')) {
+          mensaje = 'El correo electrónico ya está registrado.';
+        }
+
+        // Retornar un error 400 (bad request al frontend)
+        return response.status(400).json({
+          success: false,
+          message: mensaje,
+          campo
+        });
+      }
+
       console.error("[BACKEND] Error creando técnico:", error);
       next(error);
     }
@@ -226,6 +266,19 @@ export class TecnicoController {
           .json({ message: "El técnico no existe" });
         return
       }
+
+      let hash = "";
+
+      // Actualizar la contraseña si se envió una nueva (verificar que no esté vacía)
+      if (body.password && body.password.trim() !== "") {
+        // Generar un hash de la contraseña utilizando bcrypt
+        const salt = await bcrypt.genSalt(10);
+
+        // Encriptar la contraseña con el hash generado
+        hash = await bcrypt.hash(body.password, salt);
+      }
+
+
       // Determinar la imagen a usar (si se envía una nueva o se mantiene la existente)
       const finalImage =
         body.foto !== undefined ? body.foto : tecnicoExistente.foto;
@@ -248,7 +301,7 @@ export class TecnicoController {
           nombreCompleto: body.nombreCompleto,
           telefono: body.telefono,
           correo: body.correo,
-          contrasenaHash: body.contrasennaHash,
+          contrasenaHash: hash !== "" ? hash : tecnicoExistente.contrasenaHash, // Actualizar el hash de la contraseña en la BD si se proporcionó uno nuevo
           rol: body.rol,
           estadoTecnico: body.estadoTecnico,
           cargaTrabajo: body.cargaTrabajo,

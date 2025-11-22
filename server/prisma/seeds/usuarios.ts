@@ -10,7 +10,7 @@ export const usuarios = [
     nombreCompleto: "Brian Kellerman",
     telefono: "+506 7296 9719",
     correo: "brian-admin1@systrack.com",
-    contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
+    contrasenaHash: "$2b$10$zn3fsRaO6OJUr1hpJ2r2cevfV9NpPNGfXiVD25srx6FODX3B6n//i",
     rol: Rol.ADMIN,
   },
 

@@ -63,7 +63,7 @@
                 <!-- Nombre Completo -->
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Nombre Completo</mat-label>
-                    <input matInput formControlName="nombreCompleto" placeholder="Juan Pérez" autocomplete="name">
+                    <input matInput formControlName="nombreCompleto" placeholder="Juan Pérez" autocomplete="name" minlength="3" maxlength="50">
                     <mat-icon matPrefix>badge</mat-icon>
                     <mat-error>
                         @if(registerForm.get('nombreCompleto')?.hasError('required')) {
@@ -104,10 +104,10 @@
 
                 <!-- Teléfono -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Teléfono (Opcional)</mat-label>
-                    <input matInput type="tel" formControlName="telefono" placeholder="+506 1234-5678" autocomplete="tel">
+                    <mat-label>Teléfono (+506) OPCIONAL</mat-label>
+                    <input matInput type="tel" formControlName="telefono" placeholder="88888888" autocomplete="tel" minlength="8" maxlength="8">
                     <mat-icon matPrefix>phone</mat-icon>
-                    <mat-hint>Incluya código de país si aplica</mat-hint>
+                    <!-- <mat-hint>Incluya código de país si aplica</mat-hint> -->
                     <mat-error>
                 
                         @if (registerForm.get('telefono')?.errors?.['required']) {
@@ -136,7 +136,7 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Contraseña</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
-                        placeholder="••••••••" autocomplete="new-password">
+                        placeholder="••••••••" autocomplete="new-password" minlength="6" maxlength="20">
                     <mat-icon matPrefix>lock</mat-icon>
                     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
                         [attr.aria-label]="'Ocultar contraseña'">
@@ -163,7 +163,7 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Confirmar Contraseña</mat-label>
                     <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmpassword"
-                        placeholder="••••••••" autocomplete="new-password">
+                        placeholder="••••••••" autocomplete="new-password" minlength="6" maxlength="20">
                     <mat-icon matPrefix>lock_outline</mat-icon>
                     <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button"
                         [attr.aria-label]="'Ocultar contraseña'">
