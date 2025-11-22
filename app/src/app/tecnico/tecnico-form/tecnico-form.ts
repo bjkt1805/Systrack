@@ -10,6 +10,7 @@ import { FileUploadService } from '../../share/services/api/file-upload.service'
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { NotificationService } from '../../share/services/app/notification.service';
 import { EstadoTecnico } from '../../share/models/EnumsModel';
+import { passwordsMatchValidator } from '../../share/validators/password-match-validator';
 
 @Component({
   selector: 'app-tecnico-form',
@@ -18,6 +19,11 @@ import { EstadoTecnico } from '../../share/models/EnumsModel';
   styleUrl: './tecnico-form.css'
 })
 export class TecnicoForm implements OnInit, OnDestroy {
+
+  hidePassword = true; // Para mostrar/ocultar la contraseña
+  hideConfirmPassword = true; // Para mostrar/ocultar la confirmación de contraseña
+
+  changePassword = false; // Bandera por si el usuario quiere cambiar la contraseña
 
   // Subject para controlar la destrucción de suscripciones y evitar memory leaks
   private destroy$ = new Subject<void>();
@@ -70,6 +76,9 @@ export class TecnicoForm implements OnInit, OnDestroy {
       this.isCreate = this.idTecnico === null
       this.titleForm = this.isCreate ? 'Crear' : 'Actualizar'
 
+      //Configurar la bandera changePassword según el modo 
+      this.changePassword = this.isCreate;
+
       //Si hay id se obtiene el técnico a actualizar
       if (this.idTecnico) {
         this.tecnicoService.getById(this.idTecnico).subscribe((data) => this.patchFormValues(data))
@@ -86,18 +95,80 @@ export class TecnicoForm implements OnInit, OnDestroy {
       nombreUsuario: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(20)]], // Nombre de usuario requerido, mínimo 5 caracteres y máximo 20 
       nombreCompleto: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]], // Nombre completo requerido, mínimo 3 caracteres y máximo 50
       correo: [null, [Validators.required, Validators.pattern(this.emailPattern)]], // Correo requerido y formato válido (utilizando la expresión regular)
-      contrasennaHash: [""], // Contraseña vacía para creación/actualización
       telefono: [null, [Validators.required, Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(8)]], // Teléfono requerido y formato válido (utilizando la expresión regular)
-
+      password: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
+      confirmpassword: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
       foto: [this.nameImage],
-
       rol: ['TECNICO'], // Rol fijo para técnicos
       estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido (valor por defecto 'DISPONIBLE')
       cargaTrabajo: [0], // Campo por defecto que viene en 0
       activo: [true, Validators.required], // Campo de estado (valor por defecto true)
       especialidades: this.fb.array([], [Validators.required]) // FormArray para especialidades con validación requerida
-    });
+    }, { validators: passwordsMatchValidator }); // Validador personalizado para verificar que las contraseñas coincidan
 
+    // Aplicar los validators a los campos password y confirmpassword dependiendo del modo (creación o Edición)
+    this.updatePasswordValidators();
+
+  }
+
+  /**
+   * Método para actualizar validators de contraseña según el modo (Creación o Edición)
+   */
+  private updatePasswordValidators(): void {
+
+    const passwordControl = this.tecnicoForm.get('password'); // Obtener el control de campo password desde el formulario
+    const confirmPasswordControl = this.tecnicoForm.get('confirmpassword') // Obtener el control de campo confirmpassword desde el formulario
+
+    // Si se está en modo de creación O la bandera "changePassword" es true, configurar los validators de los campos 
+    if (this.isCreate || this.changePassword) {
+      passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+      confirmPasswordControl?.setValidators([Validators.required]);
+    }
+
+    // Si no es modo creación o la bandera "changePassword" es false, limpiar/quitar los validators de los campos 
+    else {
+      passwordControl?.clearValidators();
+      confirmPasswordControl?.clearValidators();
+
+    }
+
+    // Actualizar el estado de validez de los controles después de cambiar los validators
+    passwordControl?.updateValueAndValidity();
+    confirmPasswordControl?.updateValueAndValidity();
+  }
+
+  /**
+   * Método para habilitar/deshabilitar cambio de contraseña si el usuario prefiere (en modo edición)
+   */
+  toggleChangePassword(): void {
+    this.changePassword = !this.changePassword; // Alternar el valor de la bandera
+
+    // Si la bandera "changePassword" es true, limpiar los campos "password" y "confirmPassword"
+
+    if (this.changePassword) {
+      this.tecnicoForm.patchValue({
+        password: '',
+        confirmpassword: ''
+      });
+
+      // Marcar los campos password y confirmpassword como no tocados 
+      this.tecnicoForm.get('password')?.markAsUntouched();
+      this.tecnicoForm.get('confirmpassword')?.markAsUntouched();
+    }
+    else {
+      // Restaurar los valores vacíos y limpiar los errores 
+      this.tecnicoForm.patchValue({
+        password: '',
+        confirmpassword: ''
+      });
+
+      // Marcar los campos password y confirmpassword como no tocados
+      this.tecnicoForm.get('password')?.markAsUntouched();
+      this.tecnicoForm.get('confirmpassword')?.markAsUntouched();
+    }
+
+    // Actualizar los validators de password y confirmPassword
+    this.updatePasswordValidators();
   }
 
   /**
@@ -155,6 +226,9 @@ export class TecnicoForm implements OnInit, OnDestroy {
       this.addEspecialidad();
     }
 
+    // En modo edición, iniciar el formulario sin validaciones de contraseña (updatePasswordValidators)
+    this.updatePasswordValidators();
+
     this.debugFormulario(); // LLAMADA A LA FUNCIÓN DE DEBUG
   }
 
@@ -173,43 +247,43 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * Elimina una especialidad del FormArray según el índice
    * @param index Índice de la especialidad a eliminar
    */
-removeEspecialidad(index: number) {
+  removeEspecialidad(index: number) {
 
-  // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
-  // En modo creación, mantener al menos una
-  if (this.isCreate && this.especialidades.length <= 1) {
-    this.noti.warning(
-      'Especialidad requerida', 
-      'Debe tener al menos una especialidad para crear un técnico', 
-      3000
+    // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
+    // En modo creación, mantener al menos una
+    if (this.isCreate && this.especialidades.length <= 1) {
+      this.noti.warning(
+        'Especialidad requerida',
+        'Debe tener al menos una especialidad para crear un técnico',
+        3000
+      );
+      return;
+    }
+
+    // // CONFIRMACIÓN: En modo edición, preguntar antes de eliminar si queda solo una
+    // if (!this.isCreate && this.especialidades.length === 1) {
+    //   const confirmar = confirm('¿Está seguro de eliminar la última especialidad? El técnico quedará sin especialidades.');
+    //   if (!confirmar) {
+    //     return;
+    //   }
+    // }
+
+    // Eliminar la especialidad
+    this.especialidades.removeAt(index);
+
+    // Actualizar el control del formulario
+    this.tecnicoForm.setControl(
+      'especialidades',
+      this.fb.array(this.especialidades.controls)
     );
-    return;
+
+    console.log(`Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
+
+    // AGREGAR especialidad vacía si no quedan y estamos creando
+    if (this.isCreate && this.especialidades.length === 0) {
+      this.addEspecialidad();
+    }
   }
-
-  // // CONFIRMACIÓN: En modo edición, preguntar antes de eliminar si queda solo una
-  // if (!this.isCreate && this.especialidades.length === 1) {
-  //   const confirmar = confirm('¿Está seguro de eliminar la última especialidad? El técnico quedará sin especialidades.');
-  //   if (!confirmar) {
-  //     return;
-  //   }
-  // }
-
-  // Eliminar la especialidad
-  this.especialidades.removeAt(index);
-  
-  // Actualizar el control del formulario
-  this.tecnicoForm.setControl(
-    'especialidades',
-    this.fb.array(this.especialidades.controls)
-  );
-
-  console.log(`Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
-  
-  // AGREGAR especialidad vacía si no quedan y estamos creando
-  if (this.isCreate && this.especialidades.length === 0) {
-    this.addEspecialidad();
-  }
-}
 
   /**
    * Gestiona la selección de archivo para la imagen del técnico
@@ -258,9 +332,9 @@ removeEspecialidad(index: number) {
     }
   }
 
-/**
- * Elimina la imagen seleccionada y restaura la imagen por defecto
- */
+  /**
+   * Elimina la imagen seleccionada y restaura la imagen por defecto
+   */
   removeImage() {
     // Limpiar el archivo actual y la vista previa
     this.currentFile = undefined;
@@ -363,7 +437,7 @@ removeEspecialidad(index: number) {
 
     // Función interna para guardar o actualizar técnico
     const saveTecnico = () => {
-      const payload = {
+      let payload = {
 
         // Copiar todos los valores del formulario y además asignar especialidades e imagen
         ...formValue,
@@ -371,6 +445,28 @@ removeEspecialidad(index: number) {
         especialidades: especialidadesIds.map((id: number) => ({ id })),
         foto: this.nameImage,
       };
+
+      // En modo edición, incluir password solo si changePassword es true (el usuario va a cambiar la contraseña)
+      if (!this.isCreate) {
+
+        // Si hay campo password en el formulario, incluirlo en el payload
+        if (this.changePassword && formValue.password) {
+          payload.password = formValue.password;
+        }
+
+        // Si no se va a cambiar la contraseña, asegurarse de no enviar el campo password y confirmpassword
+        else {
+          const { password, confirmpassword, ...payloadSinPassword } = payload;
+          payload = payloadSinPassword;
+        }
+      }
+
+      else {
+        // Remover confirm password del payload ya que no es necesario enviarlo al API
+        const { confirmpassword, ...payloadSinConfirmPassword } = payload;
+
+        payload = payloadSinConfirmPassword;
+      }
 
       console.log('Payload enviado al API:', payload); // MOSTRAR EL PAYLOAD EN CONSOLA
 
@@ -380,13 +476,52 @@ removeEspecialidad(index: number) {
         : this.tecnicoService.update(payload);
 
       // Suscribirse a la respuesta del API y mostrar notificación de éxito
-      request$.pipe(takeUntil(this.destroy$)).subscribe(data => {
-        this.noti.success(
-          this.isCreate ? 'Crear Técnico' : 'Actualizar Técnico',
-          `Técnico ${data.nombreCompleto} ${this.isCreate ? 'creado' : 'actualizado'}`,
-          5000,
-          '/tecnico'
-        );
+      request$.pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response) => {
+
+          const tecnico = response; // Obtener el técnico desde la respuesta del API
+          console.log('Técnico procesado exitosamente:', tecnico.nombreCompleto);
+          // Éxito: mostrar notificación y navegar
+          this.noti.success(
+            this.isCreate ? 'Crear Técnico' : 'Actualizar Técnico',
+            `Técnico ${tecnico.nombreCompleto} ${this.isCreate ? 'creado' : 'actualizado'}`,
+            5000,
+            '/tecnico'
+          );
+        },
+        error: (error) => {
+          // Manejo de errores 
+          console.error('[FRONTEND] Error al procesar técnico:', error);
+
+          // Variable tipo string para mostrar error en la notificación
+          let errorMessage = 'Error al procesar el técnico. Inténtelo de nuevo.';
+
+          // Manejo de errores http específicos 
+
+          // Si se recibe un error 400 (Bad Request) o 500 (Internal Server Error) desde el API
+          if (error.status === 400 || error.status === 500) {
+
+            // Si el mensaje del error incluye 'nombreUsuario' asignarlo a errorMessage
+            if (error.error?.message?.includes('nombreUsuario')) {
+              errorMessage = 'El nombre de usuario ya está en uso.';
+            }
+            // Si el mensaje del error incluye 'correo' asignarlo a errorMessage
+            else if (error.error?.message?.includes('correo')) {
+              errorMessage = 'El correo electrónico ya está registrado.';
+            }
+            // Si el error tiene un mensaje asignarlo a errorMessage
+            else if (error.error?.message) {
+              errorMessage = error.error.message;
+            }
+          }
+
+          // Mostrar el toast de error con el mensaje personalizado
+          this.noti.error(
+            this.isCreate ? 'Error al Crear Técnico' : 'Error al Actualizar Técnico',
+            errorMessage,
+            5000
+          );
+        }
       });
     };
 
@@ -420,6 +555,11 @@ removeEspecialidad(index: number) {
     this.nameImage = 'image-not-found.jpg';
     this.especialidades.clear();
     this.addEspecialidad();
+
+    // Resetear la bandera changePassword según el modo 
+    // y actualizar los validators de contraseña
+    this.changePassword = this.isCreate;
+    this.updatePasswordValidators();
   }
 
   /**

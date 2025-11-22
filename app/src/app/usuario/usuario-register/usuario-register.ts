@@ -111,7 +111,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
     // Debuggear los datos a enviar al API
     console.log('Datos a enviar al API:', payload); 
 
-    // Crear el usuario a través del método Create de usuarioService
+    // Crear el usuario a través del método registerUser de usuarioService
     this.usuarioService.registerUser(payload)
       .pipe(takeUntil(this.destroy$))
 
@@ -148,7 +148,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           
           // Manejo de errores http específicos
 
-          // Si se recibe un error 400 (Bad Request) desde el API
+          // Si se recibe un error 400 (Bad Request) o 500 (Internal Server Error) desde el API
           if (error.status === 400 || error.status === 500) {
 
             // Si el mensaje del error incluye 'nombreUsuario' asignarlo a errorMessage
@@ -166,7 +166,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           }
           
           // Mostrar el toast de error con el mensaje correspondiente
-          this.notificacion.error('Error de Registro', errorMessage);
+          this.notificacion.error('Error de Registro', errorMessage, 5000);
         }
       });
   }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +17,7 @@ import { EtiquetaService } from '../../share/services/api/etiqueta.service';
 import { CategoriaService } from '../../share/services/api/categoria.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
 import { ImagenTicketModel } from '../../share/models/ImagenTicketModel';
+import { AuthenticationService } from '../../share/services/app/authentication.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -35,9 +36,23 @@ export class TicketForm {
   idTicket: number | null = null;
   isCreate = true;
 
+  // Inyectar el servicio de autenticación
+  private authService = inject(AuthenticationService);
+
+  /**
+* Signals para manejar la autenticación de usuario 
+*/
+  readonly isAuthenticated = this.authService.authenticated;
+  readonly currentUser = this.authService.usuario;
+
+  // Acceder al id del usuario 
+  getCurrentUserId(): number | null | undefined {
+    return this.currentUser()?.id;
+  }
+
   // Usuario solicitante simulado (sin autenticación)
   // EN AVANCES POSTERIORES, ESTO VENDRÍA DEL CONTEXTO DE AUTENTICACIÓN
-  private readonly USUARIO_SOLICITANTE_ID = 9; // Cliente: maria.rodriguez
+  private readonly USUARIO_SOLICITANTE_ID = this.getCurrentUserId() || 1; // Valor por defecto 1 si es null
   usuarioSolicitante: UsuarioModel | null = null;
 
   // Listas de datos (etiquetas, etiquetas filtradas, prioridades y categoria ) con signals
@@ -285,7 +300,7 @@ export class TicketForm {
       slaRespuesta: this.formatDateTime(this.fechaLimiteRespuesta),
       slaResolucion: this.formatDateTime(this.fechaLimiteResolucion)
     });
-          }
+  }
 
   /**
    * Formatear una fecha (hora de Costa Rica)para mostrarla en el formulario
@@ -484,7 +499,7 @@ export class TicketForm {
    * @param imageId
    */
   markImageForDeletion(imageId: number): void {
-    
+
     // Revisar que el array imagesToDelete no contenga ya el id de la imagen
     if (!this.imagesToDelete.includes(imageId)) {
       this.imagesToDelete.push(imageId); // Agregar el id de la imagen al array
@@ -496,7 +511,7 @@ export class TicketForm {
    * @param imageId 
    */
   unmarkImageForDeletion(imageId: number): void {
-    
+
     // Obtener el índice de la imagen a desmarcar
     const indice = this.imagesToDelete.indexOf(imageId);
 
@@ -570,7 +585,7 @@ export class TicketForm {
     // Agregar el arreglo de las imágenes al formData 
     this.selectedImages.forEach((file) => {
       formData.append('images', file);
-    }); 
+    });
 
     console.log('[FRONTEND] Datos del tiquete enviados al API:', formData.get('ticketData')); // MOSTRAR EL PAYLOAD EN CONSOLA
     console.log('[FRONTEND] Imágenes seleccionadas para enviar al API:', this.selectedImages);
@@ -585,7 +600,7 @@ export class TicketForm {
     // Llamar al servicio correspondiente según si es creación o actualización
     const request$ = this.isCreate
       ? this.ticketService.createTiquete(formData)
-      : this.ticketService.updateTiquete(this.idTicket!,formData);
+      : this.ticketService.updateTiquete(this.idTicket!, formData);
 
     // Suscribirse a la respuesta del API y mostrar notificación de éxito
     request$.pipe(takeUntil(this.destroy$)).subscribe(data => {

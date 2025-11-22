@@ -91,11 +91,11 @@
             <mat-icon>person</mat-icon>
         </button>
         <mat-menu #menu5="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="irLogin()">
                 <mat-icon style="color: white">person_add</mat-icon>
                 <span>{{ 'HEADER.LOGIN' | translate }}</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="logout()">
                 <mat-icon style="color: white">person_remove</mat-icon>
                 <span>{{ 'HEADER.LOGOUT' | translate }}</span>
             </button>

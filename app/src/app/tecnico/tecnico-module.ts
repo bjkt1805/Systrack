@@ -21,9 +21,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TecnicoIndex } from './tecnico-index/tecnico-index';
 import { TecnicoDetail } from './tecnico-detail/tecnico-detail';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TecnicoForm } from './tecnico-form/tecnico-form';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -53,6 +54,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
+    MatSlideToggle,
+    FormsModule,
     ReactiveFormsModule,
     TranslateModule
   ]

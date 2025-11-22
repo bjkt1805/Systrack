@@ -18,13 +18,13 @@ export class App {
     translate.addLangs(['es', 'en']);
 
     // Idioma por defecto (Español)
-    translate.setDefaultLang('en'); // Cambiarlo a esp
+    translate.setDefaultLang('es'); // Cambiarlo a esp
 
     // Usar idioma por defecto al inicio
-    translate.use('en'); // Cambiarlo a esp
+    translate.use('es'); // Cambiarlo a esp
   }
 
-  cambiarIdioma(lang: 'es' | 'en') {
+  cambiarIdioma(lang: 'en' | 'es') {
     this.translate.use(lang);
   }
 }

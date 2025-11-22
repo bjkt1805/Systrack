@@ -45,7 +45,8 @@
                     <!-- NOMBRE DE USUARIO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Nombre de Usuario </mat-label>
-                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez" minlength="5" maxlength="20">
+                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez" minlength="5"
+                            maxlength="20">
                         <mat-icon matPrefix>account_circle</mat-icon>
                         @if (tecnicoForm.get('nombreUsuario')?.invalid && tecnicoForm.get('nombreUsuario')?.touched) {
                         <mat-error>
@@ -62,7 +63,8 @@
                     <!-- NOMBRE COMPLETO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Nombre Completo </mat-label>
-                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González" minlength="3" maxlength="50">
+                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González"
+                            minlength="3" maxlength="50">
                         <mat-icon matPrefix>badge</mat-icon>
                         @if (tecnicoForm.get('nombreCompleto')?.invalid && tecnicoForm.get('nombreCompleto')?.touched) {
                         <mat-error>
@@ -96,27 +98,170 @@
                     <!-- TELÉFONO -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Teléfono (+506) </mat-label>
-                        <input matInput formControlName="telefono" placeholder="88888888" min="8" max="8">
+                        <input matInput formControlName="telefono" placeholder="88888888" minlength="8" maxlength="8">
                         <mat-icon matPrefix>phone</mat-icon>
                         @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
                         <mat-error>
-                            @if (tecnicoForm.get('telefono')?.errors?.['required'])  {
+                            @if (tecnicoForm.get('telefono')?.errors?.['required']) {
                             El teléfono es requerido
                             }
                             @if (tecnicoForm.get('telefono')?.errors?.['pattern']) {
                             Formato de teléfono inválido
                             }
-                            @if ((tecnicoForm.get('telefono')?.errors?.['minlength']) || tecnicoForm.get('telefono')?.errors?.['maxlength']) {
+                            @if ((tecnicoForm.get('telefono')?.errors?.['minlength']) ||
+                            tecnicoForm.get('telefono')?.errors?.['maxlength'])
+                            {
                             Debe ser de 8 caracteres
                             }
                             <!-- @if (tecnicoForm.get('telefono')?.errors?.['maxlength']) {
-                            Debe ser de 8 caracteres
-                            } -->
+                                                Debe ser de 8 caracteres
+                                                } -->
                         </mat-error>
                         }
-                        </mat-form-field>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: SEGURIDAD / CONTRASEÑA -->
+                 <mat-card class="form-section" appearance="outlined">
+            <mat-card-header class="section-header">
+                <mat-icon class="section-icon">security</mat-icon>
+                <mat-card-title class="section-title">Seguridad</mat-card-title>
+                
+                <!-- Toggle para cambiar contraseña (solo en edición) -->
+                @if (!isCreate) {
+                <mat-slide-toggle 
+                    [(ngModel)]="changePassword" 
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="toggleChangePassword()" 
+                    color="primary" 
+                    class="password-toggle">
+                    <span class="toggle-label">
+                        <mat-icon>vpn_key</mat-icon>
+                        Cambiar Contraseña
+                    </span>
+                </mat-slide-toggle>
+                }
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-content class="section-content">
+
+                <!-- Mostrar campos solo en creación O si changePassword está activo -->
+                @if (isCreate || changePassword) {
+                <div class="form-grid">
+                    
+                    <!-- CONTRASEÑA  -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Contraseña</mat-label>
+                        <input 
+                            matInput 
+                            [type]="hidePassword ? 'password' : 'text'" 
+                            formControlName="password" 
+                            placeholder="Ingrese una contraseña"
+                            minlength="6" maxlength="20"
+                            autocomplete="new-password">
+                        <mat-icon matPrefix>lock</mat-icon>
+                        <button 
+                            mat-icon-button 
+                            matSuffix 
+                            (click)="hidePassword = !hidePassword" 
+                            type="button"
+                            [attr.aria-label]="'Mostrar/Ocultar contraseña'"
+                            tabindex="-1">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        <mat-hint>Mínimo 6 caracteres</mat-hint>
+                        @if (tecnicoForm.get('password')?.invalid && tecnicoForm.get('password')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('password')?.errors?.['required']) {
+                            La contraseña es requerida
+                            }
+                            @if (tecnicoForm.get('password')?.errors?.['minlength']) {
+                            Mínimo 6 caracteres
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- CONFIRMAR CONTRASEÑA -->
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Confirmar Contraseña</mat-label>
+                        <input 
+                            matInput 
+                            [type]="hideConfirmPassword ? 'password' : 'text'" 
+                            formControlName="confirmpassword"
+                            placeholder="Confirme su contraseña"
+                            minlength="6" maxlength="20"
+                            autocomplete="new-password">
+                        <mat-icon matPrefix>lock_outline</mat-icon>
+                        <button 
+                            mat-icon-button 
+                            matSuffix 
+                            (click)="hideConfirmPassword = !hideConfirmPassword" 
+                            type="button"
+                            [attr.aria-label]="'Mostrar/Ocultar contraseña'" 
+                            tabindex="-1">
+                            <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        @if (tecnicoForm.get('confirmpassword')?.invalid && tecnicoForm.get('confirmpassword')?.touched) {
+                        <mat-error>
+                            @if (tecnicoForm.get('confirmpassword')?.errors?.['required']) {
+                            Confirme su contraseña
+                            }
+                        </mat-error>
+                        }
+                        @if (tecnicoForm.hasError('passwordsMismatch') && tecnicoForm.get('confirmpassword')?.touched) {
+                        <mat-error>
+                            Las contraseñas no coinciden
+                        </mat-error>
+                        }
+                    </mat-form-field>
 
                 </div>
+
+                <!-- Indicador de fortaleza (solo si hay valor) -->
+                @if (tecnicoForm.get('password')?.value) {
+                <div class="password-strength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" 
+                             [class.weak]="tecnicoForm.get('password')?.value.length < 8"
+                             [class.medium]="tecnicoForm.get('password')?.value.length >= 8 && tecnicoForm.get('password')?.value.length < 12"
+                             [class.strong]="tecnicoForm.get('password')?.value.length >= 12">
+                        </div>
+                    </div>
+                    <span class="strength-text">
+                        <mat-icon class="strength-icon">
+                            @if (tecnicoForm.get('password')?.value.length < 8) {
+                                warning
+                            } @else if (tecnicoForm.get('password')?.value.length < 12) {
+                                info
+                            } @else {
+                                check_circle
+                            }
+                        </mat-icon>
+                        @if (tecnicoForm.get('password')?.value.length < 8) {
+                            Débil
+                        } @else if (tecnicoForm.get('password')?.value.length < 12) {
+                            Media
+                        } @else {
+                            Fuerte
+                        }
+                    </span>
+                </div>
+                }
+                }
+
+                <!-- Mensaje informativo cuando NO se cambia contraseña -->
+                @if (!isCreate && !changePassword) {
+                <div class="password-info">
+                    <mat-icon>info</mat-icon>
+                    <p>La contraseña actual se mantendrá sin cambios. Active el interruptor para modificarla.</p>
+                </div>
+                }
+
             </mat-card-content>
         </mat-card>
 
