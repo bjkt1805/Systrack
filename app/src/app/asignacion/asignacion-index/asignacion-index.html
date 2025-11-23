@@ -5,11 +5,11 @@
         <div class="header-content">
             <h1 class="title">
                 <mat-icon>dashboard</mat-icon>
-                Vista de Asignaciones
+                {{'ASIGNACION.VISTA_ASIGNACIONES' | translate}}
             </h1>
-            <p class="subtitle">Semana del 27 de Octubre al 2 de Noviembre, 2025</p>
+            <p class="subtitle">{{'ASIGNACION.SEMANA' | translate}}</p>
             <!-- Botón de recarga -->
-            <button mat-icon-button matTooltip="Recargar tickets" class="btn-refresh" (click)="recargarTickets()"
+            <button mat-icon-button matTooltip="{{'ASIGNACION.RECARGAR_TICKETS' | translate}}" class="btn-refresh" (click)="recargarTickets()"
                 [disabled]="cargando()">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -23,7 +23,7 @@
     @if (cargando()) {
     <div class="loader-container">
         <mat-spinner></mat-spinner>
-        <p>Cargando asignaciones...</p>
+        <p>{{'ASIGNACION.CARGANDO' | translate}}</p>
     </div>
     }
 
@@ -34,7 +34,7 @@
         <p>{{ error() }}</p>
         <button mat-raised-button color="primary" (click)="recargarTickets()">
             <mat-icon>refresh</mat-icon>
-            Reintentar
+            {{'ASIGNACION.REINTENTAR' | translate}}
         </button>
     </div>
     }
@@ -51,7 +51,7 @@
                     <h3 style="font-size: 15px">{{ columna.titulo }} - {{ columna.fecha }}</h3>
 
                     <!-- Mostrar el total/count de los tiquetes por estado -->
-                    <span matToolTip="Cantidad de tiquetes" class="badge-count">Cantidad de tiquetes: {{
+                    <span matTooltip="{{'ASIGNACION.CANTIDAD_TIQUETES' | translate}}" class="badge-count">{{'ASIGNACION.CANTIDAD_TIQUETES' | translate}}: {{
                         getTotalPorDia(columna.dia) }}
                     </span>
                 </div>
@@ -84,7 +84,7 @@
                     <div class="sla-info">
                         <div class="sla-header">
                             <mat-icon style="padding-right: 10px">schedule</mat-icon>
-                            <span><b>SLA de Resolución: </b><br>{{ ticket.tiempoRestanteSLA }}</span>
+                            <span><b>{{'ASIGNACION.SLA_RESOLUCION' | translate}}: </b><br>{{ ticket.tiempoRestanteSLA }}</span>
                         </div>
                         <div class="sla-progress">
                             <div class="progress-bar" [style.width.%]="ticket.porcentajeSLA"
@@ -97,13 +97,13 @@
                         <div class="sla-cumplimiento">
                             @if (ticket.cumplioRespuesta !== null) {
                                 <mat-icon [class]="ticket.cumplioRespuesta ? 'cumplido' : 'incumplido'" 
-                                          matTooltip="SLA Respuesta: {{ ticket.cumplioRespuesta ? 'Cumplido' : 'Incumplido' }}">
+                                          matTooltip="{{'ASIGNACION.SLA_RESPUESTA' | translate}}: {{ (ticket.cumplioRespuesta ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate)) }}">
                                     {{ ticket.cumplioRespuesta ? 'check_circle' : 'cancel' }}
                                 </mat-icon>
                             }
                             @if (ticket.cumplioResolucion !== null) {
                                 <mat-icon [class]="ticket.cumplioResolucion ? 'cumplido' : 'incumplido'"
-                                          matTooltip="SLA Resolución: {{ ticket.cumplioResolucion ? 'Cumplido' : 'Incumplido' }}">
+                                          matTooltip="{{'ASIGNACION.SLA_RESOLUCION' | translate}}: {{ (ticket.cumplioResolucion ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate)) }}">
                                     {{ ticket.cumplioResolucion ? 'check_circle' : 'cancel' }}
                                 </mat-icon>
                             }
@@ -122,10 +122,10 @@
                             color="primary">
                             <mat-icon>visibility</mat-icon>
                         </button>
-                        <button mat-icon-button matTooltip="Cambiar estado">
+                        <button mat-icon-button matTooltip="{{'ASIGNACION.CAMBIAR_ESTADO' | translate}}">
                             <mat-icon>swap_horiz</mat-icon>
                         </button>
-                        <button mat-icon-button matTooltip="Agregar comentario">
+                        <button mat-icon-button matTooltip="{{'ASIGNACION.AGREGAR_COMENTARIO' | translate}}">
                             <mat-icon>comment</mat-icon>
                         </button>
                     </div>
@@ -137,7 +137,7 @@
                 @if (getTotalPorDia(columna.dia) === 0) {
                 <div class="empty-state">
                     <mat-icon>inbox</mat-icon>
-                    <p>Sin tickets</p>
+                    <p>{{'ASIGNACION.SIN_TICKETS' | translate}}</p>
                 </div>
                 }
             </div>

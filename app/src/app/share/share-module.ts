@@ -4,6 +4,7 @@ import { PageNotFound } from './page-not-found/page-not-found';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
   imports: [
     CommonModule,
     MatGridList,
-    MatGridTile
+    MatGridTile,
+    TranslateModule
 ]
 })
 export class ShareModule { }

@@ -198,6 +198,8 @@
     "ACTUALIZAR_CATEGORIA": "Update Category"
   },
 
+  
+
     "CATEGORIA_DETALLE": {
     "INFORMACION_GENERAL": "General Information",
     "NOMBRE": "Name",
@@ -323,5 +325,28 @@
   "CANCELAR": "Cancel",
   "CREAR_TICKET": "Create Ticket",
   "ACTUALIZAR_TICKET": "Update Ticket"
+},
+"ASIGNACION": {
+  "VISTA_ASIGNACIONES": "Assignment View",
+  "SEMANA": "Week from October 27 to November 2, 2025",
+  "AL": "to",
+  "RECARGAR_TICKETS": "Reload tickets",
+  "CARGANDO": "Loading assignments...",
+  "REINTENTAR": "Retry",
+  "CANTIDAD_TIQUETES": "Number of tickets",
+  "SLA_RESOLUCION": "Resolution SLA",
+  "SLA_RESPUESTA": "Response SLA",
+  "CUMPLIDO": "Fulfilled",
+  "INCUMPLIDO": "Unfulfilled",
+  "VER_DETALLE": "View Detail",
+  "CAMBIAR_ESTADO": "Change Status",
+  "AGREGAR_COMENTARIO": "Add Comment",
+  "SIN_TICKETS": "No tickets"
+},
+
+"PAGE_NOT_FOUND": {
+  "TITULO": "We're sorry!",
+  "MENSAJE": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+  "BOTON_REGRESAR": "Go Back"
 }
 }

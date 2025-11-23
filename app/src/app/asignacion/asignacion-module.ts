@@ -7,6 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from "@angular/material/chips";
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { MatChipsModule } from "@angular/material/chips";
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    TranslateModule
 ]
 })
 export class AsignacionModule { }

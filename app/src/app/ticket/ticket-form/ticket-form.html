@@ -185,7 +185,7 @@
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>{{'TICKET_FORM.ETIQUETA' | translate}}</mat-label>
                         <mat-select formControlName="etiquetaId" (selectionChange)="onEtiquetaSelected($event.value)">
-                            <mat-option value="">{{'TICKET_FORM.SELECCIONE_ETIQUETA' | translate}}</mat-option>
+                            <mat-option value="">{{'TICKET_FORM.ETIQUETA_SELECCIONE' | translate}}</mat-option>
                             @for (etiqueta of etiquetasFiltered(); track etiqueta.id) {
                             <mat-option [value]="etiqueta.id">
                                 {{ etiqueta.nombre }}

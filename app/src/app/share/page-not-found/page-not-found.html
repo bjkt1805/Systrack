@@ -10,13 +10,12 @@
         <mat-grid-tile>
             <div class="message-section">
                 <h1 class="error-code">404</h1>
-                <h2 class="error-title">Lo sentimos!</h2>
+                <h2 class="error-title">{{ 'PAGE_NOT_FOUND.TITULO' | translate }}</h2>
                 <p class="error-text">
-                    La página que está buscando podría haber sido eliminada, cambiado su
-                    nombre o no está disponible temporalmente.
+                    {{ 'PAGE_NOT_FOUND.MENSAJE' | translate }}
                 </p>
                 <button mat-stroked-button class="btn-primary" (click)="irInicio()">
-                    Regresar
+                    {{ 'PAGE_NOT_FOUND.BOTON_REGRESAR' | translate }}
                 </button>
             </div>
         </mat-grid-tile>

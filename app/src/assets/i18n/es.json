@@ -324,6 +324,29 @@
   "CANCELAR": "Cancelar",
   "CREAR_TICKET": "Crear Ticket",
   "ACTUALIZAR_TICKET": "Actualizar Ticket"
-}
+},
 
+"ASIGNACION": {
+  "VISTA_ASIGNACIONES": "Vista de Asignaciones",
+  "SEMANA": "Semana del 27 de Octubre al 2 de Noviembre, 2025",
+  "AL": "al",
+  "RECARGAR_TICKETS": "Recargar tickets",
+  "CARGANDO": "Cargando asignaciones...",
+  "REINTENTAR": "Reintentar",
+  "CANTIDAD_TIQUETES": "Cantidad de tiquetes",
+  "SLA_RESOLUCION": "SLA de Resolución",
+  "SLA_RESPUESTA": "SLA Respuesta",
+  "CUMPLIDO": "Cumplido",
+  "INCUMPLIDO": "Incumplido",
+  "VER_DETALLE": "Ver detalle",
+  "CAMBIAR_ESTADO": "Cambiar estado",
+  "AGREGAR_COMENTARIO": "Agregar comentario",
+  "SIN_TICKETS": "Sin tickets"
+},
+
+"PAGE_NOT_FOUND": {
+  "TITULO": "Lo sentimos!",
+  "MENSAJE": "La página que está buscando podría haber sido eliminada, cambiado su nombre o no está disponible temporalmente.",
+  "BOTON_REGRESAR": "Regresar"
+}
 }
