@@ -11,6 +11,9 @@ export class TecnicoRoutes {
         //GET localhost:3000/tecnico/ - Listado de todos los técnicos
         router.get('/', controller.get)
 
+        // GET localhost:3000/tecnico/available - Listado de técnicos disponibles
+        router.get('/available', controller.getAvailable)
+
         //GET localhost:3000/tecnico/search?clave=valor - Buscar técnicos con filtros y paginación
         router.get('/search',controller.search)
         

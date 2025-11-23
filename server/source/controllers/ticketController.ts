@@ -568,6 +568,320 @@ export class TicketController {
     }
   };
 
+  /**
+   * ACTUALIZAR EL ESTADO DEL TIQUETE
+   * 
+   * El método hace lo siguiente: 
+   * 
+   * - Valida el flujo de estados del tiquete (respetar PENDIENTE, ASIGNADO, EN_PROCESO, RESUELTO, CERRADO)
+   * - Valida los permisos por rol 
+   * - Valida el técnico asignado 
+   * - Actualiza el tiquete (estado, fechas, técnico)
+   * - Creación de registro en tabla HistorialTicket
+   * - Inserción de imágenes en tabla ImagenTicket
+   */
+
+  updateEstado = async (request: Request, response: Response, next: NextFunction) => {
+
+    try {
+
+      // Obtener el id del tiquete desde la petición
+      const ticketId = parseInt(request.params.id);
+
+      // Obtener nuevoEstado, nota, usuarioAsignadoId, imagenes desde el payload
+      const { nuevoEstado, nota, usuarioAsignadoId, imagenes, usuarioActualId, usuarioActualRol } = request.body;
+
+      // Console log para debuguear los datos a actualizar 
+
+      console.log('[BACKEND] Actualizando estado del ticket:', {
+        ticketId,
+        nuevoEstado,
+        usuarioActualId,
+        usuarioActualRol,
+        usuarioAsignadoId,
+        cantidadImagenes: imagenes?.length || 0
+      });
+
+      // Validación de id de tiquete
+      if (!ticketId || isNaN(ticketId)) {
+        return next(AppError.badRequest('ID de ticket inválido'));
+      }
+
+      // Validación de nuevoEstado
+      if (!nuevoEstado) {
+        return next(AppError.badRequest('El nuevo estado es requerido'))
+      }
+
+      // Validación de nota
+      if (!nota || nota.trim().length < 10) {
+        return next(AppError.badRequest('La observación debe tener al menos 10 caracteres'));
+      }
+
+      // Validación de imagenes
+      if (!imagenes || imagenes.length === 0) {
+        return next(AppError.badRequest('Debe incluir al menos una imagen como evidencia'));
+      }
+
+      // Validación de id de usuario
+      if (!usuarioActualId) {
+        return next(AppError.unauthorized('Usuario no autenticado'));
+      }
+
+      // OBTENER EL TIQUETE ACTUAL POR MEDIO DE FINDUNIQUE 
+      const ticket = await this.prisma.ticket.findUnique({
+        where: { id: ticketId },
+        include: {
+          solicitante: true,
+          usuarioAsignado: true,
+          categoria: {
+            include: { sla: true }
+          }
+        }
+      });
+
+      // Si no se encuentra el tiquete, enviar error 
+      if (!ticket) {
+        return next(AppError.notFound('Ticket no encontrado'));
+      }
+
+      // Validar los flujos de estado 
+      const estadoActual = ticket.estado as EstadoTicket;
+      this.validarTransicionEstado(estadoActual, nuevoEstado, usuarioActualRol);
+
+      // Validar los permisos por rol 
+      const esCreador = ticket.solicitanteId == usuarioActualId;
+      this.validarPermisoEstado(nuevoEstado, usuarioActualRol, esCreador);
+
+      // Validar técnico asignado
+      const tecnico = usuarioAsignadoId || ticket.usuarioAsignadoId;
+      if (nuevoEstado !== 'PENDIENTE' && !tecnico) {
+        return next(AppError.badRequest('Debe asignar un técnico para avanzar el estado'));
+      }
+
+      // Preparar datos de actualización de tiquete
+      const dataActualizacion: any = {
+        estado: nuevoEstado,
+      };
+
+      // Actualizar el técnico si se proporciona y es diferente 
+      if (usuarioAsignadoId && usuarioAsignadoId !== ticket.usuarioAsignadoId) {
+        dataActualizacion.usuarioAsignadoId = usuarioAsignadoId;
+      }
+
+      // Actualizar las fechas según el estado 
+      const ahora = new Date();
+
+      switch (nuevoEstado) {
+        case 'ASIGNADO':
+          if (!ticket.respondidoAt) {
+            dataActualizacion.respondidoAt = ahora;
+            // Calcular cumplimiento de respuesta
+            dataActualizacion.cumplioRespuesta =
+              ahora <= ticket.fechaLimiteRespuesta;
+          }
+          break;
+
+        case 'RESUELTO':
+          if (!ticket.resueltoAt) {
+            dataActualizacion.resueltoAt = ahora;
+            // Calcular cumplimiento de resolución
+            dataActualizacion.cumplioResolucion =
+              ahora <= ticket.fechaLimiteResolucion;
+          }
+          break;
+
+        case 'CERRADO':
+          if (!ticket.cerradoAt) {
+            dataActualizacion.cerradoAt = ahora;
+            dataActualizacion.cerradoPorId = usuarioActualId;
+
+            // Si no se resolvión antes, marcar ahora 
+            if (!ticket.resueltoAt) {
+              dataActualizacion.resueltoAt = ahora;
+              dataActualizacion.cumplioResolucion =
+                ahora <= ticket.fechaLimiteResolucion;
+            }
+          }
+          break;
+      }
+
+      // Actualizar el tiquete, crear una entrada en HistorialTicket y 
+      // crear varias entradas en ImagenTicket por medio de una transacción
+      // de Prisma
+      const transaccion = await this.prisma.$transaction(async (prisma) => {
+
+        // Actualizar el tiquete 
+        const ticketActualizado = await prisma.ticket.update({
+          where: { id: ticketId },
+          data: dataActualizacion,
+          include: {
+            solicitante: true,
+            usuarioAsignado: true,
+            categoria: {
+              include: { sla: true }
+            }
+          }
+        });
+
+        // Crear un registro en HistorialTicket
+        const historial = await prisma.historialTicket.create({
+          data: {
+            ticketId: ticketId,
+            cambiadoPorId: usuarioActualId,
+            deEstado: estadoActual,
+            aEstado: nuevoEstado,
+            nota: nota.trim() // Quitar espacios en blanco de nota
+
+          }
+        });
+
+        // Insertar las imágenes a ImagenTicket
+        if (imagenes && imagenes.length > 0) {
+          const imagenesData = imagenes.map((filename: string) => ({
+            historialId: historial.id,
+            url: filename,
+            descripcion: `Imagen de evidencia. Cambio de: ${estadoActual} a ${nuevoEstado}`
+          }));
+
+          await prisma.imagenTicket.createMany({
+            data: imagenesData
+          });
+        }
+
+        return { ticketActualizado, historial };
+      });
+
+      console.log('[BACKEND] Estado actualizado exitosamente:', {
+        ticketId,
+        estadoAnterior: estadoActual,
+        estadoNuevo: nuevoEstado,
+        historialId: transaccion.historial.id
+      });
+
+      // Enviar la respuesta de transacción exitosa 
+      response.json({
+        success: true,
+        message: `Estado actualizado de ${estadoActual} a ${nuevoEstado}`,
+        ticket: transaccion.ticketActualizado,
+        historial: transaccion.historial
+      });
+
+    } catch (error: any) {
+      console.error('[BACKEND] Error al actualizar estado:', error);
+      next(error);
+    }
+  };
+
+  /**
+   * Validar que la transición de estado sea valida según el flujo del tiquete 
+   * PENDIENTE -> ASIGNADO -> EN_PROCESO -> RESUELTO -> CERRADO
+   */
+  private validarTransicionEstado(
+    estadoActual: EstadoTicket,
+    estadoNuevo: EstadoTicket,
+    usuarioRol: string
+  ): void {
+
+    // Permitir que el usuario ADMIN puede cerrar el tiquete directamente
+    if (usuarioRol === 'ADMIN') {
+
+      // El admin solo puede cambiar de Pendiente a Asignado y de cualquier
+      // estado a Cerrado. Crear un arreglo con los estados permitidos para 
+      // el admin
+      const transicionesPermitidas = [
+        estadoActual === 'PENDIENTE' && estadoNuevo === 'ASIGNADO',
+        estadoNuevo === 'CERRADO' && estadoActual !== 'CERRADO'
+      ];
+
+      // Validar si el estado no está dentro de las transiciones permitidas. 
+      // En caso de no ser así, arrojar error.
+
+      if (!transicionesPermitidas.some(permitido => permitido)) {
+        throw AppError.forbidden(
+          `Como ADMIN solo se puede: ` +
+          `1) Asignar tickets (PENDIENTE → ASIGNADO), ` +
+          `2) Cerrar tickets (desde cualquier estado)`
+        );
+      }
+
+      console.log(`[BACKEND] ADMIN realizando transición: ${estadoActual} → ${estadoNuevo}`);
+      return; // Salirse de la función
+    }
+
+    // A través de un record/map mapear los estados del tiquete
+    const FLUJO_ESTADOS: Record<EstadoTicket, EstadoTicket[]> = {
+      PENDIENTE: ['ASIGNADO'], // De Pendiente a Asignado
+      ASIGNADO: ['EN_PROCESO'], // De Asignado a En Proceso 
+      EN_PROCESO: ['RESUELTO'], // De En Proceso a Resuelto
+      RESUELTO: ['CERRADO'], // De Resuelto a Cerrado
+      CERRADO: [] // De Cerrado a null (por ser el último estado)
+    }
+
+    // Obtener los estados permitidos para el estado actual
+    // Por ejemplo: si estadoActual es PENDIENTE, FLUJO_ESTADOS 
+    // mapea a ASIGNADO
+    const estadosPermitidos = FLUJO_ESTADOS[estadoActual];
+
+    // Validar si el estadoNuevo está en los estados permitidos
+    if (!estadosPermitidos.includes(estadoNuevo as any)) {
+      // Si no lo está, enviar un error
+      throw AppError.badRequest(
+        `No se puede cambiar de ${estadoActual} a ${estadoNuevo}. ` +
+        `Estados permitidos: ${estadosPermitidos.join(', ')}`
+      );
+    }
+  }
+
+  /**
+   * Validar si el usuario tiene permiso para cambiar el estado
+   * actual del tiquete
+   */
+  private validarPermisoEstado(
+    estadoNuevo: EstadoTicket, // recibir el estado nuevo del tiquete
+    rol: string, // obtener el rol del usuario
+    esCreador: boolean // revisar si el usuario es el creador del tiquete
+  ): void {
+
+    // Validación para Admin
+        if (rol === 'ADMIN') {
+        // Admin solo puede cambiar a ASIGNADO o CERRADO
+
+        // Si el estado nuevo no es ni ASIGNADO, ni CERRADO, enviar mensaje de error (forbidden)
+        if (!['ASIGNADO', 'CERRADO'].includes(estadoNuevo)) {
+            throw AppError.forbidden(
+                'Como ADMIN solo puedes asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). ' +
+                'Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos.'
+            );
+        }
+        console.log(`[BACKEND] ADMIN tiene permiso para cambiar a ${estadoNuevo}`);
+        return; // Salir de la función para usuario ADMIN
+    }
+
+    // Solo el usuario ADMIN puede asignar tiquetes
+    if (estadoNuevo === 'ASIGNADO') {
+      if (rol !== 'ADMIN') {
+        throw AppError.forbidden('Solo ADMIN puede asignar técnicos');
+      }
+      return; // Salir de la función para usuario ADMIN
+    }
+
+    // Solo los técnicos pueden cambiar el estado de EN_PROCESO o RESUELTO
+    // Revisar si estadoNuevo es "EN_PROCESO" o "RESUELTO" para técnico
+    if (['EN_PROCESO', 'RESUELTO'].includes(estadoNuevo)) {
+      // if (rol !== 'TECNICO' && rol !== 'ADMIN') {
+      if (rol !== 'TECNICO') {
+        throw AppError.forbidden('Solo técnicos pueden cambiar a este estado');
+      }
+    }
+
+    // Solo el cliente creador del tiquete o admin pueden cerrar el tiquete
+    if (estadoNuevo === 'CERRADO') {
+      if (!esCreador && rol !== 'ADMIN') {
+        throw AppError.forbidden('Solo el creador del tiquete o el admin puede cerrarlo');
+      }
+    }
+  }
+
   // MÉTODOS PARA CÁLCULO DE SEMANA
   private obtenerInicioSemana(fecha: Date): Date {
 

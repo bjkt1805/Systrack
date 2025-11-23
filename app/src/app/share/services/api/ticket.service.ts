@@ -65,4 +65,13 @@ export class TicketService extends BaseAPI<TicketModel> {
     return this.http.put<TicketModel>(`${this.urlAPI}/${environment.endPointTicket}/${ticketId}`, formData);
   }
 
+  /**
+   * Actualizar el estado del tiquete con historial e imágenes
+   * @param ticketId ID del tiquete
+   * @param payload { nuevoEstado, nota, usuarioAsignadoId?, imagenes[]}
+   */
+  updateEstado(ticketId: number, payload: any): Observable<any>{
+    return this.http.put(`${this.urlAPI}/${environment.endPointTicket}/${ticketId}/estado`,payload);
+  }
+
 }

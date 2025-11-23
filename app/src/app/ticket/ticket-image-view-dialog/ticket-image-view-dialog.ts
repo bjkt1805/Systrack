@@ -2,9 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-ticket-image-preview-dialog',
+  selector: 'app-ticket-image-view-dialog',
   standalone: false,
-  templateUrl: './ticket-diag.html',
+  templateUrl: './ticket-image-view-dialog.html',
   styleUrl: './ticket-image-view-dialog.css'
 })
 

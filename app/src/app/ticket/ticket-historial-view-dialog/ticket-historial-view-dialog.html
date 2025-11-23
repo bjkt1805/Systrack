@@ -1,0 +1,204 @@
+<div class="dialog-container">
+
+    <!-- ========== HEADER ========== -->
+    <h2 mat-dialog-title class="dialog-title">
+        <mat-icon class="title-icon">swap_horiz</mat-icon>
+        Actualizar Estado del Ticket
+    </h2>
+
+    <!-- ========== CONTENIDO ========== -->
+    <mat-dialog-content class="dialog-content">
+
+        <!-- INFORMACIÓN DEL TICKET -->
+        <div class="ticket-info-card">
+            <mat-card appearance="outlined">
+                <mat-card-content>
+                    <div class="info-row">
+                        <mat-icon class="info-icon">confirmation_number</mat-icon>
+                        <div class="info-text">
+                            <span class="info-label">Ticket:</span>
+                            <strong class="info-value">{{ data.ticket.codigo }} - {{ data.ticket.titulo }}</strong>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <mat-icon class="info-icon" [ngClass]="'icon-' + data.ticket.estado.toLowerCase()">
+                            {{ getEstadoIcon(data.ticket.estado) }}
+                        </mat-icon>
+                        <div class="info-text">
+                            <span class="info-label">Estado actual:</span>
+                            <span class="estado-badge" [ngClass]="'estado-' + data.ticket.estado.toLowerCase()">
+                                {{ data.ticket.estado }}
+                            </span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- FORMULARIO REACTIVO -->
+        <form [formGroup]="estadoForm" class="estado-form">
+
+            <!-- ========== NUEVO ESTADO ========== -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nuevo Estado</mat-label>
+                <mat-select formControlName="nuevoEstado" required>
+                    @for (estado of data.estadosDisponibles; track estado) {
+                    <mat-option [value]="estado">
+                        <div class="option-content">
+                            <mat-icon class="option-icon"></mat-icon>
+                            <span>{{ getEstadoLabel(estado) }}</span>
+                        </div>
+                    </mat-option>
+                    }
+                </mat-select>
+                <mat-icon matPrefix>flag</mat-icon>
+                @if (estadoForm.get('nuevoEstado')?.invalid && estadoForm.get('nuevoEstado')?.touched) {
+                <mat-error>Seleccione el nuevo estado</mat-error>
+                }
+            </mat-form-field>
+
+            <!-- ========== ASIGNACIÓN DE TÉCNICO (solo visible para ADMIN) ========== -->
+            @if (esAdmin() && estadoForm.get('nuevoEstado')?.value === 'ASIGNADO') {
+            <div class="asignacion-tecnico-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">engineering</mat-icon>
+                    <h3 class="section-title">Asignación de Técnico</h3>
+                </div>
+
+                <!-- BOTONES: AUTOMÁTICO Y MANUAL -->
+                <div class="botones-asignacion" style="gap: 15px">
+                    <button style="padding-right: 10px;" type="button" mat-raised-button color="primary"
+                        class="btn-tipo-asignacion">
+                        <mat-icon>auto_awesome</mat-icon>
+                        <span>Asignación Automática</span>
+                    </button>
+
+                    <button type="button" mat-raised-button class="btn-tipo-asignacion">
+                        <mat-icon>person_search</mat-icon>
+                        <span>Asignación Manual</span>
+                    </button>
+                </div>
+
+                <mat-hint class="hint-asignacion">
+                    <mat-icon class="hint-icon">info</mat-icon>
+                    Seleccione cómo desea asignar el técnico a este ticket
+                </mat-hint>
+            </div>
+            }
+
+            <!-- MENSAJE INFORMATIVO SI NO ES ADMIN Y HAY TÉCNICO ASIGNADO -->
+            @if (!esAdmin() && data.ticket.usuarioAsignado) {
+            <div class="info-tecnico-asignado">
+                <mat-icon class="info-icon">info</mat-icon>
+                <div class="info-content">
+                    <span class="info-label">Técnico asignado:</span>
+                    <span class="info-value">{{ data.ticket.usuarioAsignado.nombreCompleto }}</span>
+                </div>
+            </div>
+            }
+
+            <!-- ========== COMENTARIO OBLIGATORIO ========== -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Observación Obligatoria</mat-label>
+                <textarea matInput formControlName="nota" rows="4"
+                    placeholder="Describa detalladamente el motivo del cambio de estado..." maxlength="500" required>
+        </textarea>
+                <mat-icon matPrefix>comment</mat-icon>
+                <mat-hint align="end">{{ estadoForm.get('nota')?.value?.length || 0 }}/500</mat-hint>
+                @if (estadoForm.get('nota')?.invalid && estadoForm.get('nota')?.touched) {
+                <mat-error>
+                    @if (estadoForm.get('nota')?.errors?.['required']) {
+                    La observación es obligatoria
+                    }
+                    @if (estadoForm.get('nota')?.errors?.['minlength']) {
+                    Mínimo 10 caracteres (actual: {{ estadoForm.get('nota')?.value?.length || 0 }})
+                    }
+                </mat-error>
+                }
+            </mat-form-field>
+
+            <!-- ========== SECCIÓN DE IMÁGENES (OBLIGATORIA) ========== -->
+            <div class="imagenes-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">photo_camera</mat-icon>
+                    <h3 class="section-title">
+                        Evidencia Visual
+                        <span class="required-badge">
+                            <mat-icon>warning</mat-icon>
+                            Obligatoria
+                        </span>
+                    </h3>
+                </div>
+
+                <!-- Botón para seleccionar imágenes -->
+                <div class="upload-area">
+                    <input #fileInput type="file" accept="image/*" multiple (change)="onFileSelected($event)"
+                        class="file-input" id="file-upload">
+
+                    <label style="color: black;" for="file-upload" class="upload-button" mat-raised-button
+                        color="primary">
+                        <mat-icon>add_photo_alternate</mat-icon>
+                        Seleccionar Imágenes
+                        <span class="upload-count" [class.complete]="imagenesSeleccionadas().length > 0">
+                            ({{ imagenesSeleccionadas().length }}/{{ maxImagenes }})
+                        </span>
+                    </label>
+
+                    <div class="upload-info">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span>Máximo {{ maxImagenes }} imágenes · {{ maxTamanoImagenMB }}MB por imagen · JPG, PNG, GIF,
+                            WEBP</span>
+                    </div>
+                </div>
+
+                <!-- Preview de imágenes seleccionadas -->
+                @if (imagenesSeleccionadas().length > 0) {
+                <div class="imagenes-preview">
+                    @for (preview of imagenesPreview(); track $index) {
+                    <div class="preview-item" @fadeIn>
+                        <img [src]="preview" [alt]="'Imagen ' + ($index + 1)" class="preview-image">
+                        <button type="button" mat-icon-button color="warn" class="remove-button"
+                            (click)="removeImage($index)" matTooltip="Eliminar imagen">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <div class="image-number">{{ $index + 1 }}</div>
+                        <div class="image-overlay">
+                            <mat-icon>zoom_in</mat-icon>
+                        </div>
+                    </div>
+                    }
+                </div>
+                } @else {
+                <div class="no-images-message">
+                    <mat-icon class="message-icon">image_not_supported</mat-icon>
+                    <p class="message-title">No hay imágenes seleccionadas</p>
+                    <p class="message-hint">Debe cargar al menos 1 imagen como evidencia del cambio de estado</p>
+                </div>
+                }
+            </div>
+
+        </form>
+
+    </mat-dialog-content>
+
+    <!-- ========== ACCIONES ========== -->
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="onCancel()" [disabled]="enviando()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!puedeEnviar()" class="btn-submit">
+            @if (enviando()) {
+            <mat-spinner diameter="20" class="spinner"></mat-spinner>
+            <span>Procesando...</span>
+            } @else {
+            <ng-container>
+                <mat-icon>check_circle</mat-icon>
+                <span>Actualizar Estado</span>
+            </ng-container>
+
+            }
+        </button>
+    </mat-dialog-actions>
+
+</div>

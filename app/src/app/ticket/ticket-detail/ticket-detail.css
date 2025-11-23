@@ -3,6 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
+  background-color: white !important;
 }
 
 /* CARD BASE */
@@ -18,8 +19,14 @@
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
 }
 
+/* .header-actions {
+  font-weight: bold !important;
+} */
+
 /* HEADER MODERNO */
 .ticket-card__header {
+
+  gap: 20px;
   padding: 32px 32px 24px;
   background: linear-gradient(135deg, 
     color-mix(in srgb, var(--mat-sys-primary) 8%, transparent),

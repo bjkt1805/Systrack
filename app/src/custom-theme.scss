@@ -48,7 +48,7 @@ html {
   @include mat.tooltip-overrides((container-color: rgba(0, 0, 0, 0.6),
       supporting-text-color: white));
 
-  @include mat.dialog-overrides((container-color: black,
+  @include mat.dialog-overrides((container-color: white,
       subhead-color: c(colors.$primary-palette, 80),
       subhead-size: 1.5em,
       supporting-text-color: white,
