@@ -74,11 +74,11 @@
             <mat-icon>language</mat-icon>
         </button>
         <mat-menu #menuIdioma="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="cambiarIdioma('es')">
                 <mat-icon style="color: white">flag</mat-icon>
                 <span>{{ 'HEADER.IDIOMA1' | translate }}</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="cambiarIdioma('en')">
                 <mat-icon style="color: white">flag</mat-icon>
                 <span>{{ 'HEADER.IDIOMA2' | translate }}</span>
             </button>

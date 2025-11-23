@@ -26,6 +26,7 @@ import { TicketImageViewDialog } from './ticket-image-view-dialog/ticket-image-v
 import { TicketIndex } from './ticket-index/ticket-index';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TicketForm } from './ticket-form/ticket-form';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { TicketForm } from './ticket-form/ticket-form';
     MatTooltipModule,
     MatExpansionModule, 
     MatProgressSpinnerModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class TicketModule { }

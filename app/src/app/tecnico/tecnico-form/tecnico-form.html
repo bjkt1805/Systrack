@@ -6,12 +6,12 @@
                 <mat-icon class="form-icon">{{ isCreate ? 'person_add' : 'edit' }}</mat-icon>
             </div>
             <div class="title-group">
-                <h1 class="form-title">{{ titleForm }} Técnico</h1>
+                <h1 class="form-title">{{ titleForm }} {{'TECNICO_FORM.TITULO' | translate}}</h1>
                 <p class="form-subtitle">
                     @if (isCreate) {
-                    Complete la información para agregar un nuevo técnico al sistema
+                    {{'TECNICO_FORM.SUBTITULO_CREAR' | translate}}
                     } @else {
-                    Modifique la información del técnico seleccionado
+                    {{'TECNICO_FORM.SUBTITULO_EDITAR' | translate}}
                     }
                 </p>
             </div>
@@ -21,7 +21,7 @@
         <div class="header-actions">
             <button mat-stroked-button class="btn-back" (click)="goBack()">
                 <mat-icon>arrow_back</mat-icon>
-                Regresar
+                {{'TECNICO_FORM.REGRESAR' | translate}}
             </button>
         </div>
 
@@ -34,7 +34,7 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon class="section-icon">person</mat-icon>
-                <mat-card-title class="section-title">Información Personal</mat-card-title>
+                <mat-card-title class="section-title">{{'TECNICO_FORM.INFORMACION_PERSONAL' | translate}}</mat-card-title>
             </mat-card-header>
 
             <mat-divider></mat-divider>
@@ -44,17 +44,17 @@
 
                     <!-- NOMBRE DE USUARIO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Nombre de Usuario </mat-label>
-                        <input matInput formControlName="nombreUsuario" placeholder="Ej: jperez" minlength="5"
+                        <mat-label>{{'TECNICO_FORM.NOMBRE_USUARIO' | translate}}</mat-label>
+                        <input matInput formControlName="nombreUsuario" placeholder="{{'TECNICO_FORM.NOMBRE_USUARIO_PLACEHOLDER' | translate}}" minlength="5"
                             maxlength="20">
                         <mat-icon matPrefix>account_circle</mat-icon>
                         @if (tecnicoForm.get('nombreUsuario')?.invalid && tecnicoForm.get('nombreUsuario')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('nombreUsuario')?.errors?.['required']) {
-                            El nombre de usuario es requerido
+                            {{'TECNICO_FORM.NOMBRE_USUARIO_REQUERIDO' | translate}}
                             }
                             @if (tecnicoForm.get('nombreUsuario')?.errors?.['minlength']) {
-                            Mínimo 5 caracteres
+                            {{'TECNICO_FORM.NOMBRE_USUARIO_MINIMO' | translate}}
                             }
                         </mat-error>
                         }
@@ -62,17 +62,17 @@
 
                     <!-- NOMBRE COMPLETO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Nombre Completo </mat-label>
-                        <input matInput formControlName="nombreCompleto" placeholder="Ej: Juan Pérez González"
+                        <mat-label>{{'TECNICO_FORM.NOMBRE_COMPLETO' | translate}}</mat-label>
+                        <input matInput formControlName="nombreCompleto" placeholder="{{'TECNICO_FORM.NOMBRE_COMPLETO_PLACEHOLDER' | translate}}"
                             minlength="3" maxlength="50">
                         <mat-icon matPrefix>badge</mat-icon>
                         @if (tecnicoForm.get('nombreCompleto')?.invalid && tecnicoForm.get('nombreCompleto')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('nombreCompleto')?.errors?.['required']) {
-                            El nombre completo es requerido
+                            {{'TECNICO_FORM.NOMBRE_COMPLETO_REQUERIDO' | translate}}
                             }
                             @if (tecnicoForm.get('nombreCompleto')?.errors?.['minlength']) {
-                            Mínimo 3 caracteres
+                            {{'TECNICO_FORM.NOMBRE_COMPLETO_MINIMO' | translate}}
                             }
                         </mat-error>
                         }
@@ -80,16 +80,16 @@
 
                     <!-- CORREO ELECTRÓNICO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Correo Electrónico </mat-label>
-                        <input matInput formControlName="correo" type="email" placeholder="juan.perez@empresa.com">
+                        <mat-label>{{'TECNICO_FORM.CORREO' | translate}}</mat-label>
+                        <input matInput formControlName="correo" type="email" placeholder="{{'TECNICO_FORM.CORREO_PLACEHOLDER' | translate}}">
                         <mat-icon matPrefix>email</mat-icon>
                         @if (tecnicoForm.get('correo')?.invalid && tecnicoForm.get('correo')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('correo')?.errors?.['required']) {
-                            El correo electrónico es requerido
+                            {{'TECNICO_FORM.CORREO_REQUERIDO' | translate}}
                             }
                             @if (tecnicoForm.get('correo')?.errors?.['pattern']) {
-                            Formato de correo inválido
+                            {{'TECNICO_FORM.CORREO_FORMATO' | translate}}
                             }
                         </mat-error>
                         }
@@ -97,21 +97,21 @@
 
                     <!-- TELÉFONO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Teléfono (+506) </mat-label>
+                        <mat-label>{{'TECNICO_FORM.TELEFONO' | translate}}</mat-label>
                         <input matInput formControlName="telefono" placeholder="88888888" minlength="8" maxlength="8">
                         <mat-icon matPrefix>phone</mat-icon>
                         @if (tecnicoForm.get('telefono')?.invalid && tecnicoForm.get('telefono')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('telefono')?.errors?.['required']) {
-                            El teléfono es requerido
+                            {{'TECNICO_FORM.TELEFONO_REQUERIDO' | translate}}
                             }
                             @if (tecnicoForm.get('telefono')?.errors?.['pattern']) {
-                            Formato de teléfono inválido
+                            {{'TECNICO_FORM.TELEFONO_FORMATO' | translate}}
                             }
                             @if ((tecnicoForm.get('telefono')?.errors?.['minlength']) ||
                             tecnicoForm.get('telefono')?.errors?.['maxlength'])
                             {
-                            Debe ser de 8 caracteres
+                            {{'TECNICO_FORM.TELEFONO_LONGITUD' | translate}}
                             }
                             <!-- @if (tecnicoForm.get('telefono')?.errors?.['maxlength']) {
                                                 Debe ser de 8 caracteres
@@ -127,7 +127,7 @@
                  <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon class="section-icon">security</mat-icon>
-                <mat-card-title class="section-title">Seguridad</mat-card-title>
+                <mat-card-title class="section-title">{{'TECNICO_FORM.SEGURIDAD' | translate}}</mat-card-title>
                 
                 <!-- Toggle para cambiar contraseña (solo en edición) -->
                 @if (!isCreate) {
@@ -139,7 +139,7 @@
                     class="password-toggle">
                     <span class="toggle-label">
                         <mat-icon>vpn_key</mat-icon>
-                        Cambiar Contraseña
+                        {{'TECNICO_FORM.CAMBIAR_CONTRASENNA' | translate}}
                     </span>
                 </mat-slide-toggle>
                 }
@@ -155,12 +155,12 @@
                     
                     <!-- CONTRASEÑA  -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Contraseña</mat-label>
+                        <mat-label>{{'TECNICO_FORM.CONTRASENNA' | translate}}</mat-label>
                         <input 
                             matInput 
                             [type]="hidePassword ? 'password' : 'text'" 
                             formControlName="password" 
-                            placeholder="Ingrese una contraseña"
+                            placeholder="{{'TECNICO_FORM.CONTRASENNA_PLACEHOLDER' | translate}}"
                             minlength="6" maxlength="20"
                             autocomplete="new-password">
                         <mat-icon matPrefix>lock</mat-icon>
@@ -169,18 +169,18 @@
                             matSuffix 
                             (click)="hidePassword = !hidePassword" 
                             type="button"
-                            [attr.aria-label]="'Mostrar/Ocultar contraseña'"
+                            [attr.aria-label]="'TECNICO_FORM.CONTRASENNA_MOSTRAR_OCULTAR' | translate"
                             tabindex="-1">
                             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
-                        <mat-hint>Mínimo 6 caracteres</mat-hint>
+                        <mat-hint>{{'TECNICO_FORM.CONTRASENNA_MINIMO' | translate}}</mat-hint>
                         @if (tecnicoForm.get('password')?.invalid && tecnicoForm.get('password')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('password')?.errors?.['required']) {
-                            La contraseña es requerida
+                            {{'TECNICO_FORM.CONTRASENNA_REQUERIDA' | translate}}
                             }
                             @if (tecnicoForm.get('password')?.errors?.['minlength']) {
-                            Mínimo 6 caracteres
+                            {{'TECNICO_FORM.CONTRASENNA_MINIMO' | translate}}
                             }
                         </mat-error>
                         }
@@ -188,12 +188,12 @@
 
                     <!-- CONFIRMAR CONTRASEÑA -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Confirmar Contraseña</mat-label>
+                        <mat-label>{{'TECNICO_FORM.CONTRASENNA_CONFIRMAR' | translate}}</mat-label>
                         <input 
                             matInput 
                             [type]="hideConfirmPassword ? 'password' : 'text'" 
                             formControlName="confirmpassword"
-                            placeholder="Confirme su contraseña"
+                            placeholder="{{'TECNICO_FORM.CONTRASENNA_CONFIRMAR_PLACEHOLDER' | translate}}"
                             minlength="6" maxlength="20"
                             autocomplete="new-password">
                         <mat-icon matPrefix>lock_outline</mat-icon>
@@ -202,20 +202,20 @@
                             matSuffix 
                             (click)="hideConfirmPassword = !hideConfirmPassword" 
                             type="button"
-                            [attr.aria-label]="'Mostrar/Ocultar contraseña'" 
+                            [attr.aria-label]="'TECNICO_FORM.CONTRASENNA_CONFIRMAR_MOSTRAR_OCULTAR' | translate" 
                             tabindex="-1">
                             <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                         @if (tecnicoForm.get('confirmpassword')?.invalid && tecnicoForm.get('confirmpassword')?.touched) {
                         <mat-error>
                             @if (tecnicoForm.get('confirmpassword')?.errors?.['required']) {
-                            Confirme su contraseña
+                            {{'TECNICO_FORM.CONTRASENNA_CONFIRMAR_REQUERIDA' | translate}}
                             }
                         </mat-error>
                         }
                         @if (tecnicoForm.hasError('passwordsMismatch') && tecnicoForm.get('confirmpassword')?.touched) {
                         <mat-error>
-                            Las contraseñas no coinciden
+                            {{'TECNICO_FORM.CONTRASENNA_NO_COINCIDE' | translate}}
                         </mat-error>
                         }
                     </mat-form-field>
@@ -243,11 +243,11 @@
                             }
                         </mat-icon>
                         @if (tecnicoForm.get('password')?.value.length < 8) {
-                            Débil
+                            {{'TECNICO_FORM.DEBIL' | translate}}
                         } @else if (tecnicoForm.get('password')?.value.length < 12) {
-                            Media
+                            {{'TECNICO_FORM.MEDIA' | translate}}
                         } @else {
-                            Fuerte
+                            {{'TECNICO_FORM.FUERTE' | translate}}
                         }
                     </span>
                 </div>
@@ -258,7 +258,7 @@
                 @if (!isCreate && !changePassword) {
                 <div class="password-info">
                     <mat-icon>info</mat-icon>
-                    <p>La contraseña actual se mantendrá sin cambios. Active el interruptor para modificarla.</p>
+                    <p>{{'TECNICO_FORM.CONTRASENNA_SIN_CAMBIOS' | translate}}</p>
                 </div>
                 }
 
@@ -269,7 +269,7 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon class="section-icon">settings</mat-icon>
-                <mat-card-title class="section-title">Configuración de Técnico</mat-card-title>
+                <mat-card-title class="section-title">{{'TECNICO_FORM.CONFIGURACION' | translate}}</mat-card-title>
             </mat-card-header>
 
             <mat-divider></mat-divider>
@@ -279,29 +279,29 @@
 
                     <!-- ESTADO TÉCNICO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Estado del Técnico </mat-label>
+                        <mat-label>{{'TECNICO_FORM.ESTADO_TECNICO' | translate}}</mat-label>
                         <mat-select formControlName="estadoTecnico">
                             <mat-option value="DISPONIBLE">
                                 <mat-icon class="option-icon">check_circle</mat-icon>
-                                Disponible
+                                {{'TECNICO_FORM.ESTADO_DISPONIBLE' | translate}}
                             </mat-option>
                             <mat-option value="NO_DISPONIBLE">
                                 <mat-icon class="option-icon">cancel</mat-icon>
-                                No Disponible
+                                {{'TECNICO_FORM.ESTADO_NO_DISPONIBLE' | translate}}
                             </mat-option>
                         </mat-select>
                         <mat-icon matPrefix>toggle_on</mat-icon>
                         @if (tecnicoForm.get('estadoTecnico')?.invalid && tecnicoForm.get('estadoTecnico')?.touched) {
-                        <mat-error>El estado del técnico es requerido</mat-error>
+                        <mat-error>{{'TECNICO_FORM.ESTADO_REQUERIDO' | translate}}</mat-error>
                         }
                     </mat-form-field>
 
                     <!-- CARGA DE TRABAJO -->
                     <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Carga de Trabajo</mat-label>
+                        <mat-label>{{'TECNICO_FORM.CARGA_TRABAJO' | translate}}</mat-label>
                         <input matInput formControlName="cargaTrabajo" type="number" min="0" max="100" readonly="true">
                         <mat-icon matPrefix>work</mat-icon>
-                        <mat-hint>Número de tickets asignados actualmente</mat-hint>
+                        <mat-hint>{{'TECNICO_FORM.CARGA_TRABAJO_CANTIDAD' | translate}}</mat-hint>
                     </mat-form-field>
 
                     <!-- ESTADO ACTIVO -->
@@ -317,13 +317,13 @@
                                     <!-- LABEL DINÁMICO -->
                                     <span class="checkbox-label"
                                         [ngClass]="tecnicoForm.get('activo')?.value ? 'label-active' : 'label-inactive'">
-                                        {{ tecnicoForm.get('activo')?.value ? 'Usuario Activo' : 'Usuario Inactivo' }}
+                                        {{ tecnicoForm.get('activo')?.value ? ('TECNICO_FORM.USUARIO_ACTIVO' | translate) : ('TECNICO_FORM.USUARIO_INACTIVO' | translate) }}
                                     </span>
                                     <!-- hINT DINÁMICO CON ANIMACIÓN -->
                                     <span class="checkbox-hint"
                                         [ngClass]="tecnicoForm.get('activo')?.value ? 'hint-active' : 'hint-inactive'">
-                                        {{ tecnicoForm.get('activo')?.value ? 'El técnico puede acceder al sistema' :
-                                        'El técnico no puede acceder al sistema' }}
+                                        {{ tecnicoForm.get('activo')?.value ? ('TECNICO_FORM.USUARIO_ACTIVO_TEXTO' | translate) :
+                                        ('TECNICO_FORM.USUARIO_INACTIVO_TEXTO' | translate) }}
                                     </span>
                                 </div>
                             </div>
@@ -338,10 +338,10 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon class="section-icon">star</mat-icon>
-                <mat-card-title class="section-title">Especialidades</mat-card-title>
+                <mat-card-title class="section-title">{{'TECNICO_FORM.ESPECIALIDADES' | translate}}</mat-card-title>
                 <div class="section-actions">
                     <button type="button" mat-mini-fab color="primary" (click)="addEspecialidad()"
-                        matTooltip="Agregar especialidad" class="btn-add-especialidad">
+                        matTooltip="{{'TECNICO_FORM.AGREGAR_ESPECIALIDAD' | translate}}" class="btn-add-especialidad">
                         <mat-icon>add</mat-icon>
                     </button>
                 </div>
@@ -357,9 +357,9 @@
                     <div class="especialidad-item" [formGroupName]="$index">
 
                         <mat-form-field appearance="outline" class="especialidad-field">
-                            <mat-label>Especialidad {{ $index + 1 }}</mat-label>
+                            <mat-label>{{'TECNICO_FORM.ESPECIALIDAD_LABEL' | translate}} {{ $index + 1 }}</mat-label>
                             <mat-select formControlName="especialidadId">
-                                <mat-option value="">Seleccione una especialidad</mat-option>
+                                    <mat-option value="">{{'TECNICO_FORM.ESPECIALIDAD_PLACEHOLDER' | translate}}</mat-option>
 
                                 <!-- Usar solo especialidades filtradas -->
                                 @for (especialidad of getEspecialidadesDisponibles($index); track especialidad.id) {
@@ -372,14 +372,14 @@
                             <mat-icon matPrefix>category</mat-icon>
                             @if (especialidadControl.get('especialidadId')?.invalid &&
                             especialidadControl.get('especialidadId')?.touched) {
-                            <mat-error>Seleccione una especialidad</mat-error>
+                            <mat-error>{{'TECNICO_FORM.ESPECIALIDAD_REQUIRED' | translate}}</mat-error>
                             }
                         </mat-form-field>
 
                         <!-- Mostrar botón eliminar cuando hay más de 1 especialidad O cuando se está editando el técnico -->
                         @if (especialidades.length > 1 || !isCreate) {
                         <button type="button" mat-icon-button color="warn" (click)="removeEspecialidad($index)"
-                            matTooltip="Eliminar especialidad" class="btn-remove-especialidad">
+                            matTooltip="{{'TECNICO_FORM.ELIMINAR_ESPECIALIDAD' | translate}}" class="btn-remove-especialidad">
                             <mat-icon>remove_circle</mat-icon>
                         </button>
                         }
@@ -393,7 +393,7 @@
                 <div class="no-especialidades">
                     <mat-icon class="no-especialidades-icon">info</mat-icon>
                     <p class="no-especialidades-text">
-                        No hay especialidades agregadas. Haga clic en el botón "+" para agregar una.
+                        {{'TECNICO_FORM.NO_ESPECIALIDADES' | translate}}
                     </p>
                 </div>
                 }
@@ -405,7 +405,7 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon class="section-icon">photo_camera</mat-icon>
-                <mat-card-title class="section-title">Foto de Perfil</mat-card-title>
+                <mat-card-title class="section-title">{{'TECNICO_FORM.FOTO_PERFIL' | translate}}</mat-card-title>
             </mat-card-header>
 
             <mat-divider></mat-divider>
@@ -416,9 +416,9 @@
                     <!-- PREVIEW DE LA IMAGEN -->
                     <div class="photo-preview">
                         @if (preview) {
-                        <img [src]="preview" alt="Vista previa" class="preview-image">
+                        <img [src]="preview" alt="{{'TECNICO_FORM.VISTA_PREVIA' | translate}}" class="preview-image">
                         } @else {
-                        <img [src]="'http://localhost:3000/images/' + nameImage" alt="Imagen actual"
+                        <img [src]="'http://localhost:3000/images/' + nameImage" alt="{{'TECNICO_FORM.IMAGEN_ACTUAL' | translate}}"
                             class="preview-image">
                         }
                         <div class="photo-overlay">
@@ -433,7 +433,7 @@
 
                         <label for="file-input" class="btn-upload" mat-raised-button>
                             <mat-icon>upload</mat-icon>
-                            Seleccionar Imagen
+                            {{'TECNICO_FORM.SELECCIONAR_IMAGEN' | translate}}
                         </label>
 
                         <!-- Mostrar botón quitar en edición Y cuando hay archivo/preview -->
@@ -441,7 +441,7 @@
                         <button type="button" mat-stroked-button color="warn" (click)="removeImage()"
                             class="btn-remove-image">
                             <mat-icon>delete</mat-icon>
-                            Quitar Imagen
+                            {{'TECNICO_FORM.QUITAR_IMAGEN' | translate}}
                         </button>
                         }
                     </div>
@@ -449,7 +449,7 @@
                     <div class="photo-hints">
                         <p class="photo-hint">
                             <mat-icon class="hint-icon">info</mat-icon>
-                            Tamaño recomendado: 400x400px | Formatos: JPG, PNG | Máximo: 2MB
+                            {{'TECNICO_FORM.FOTO_HINT' | translate}}
                         </p>
                     </div>
 
@@ -462,21 +462,21 @@
             <div class="actions-left">
                 <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
                     <mat-icon>refresh</mat-icon>
-                    Limpiar Formulario
+                    {{'TECNICO_FORM.LIMPIAR_FORMULARIO' | translate}}
                 </button>
             </div>
 
             <div class="actions-right">
                 <button type="button" mat-button (click)="goBack()" class="btn-cancel">
                     <mat-icon>cancel</mat-icon>
-                    Cancelar
+                    {{'TECNICO_FORM.CANCELAR' | translate}}
                 </button>
 
                 <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido) -->
                 <button type="submit" mat-raised-button color="primary" [disabled]="tecnicoForm.invalid"
                     class="btn-submit">
                     <mat-icon>{{ isCreate ? 'save' : 'update' }}</mat-icon>
-                    {{ isCreate ? 'Crear Técnico' : 'Actualizar Técnico' }}
+                    {{ isCreate ? ('TECNICO_FORM.CREAR_TECNICO' | translate) : ('TECNICO_FORM.ACTUALIZAR_TECNICO' | translate) }}
                 </button>
             </div>
         </div>

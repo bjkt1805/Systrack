@@ -25,7 +25,7 @@
           (click)="abrirDialogoCambioEstado()"
           class="btn-update-estado">
           <mat-icon>swap_horiz</mat-icon>
-          Actualizar Estado
+          {{'TICKET_DETALLE.ACTUALIZAR_ESTADO' | translate}}
         </button>
       </div>
       }
@@ -40,17 +40,17 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>info</mat-icon>
-          Información General
+          {{'TICKET_DETALLE.INFORMACION_GENERAL' | translate}}
         </h3>
         
         <div class="ticket-info">
           <div class="info-row">
-            <span class="info-label">Fecha de creación</span>
+            <span class="info-label">{{'TICKET_DETALLE.FECHA_CREACION' | translate}}</span>
             <span class="info-value">{{ fechaFormateada(datos()?.creadoAt) }}</span>
           </div>
 
           <div class="info-row">
-            <span class="info-label">Estado</span>
+            <span class="info-label">{{'TICKET_DETALLE.ESTADO' | translate}}</span>
             <!-- Badge visual del estado actual del tiquete -->
             <span class="info-value">
               <span class="estado-badge" [class]="'estado-' + datos()?.estado?.toLowerCase()">
@@ -60,22 +60,22 @@
             </span>          </div>
 
           <div class="info-row">
-            <span class="info-label">Prioridad</span>
+            <span class="info-label">{{'TICKET_DETALLE.PRIORIDAD' | translate}}</span>
             <span class="info-value">{{ datos()?.prioridad }}</span>
           </div>
 
           <div class="info-row">
-            <span class="info-label">Solicitante</span>
+            <span class="info-label">{{'TICKET_DETALLE.SOLICITANTE' | translate}}</span>
             <span class="info-value">{{ datos()?.solicitante?.correo }}</span>
           </div>
 
           <div class="info-row">
-            <span class="info-label">Categoría</span>
+            <span class="info-label">{{'TICKET_DETALLE.CATEGORIA' | translate}}</span>
             <span class="info-value">{{ datos()?.categoria?.nombre }}</span>
           </div>
 
           <div class="info-row">
-            <span class="info-label">Técnico asignado</span>
+            <span class="info-label">{{'TICKET_DETALLE.TECNICO_ASIGNADO' | translate}}</span>
             <span class="info-value">{{ datos()?.usuarioAsignado?.nombreUsuario }}</span>
           </div>
         </div>
@@ -85,7 +85,7 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>schedule</mat-icon>
-          Acuerdo de Nivel de Servicio (SLA)
+          {{'TICKET_DETALLE.SLA' | translate}}
         </h3>
         
         <div class="ticket-info--sla">
@@ -95,7 +95,7 @@
               <mat-icon>reply</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">SLA de Respuesta</span>
+              <span class="sla-label">{{'TICKET_DETALLE.SLA_RESPUESTA' | translate}}</span>
               <span class="sla-value">
                 {{ fechaLimiteRespuesta() ? (fechaFormateada(datos()?.fechaLimiteRespuesta)) : '—' }}
               </span>
@@ -108,7 +108,7 @@
               <mat-icon>check_circle</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">SLA de Resolución</span>
+              <span class="sla-label">{{'TICKET_DETALLE.SLA_RESOLUCION' | translate}}</span>
               <span class="sla-value">
                 {{ fechaLimiteResolucion() ? (fechaFormateada(datos()?.fechaLimiteResolucion)) : '—' }}
               </span>
@@ -121,7 +121,7 @@
               <mat-icon>timer</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">Días de Resolución</span>
+              <span class="sla-label">{{'TICKET_DETALLE.DIAS_RESOLUCION' | translate}}</span>
               <span class="sla-value">{{ tiempoResolucion() || '—' }}</span>
             </div>
           </div>
@@ -132,53 +132,53 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>task_alt</mat-icon>
-          Cumplimiento de SLA
+          {{'TICKET_DETALLE.CUMPLIMIENTO_SLA' | translate}}
         </h3>
         
         <div class="ticket-info">
           <div class="info-row">
-            <span class="info-label">Cumplimiento de Respuesta</span>
+            <span class="info-label">{{'TICKET_DETALLE.CUMPLIMIENTO_RESPUESTA' | translate}}</span>
             <span class="info-value">
               @if (cumplioRespuesta() === null) {
                 <span class="info-badge" style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
                   <mat-icon>schedule</mat-icon>
-                  Pendiente
+                  {{'TICKET_DETALLE.PENDIENTE' | translate}}
                 </span>
               }
               @else if (cumplioRespuesta()) {
                 <span class="info-badge ok">
                   <mat-icon>check_circle</mat-icon>
-                  Cumplido
+                  {{'TICKET_DETALLE.CUMPLIDO' | translate}}
                 </span>
               }
               @else {
                 <span class="info-badge off">
                   <mat-icon>cancel</mat-icon>
-                  Incumplido
+                  {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
                 </span>
               }
             </span>
           </div>
 
           <div class="info-row">
-            <span class="info-label">Cumplimiento de Resolución</span>
+            <span class="info-label">{{'TICKET_DETALLE.CUMPLIMIENTO_RESOLUCION' | translate}}</span>
             <span class="info-value">
               @if (cumplioResolucion() === null) {
                 <span class="info-badge" style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
                   <mat-icon>schedule</mat-icon>
-                  Pendiente
+                  {{'TICKET_DETALLE.PENDIENTE' | translate}}
                 </span>
               }
               @else if (cumplioResolucion()) {
                 <span class="info-badge ok">
                   <mat-icon>check_circle</mat-icon>
-                  Cumplido
+                  {{'TICKET_DETALLE.CUMPLIDO' | translate}}
                 </span>
               }
               @else {
                 <span class="info-badge off">
                   <mat-icon>cancel</mat-icon>
-                  Incumplido
+                  {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
                 </span>
               }
             </span>
@@ -191,7 +191,7 @@
       <section class="info-section ticket-history">
         <h3 class="section-title">
           <mat-icon>history</mat-icon>
-          Historial del Ticket
+          {{'TICKET_DETALLE.HISTORIAL_TICKET' | translate}}
         </h3>
 
         <mat-accordion class="history-list">
@@ -215,12 +215,12 @@
 
             <div class="history-body">
               <p class="comment">
-                <strong>Comentario:</strong> {{ item?.nota }}
+                <strong>{{'TICKET_DETALLE.COMENTARIO' | translate}}:</strong> {{ item?.nota }}
               </p>
 
               @if (item.imagenes && item.imagenes.length > 0) {
               <div class="images-grid">
-                <p><strong>Imágenes adjuntas:</strong></p>
+                <p><strong>{{'TICKET_DETALLE.IMAGENES_ADJUNTAS' | translate}}:</strong></p>
                 @for (img of item.imagenes; track img.id) {
                 <figure class="image-item">
                   <button type="button" class="img-thumb" (click)="openImage(img)">
@@ -243,12 +243,12 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>star</mat-icon>
-          Valoración del Servicio
+          {{'TICKET_DETALLE.VALORACION_SERVICIO' | translate}}
         </h3>
         
         <div class="ticket-info">
           <div class="info-row">
-            <span class="info-label">Calificación</span>
+            <span class="info-label">{{'TICKET_DETALLE.CALIFICACION' | translate}}</span>
             <span class="info-value rating-stars">
               @for (star of [1,2,3,4,5]; track star) {
                 <mat-icon [style.color]="star <= datos()!.valoracion!.puntaje ? '#ffd700' : '#e0e0e0'">
@@ -261,7 +261,7 @@
           
           @if (datos()?.valoracion?.comentario) {
           <div class="info-row full-width">
-            <span class="info-label">Comentario</span>
+            <span class="info-label">{{'TICKET_DETALLE.COMENTARIO' | translate}}</span>
             <span class="info-value description">{{ datos()?.valoracion?.comentario }}</span>
           </div>
           }
@@ -275,7 +275,7 @@
     <mat-card-footer class="ticket-card__actions">
       <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Regresar
+        {{'TICKET_DETALLE.REGRESAR' | translate}}
       </button>
     </mat-card-footer>
   </mat-card>
@@ -288,11 +288,11 @@
       <div class="empty-icon">
         <mat-icon>confirmation_number_off</mat-icon>
       </div>
-      <h2 class="empty-title">Ticket no encontrado</h2>
-      <p class="empty-text">No se pudo cargar la información de este ticket.</p>
+      <h2 class="empty-title">{{'TICKET_DETALLE.TICKET_NO_ENCONTRADO' | translate}}</h2>
+      <p class="empty-text">{{'TICKET_DETALLE.NO_SE_PUDO_CARGAR' | translate}}</p>
       <button mat-raised-button color="primary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Volver al Listado
+        {{'TICKET_DETALLE.VOLVER_AL_LISTADO' | translate}}
       </button>
     </mat-card-content>
   </mat-card>

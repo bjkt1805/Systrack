@@ -8,7 +8,7 @@
             <div class="header-text">
                 <h1 class="header-title">{{ titleForm }}</h1>
                 <p class="header-subtitle">
-                    {{ isCreate ? 'Complete la información para crear un nuevo ticket' : 'Información del ticket' }}
+                    {{ isCreate ? ('TICKET_FORM.SUBTITULO_CREAR' | translate) : ('TICKET_FORM.SUBTITULO_EDITAR' | translate) }}
                 </p>
             </div>
         </div>
@@ -17,7 +17,7 @@
         <div class="header-actions">
             <button type="button" mat-stroked-button (click)="goBack()" class="btn-back">
                 <mat-icon>arrow_back</mat-icon>
-                Volver
+                {{'TICKET_FORM.VOLVER' | translate}}
             </button>
         </div>
     </div>
@@ -29,8 +29,8 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon mat-card-avatar class="section-icon">person</mat-icon>
-                <mat-card-title class="section-title">Información del Solicitante</mat-card-title>
-                <mat-card-subtitle class="section-subtitle">Usuario que reporta la incidencia</mat-card-subtitle>
+                <mat-card-title class="section-title">{{'TICKET_FORM.SOLICITANTE_TITULO' | translate}}</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">{{'TICKET_FORM.SOLICITANTE_SUBTITULO' | translate}}</mat-card-subtitle>
             </mat-card-header>
 
             <mat-card-content class="section-content">
@@ -38,28 +38,28 @@
 
                     <!-- NOMBRE COMPLETO -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Nombre Completo</mat-label>
+                        <mat-label>{{'TICKET_FORM.NOMBRE_COMPLETO' | translate}}</mat-label>
                         <input matInput formControlName="solicitanteNombre" readonly>
                         <mat-icon matPrefix>badge</mat-icon>
                     </mat-form-field>
 
                     <!-- CORREO ELECTRÓNICO -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Correo Electrónico</mat-label>
+                        <mat-label>{{'TICKET_FORM.CORREO_ELECTRONICO' | translate}}</mat-label>
                         <input matInput formControlName="solicitanteCorreo" readonly>
                         <mat-icon matPrefix>email</mat-icon>
                     </mat-form-field>
 
                     <!-- FECHA DE CREACIÓN -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Fecha de Creación</mat-label>
+                        <mat-label>{{'TICKET_FORM.FECHA_CREACION' | translate}}</mat-label>
                         <input matInput formControlName="fechaCreacion" readonly>
                         <mat-icon matPrefix>schedule</mat-icon>
                     </mat-form-field>
 
                     <!-- ESTADO -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Estado</mat-label>
+                        <mat-label>{{'TICKET_FORM.ESTADO' | translate}}</mat-label>
                         <input matInput formControlName="estado" readonly>
                         <mat-icon matPrefix>info</mat-icon>
                     </mat-form-field>
@@ -72,8 +72,8 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon mat-card-avatar class="section-icon">description</mat-icon>
-                <mat-card-title class="section-title">Detalles del Ticket</mat-card-title>
-                <mat-card-subtitle class="section-subtitle">Información principal de la incidencia</mat-card-subtitle>
+                <mat-card-title class="section-title">{{'TICKET_FORM.DETALLES_TITULO' | translate}}</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">{{'TICKET_FORM.DETALLES_SUBTITULO' | translate}}</mat-card-subtitle>
             </mat-card-header>
 
             <mat-card-content class="section-content">
@@ -82,7 +82,7 @@
                     <!-- CÓDIGO (solo en edición) -->
                     @if (!isCreate) {
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Código</mat-label>
+                        <mat-label>{{'TICKET_FORM.CODIGO' | translate}}</mat-label>
                         <input matInput formControlName="codigo" readonly>
                         <mat-icon matPrefix>tag</mat-icon>
                     </mat-form-field>
@@ -90,20 +90,20 @@
 
                     <!-- TÍTULO -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Título del Ticket</mat-label>
-                        <input matInput formControlName="titulo" placeholder="Ej: Problema con el acceso al sistema"
+                        <mat-label>{{'TICKET_FORM.TITULO' | translate}}</mat-label>
+                        <input matInput formControlName="titulo" placeholder="{{'TICKET_FORM.TITULO_PLACEHOLDER' | translate}}"
                             minlength="5" maxlength="20">
                         <mat-icon matPrefix>title</mat-icon>
                         @if (ticketForm.get('titulo')?.invalid && ticketForm.get('titulo')?.touched) {
                         <mat-error>
                             @if (ticketForm.get('titulo')?.errors?.['required']) {
-                            El título es requerido
+                            {{'TICKET_FORM.TITULO_REQUERIDO' | translate}}
                             }
                             @if (ticketForm.get('titulo')?.errors?.['minlength']) {
-                            Mínimo 5 caracteres
+                            {{'TICKET_FORM.TITULO_MINIMO' | translate}}
                             }
                             @if (ticketForm.get('titulo')?.errors?.['maxlength']) {
-                            Máximo 100 caracteres
+                            {{'TICKET_FORM.TITULO_MAXIMO' | translate}}
                             }
                         </mat-error>
                         }
@@ -111,20 +111,20 @@
 
                     <!-- DESCRIPCIÓN -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Descripción Detallada</mat-label>
+                        <mat-label>{{'TICKET_FORM.DESCRIPCION' | translate}}</mat-label>
                         <textarea matInput formControlName="descripcion" rows="4" minlength="10" maxlength="500"
-                            placeholder="Describa detalladamente el problema que está experimentando..."></textarea>
+                            placeholder="{{'TICKET_FORM.DESCRIPCION_PLACEHOLDER' | translate}}"></textarea>
                         <mat-icon matPrefix>notes</mat-icon>
                         @if (ticketForm.get('descripcion')?.invalid && ticketForm.get('descripcion')?.touched) {
                         <mat-error>
                             @if (ticketForm.get('descripcion')?.errors?.['required']) {
-                            La descripción es requerida
+                            {{'TICKET_FORM.DESCRIPCION_REQUERIDA' | translate}}
                             }
                             @if (ticketForm.get('descripcion')?.errors?.['minlength']) {
-                            Mínimo 10 caracteres
+                            {{'TICKET_FORM.DESCRIPCION_MINIMO' | translate}}
                             }
                             @if (ticketForm.get('descripcion')?.errors?.['maxlength']) {
-                            Máximo 500 caracteres
+                            {{'TICKET_FORM.DESCRIPCION_MAXIMO' | translate}}
                             }
                         </mat-error>
                         }
@@ -132,7 +132,7 @@
 
                     <!-- PRIORIDAD -->
                     <mat-form-field appearance="outline" class="prioridad-field">
-                        <mat-label>Prioridad</mat-label>
+                        <mat-label>{{'TICKET_FORM.PRIORIDAD' | translate}}</mat-label>
                         <mat-select formControlName="prioridad">
                             @for (prioridad of prioridadesList(); track prioridad.value) {
                             <mat-option [value]="prioridad.value">
@@ -148,7 +148,7 @@
                             {{ getPrioridadIcon(ticketForm.get('prioridad')?.value) }}
                         </mat-icon>
                         @if (ticketForm.get('prioridad')?.invalid && ticketForm.get('prioridad')?.touched) {
-                        <mat-error>Seleccione una prioridad</mat-error>
+                        <mat-error>{{'TICKET_FORM.PRIORIDAD_REQUERIDA' | translate}}</mat-error>
                         }
                     </mat-form-field>
 
@@ -160,9 +160,8 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon mat-card-avatar class="section-icon">category</mat-icon>
-                <mat-card-title class="section-title">Categorización</mat-card-title>
-                <mat-card-subtitle class="section-subtitle">Seleccione la etiqueta que mejor describa su
-                    problema</mat-card-subtitle>
+                <mat-card-title class="section-title">{{'TICKET_FORM.CATEGORIZACION_TITULO' | translate}}</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">{{'TICKET_FORM.CATEGORIZACION_SUBTITULO' | translate}}</mat-card-subtitle>
             </mat-card-header>
 
             <mat-card-content class="section-content">
@@ -171,8 +170,8 @@
                     <!-- BÚSQUEDA DE ETIQUETAS -->
                     <div class="etiqueta-search-container">
                         <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Buscar Etiqueta</mat-label>
-                            <input matInput [formControl]="etiquetaSearchControl" placeholder="Escriba para buscar...">
+                            <mat-label>{{'TICKET_FORM.BUSCAR_ETIQUETA' | translate}}</mat-label>
+                            <input matInput [formControl]="etiquetaSearchControl" placeholder="{{'TICKET_FORM.BUSCAR_PLACEHOLDER' | translate}}">
                             <mat-icon matPrefix>search</mat-icon>
                             @if (etiquetaSearchControl.value) {
                             <button matSuffix mat-icon-button (click)="etiquetaSearchControl.setValue('')">
@@ -184,9 +183,9 @@
 
                     <!-- SELECCIÓN DE ETIQUETA -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Etiqueta</mat-label>
+                        <mat-label>{{'TICKET_FORM.ETIQUETA' | translate}}</mat-label>
                         <mat-select formControlName="etiquetaId" (selectionChange)="onEtiquetaSelected($event.value)">
-                            <mat-option value="">Seleccione una etiqueta</mat-option>
+                            <mat-option value="">{{'TICKET_FORM.SELECCIONE_ETIQUETA' | translate}}</mat-option>
                             @for (etiqueta of etiquetasFiltered(); track etiqueta.id) {
                             <mat-option [value]="etiqueta.id">
                                 {{ etiqueta.nombre }}
@@ -195,7 +194,7 @@
                         </mat-select>
                         <mat-icon matPrefix>label</mat-icon>
                         @if (ticketForm.get('etiquetaId')?.invalid && ticketForm.get('etiquetaId')?.touched) {
-                        <mat-error>Seleccione una etiqueta</mat-error>
+                        <mat-error>{{'TICKET_FORM.ETIQUETA_REQUERIDA' | translate}}</mat-error>
                         }
                     </mat-form-field>
 
@@ -207,7 +206,7 @@
                                 <div class="categoria-info">
                                     <div class="categoria-header">
                                         <mat-icon class="categoria-icon">folder</mat-icon>
-                                        <h3>Categoría Asignada Automáticamente</h3>
+                                        <h3>{{'TICKET_FORM.CATEGORIA_ASIGNADA_AUTOMATICAMENTE' | translate}}</h3>
                                     </div>
                                     <div class="categoria-details">
                                         <p class="categoria-nombre">{{ categoriaSeleccionada()?.nombre }}</p>
@@ -228,8 +227,8 @@
         <mat-card class="form-section sla-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon mat-card-avatar class="section-icon">timer</mat-icon>
-                <mat-card-title class="section-title">Tiempos de Respuesta (SLA)</mat-card-title>
-                <mat-card-subtitle class="section-subtitle">Tiempos calculados automáticamente</mat-card-subtitle>
+                <mat-card-title class="section-title">{{'TICKET_FORM.SLA_TITULO' | translate}}</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">{{'TICKET_FORM.SLA_SUBTITULO' | translate}}</mat-card-subtitle>
             </mat-card-header>
 
             <mat-card-content class="section-content">
@@ -238,26 +237,26 @@
                     <!-- SLA RESPUESTA -->
                     <div class="sla-item">
                         <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Límite de Respuesta</mat-label>
+                            <mat-label>{{'TICKET_FORM.LIMITE_RESPUESTA' | translate}}</mat-label>
                             <input matInput formControlName="slaRespuesta" readonly>
                             <mat-icon matPrefix class="sla-icon-respuesta">schedule</mat-icon>
                         </mat-form-field>
                         <div class="sla-info">
-                            <span class="sla-label">Tiempo máximo: {{ categoriaSeleccionada()?.sla?.maxMinutosRespuesta
-                                }} minutos</span>
+                            <span class="sla-label">{{'TICKET_FORM.TIEMPO_MAXIMO' | translate}}: {{ categoriaSeleccionada()?.sla?.maxMinutosRespuesta
+                                }} {{'TICKET_FORM.MINUTOS' | translate}}</span>
                         </div>
                     </div>
 
                     <!-- SLA RESOLUCIÓN -->
                     <div class="sla-item">
                         <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Límite de Resolución</mat-label>
+                            <mat-label>{{'TICKET_FORM.LIMITE_RESOLUCION' | translate}}</mat-label>
                             <input matInput formControlName="slaResolucion" readonly>
                             <mat-icon matPrefix class="sla-icon-resolucion">alarm</mat-icon>
                         </mat-form-field>
                         <div class="sla-info">
-                            <span class="sla-label">Tiempo máximo: {{ categoriaSeleccionada()?.sla?.maxMinutosResolucion
-                                }} minutos</span>
+                            <span class="sla-label">{{'TICKET_FORM.TIEMPO_MAXIMO' | translate}}: {{ categoriaSeleccionada()?.sla?.maxMinutosResolucion
+                                }} {{'TICKET_FORM.MINUTOS' | translate}}</span>
                         </div>
                     </div>
 
@@ -270,8 +269,8 @@
         <mat-card class="form-section" appearance="outlined">
             <mat-card-header class="section-header">
                 <mat-icon mat-card-avatar class="section-icon">image</mat-icon>
-                <mat-card-title class="section-title">Imágenes del Ticket</mat-card-title>
-                <mat-card-subtitle class="section-subtitle">Adjunte imágenes relacionadas al problema (máximo {{
+                <mat-card-title class="section-title">{{'TICKET_FORM.IMAGENES_TITULO' | translate}}</mat-card-title>
+                <mat-card-subtitle class="section-subtitle">({{'TICKET_FORM.IMAGENES_SUBTITULO' | translate}} {{
                     maxImages
                     }})</mat-card-subtitle>
             </mat-card-header>
@@ -281,7 +280,7 @@
                 <!-- IMÁGENES EXISTENTES (solo en edición) -->
                 @if (!isCreate && existingImages.length > 0) {
                 <div class="existing-images-section">
-                    <h4>Imágenes Actuales ({{ existingImages.length }}):</h4>
+                    <h4>{{'TICKET_FORM.IMAGENES_ACTUALES' | translate}} ({{ existingImages.length }}):</h4>
                     <div class="images-grid">
                         @for (image of existingImages; track image.id) {
                         <div class="image-preview-item"
@@ -296,12 +295,12 @@
                                 @if (isImageMarkedForDeletion(image.id)) {
                                 <button type="button" mat-mini-fab color="accent"
                                     (click)="unmarkImageForDeletion(image.id)" class="undo-btn"
-                                    matTooltip="Deshacer eliminación">
+                                    matTooltip="{{'TICKET_FORM.DESHAACER_ELIMINACION' | translate}}">
                                     <mat-icon>undo</mat-icon>
                                 </button>
                                 } @else {
                                 <button type="button" mat-mini-fab color="warn" (click)="markImageForDeletion(image.id)"
-                                    class="remove-btn" matTooltip="Marcar para eliminar">
+                                    class="remove-btn" matTooltip="{{'TICKET_FORM.MARCAR_PARA_ELIMINAR' | translate}}">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                                 }
@@ -310,7 +309,7 @@
                             @if (isImageMarkedForDeletion(image.id)) {
                             <div class="deletion-badge">
                                 <mat-icon>delete_forever</mat-icon>
-                                Se eliminará
+                                {{'TICKET_FORM.SE_ELIMINARA' | translate}}
                             </div>
                             }
                         </div>
@@ -333,9 +332,9 @@
                         <button type="button" mat-stroked-button (click)="imageInput.click()" class="upload-btn">
                             <mat-icon>add_photo_alternate</mat-icon>
                             @if (isCreate) {
-                            Agregar Imágenes ({{ selectedImages.length }}/{{ maxImages }})
+                            {{'TICKET_FORM.AGREGAR_IMAGENES' | translate}} ({{ selectedImages.length }}/{{ maxImages }})
                             } @else {
-                            Agregar Imágenes
+                            {{'TICKET_FORM.AGREGAR_IMAGENES' | translate}}
                             ({{ existingImages.length - imagesToDelete.length + selectedImages.length }}/{{ maxImages
                             }})
                             }
@@ -344,7 +343,7 @@
                         @if (selectedImages.length > 0 || imagesToDelete.length > 0) {
                         <button type="button" mat-button color="warn" (click)="clearImages()" class="clear-btn">
                             <mat-icon>clear_all</mat-icon>
-                            @if (isCreate) { Limpiar Todo } @else { Deshacer Cambios }
+                            @if (isCreate) { {{'TICKET_FORM.LIMPIAR_TODO' | translate}} } @else { {{'TICKET_FORM.DESHACER_CAMBIOS' | translate}} }
                         </button>
                         }
 </div>
@@ -354,7 +353,7 @@
 <!-- PREVIEWS DE NUEVAS IMÁGENES -->
 @if (selectedImages.length > 0) {
 <div class="new-images-section">
-    <h4>Nuevas Imágenes a Subir ({{ selectedImages.length }}):</h4>
+    <h4>{{'TICKET_FORM.NUEVAS_IMAGENES_A_SUBIR' | translate}} ({{ selectedImages.length }}):</h4>
     <div class="images-grid">
         @for (preview of imagePreviews; track $index) {
         <div class="image-preview-item new-image">
@@ -367,7 +366,7 @@
             </div>
             <div class="new-badge">
                 <mat-icon>fiber_new</mat-icon>
-                Nueva
+                {{'TICKET_FORM.NUEVA' | translate}}
             </div>
         </div>
         }
@@ -379,8 +378,8 @@
 @if (!isCreate && (existingImages.length - imagesToDelete.length + selectedImages.length) >= maxImages) {
 <div class="limit-message">
     <mat-icon>info</mat-icon>
-    Ha alcanzado el límite de {{ maxImages }} imágenes.
-    Elimine imágenes existentes para agregar nuevas.
+    {{'TICKET_FORM.LIMITE_ALCANZADO' | translate:{maxImages: maxImages} }}
+    {{'TICKET_FORM.LIMITE_MENSAJE' | translate}}
 </div>
 }
 
@@ -389,18 +388,18 @@
 <div class="changes-summary">
     <mat-card class="summary-card" appearance="outlined">
         <mat-card-content>
-            <h4>Resumen de Cambios:</h4>
+            <h4>{{'TICKET_FORM.RESUMEN_CAMBIOS' | translate}}:</h4>
             <ul>
                 @if (selectedImages.length > 0) {
                 <li class="summary-add">
                     <mat-icon>add_circle</mat-icon>
-                    Se agregarán {{ selectedImages.length }} nueva(s) imagen(es)
+                    {{'TICKET_FORM.SE_AGREGARAN' | translate:{count: selectedImages.length} }}
                 </li>
                 }
                 @if (imagesToDelete.length > 0) {
                 <li class="summary-delete">
                     <mat-icon>remove_circle</mat-icon>
-                    Se eliminarán {{ imagesToDelete.length }} imagen(es) existente(s)
+                    {{'TICKET_FORM.SE_ELIMINARAN' | translate:{count: imagesToDelete.length} }}
                 </li>
                 }
             </ul>
@@ -419,7 +418,7 @@
         @if (isCreate) {
         <button type="button" mat-stroked-button (click)="onReset()" class="btn-reset">
             <mat-icon class="icon-formActions">refresh</mat-icon>
-            Limpiar Formulario
+            {{'TICKET_FORM.LIMPIAR_TODO' | translate}}
         </button>
         }
     </div>
@@ -428,14 +427,14 @@
         <!-- BOTÓN CANCELAR/CERRAR -->
         <button type="button" mat-button (click)="goBack()" class="btn-cancel">
             <mat-icon class="icon-formActions">cancel</mat-icon>
-            {{ isCreate ? 'Cancelar' : 'Cancelar' }}
+            {{ isCreate ? ('TICKET_FORM.CANCELAR' | translate) : ('TICKET_FORM.CANCELAR' | translate) }}
         </button>
 
         <!-- Botón para enviar datos al API (se deshabilita si el formulario es inválido o si no hay categoría seleccionada) -->
         <button type="submit" mat-raised-button color="primary"
             [disabled]="ticketForm.invalid || !categoriaSeleccionada()" class="btn-submit">
             <mat-icon class="icon-formActions">{{ isCreate ? 'save' : 'update' }}</mat-icon>
-            {{ isCreate ? 'Crear Ticket' : 'Actualizar Ticket' }}
+            {{ isCreate ? ('TICKET_FORM.CREAR_TICKET' | translate) : ('TICKET_FORM.ACTUALIZAR_TICKET' | translate) }}
         </button>
     </div>
 </div>

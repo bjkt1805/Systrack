@@ -1,0 +1,22 @@
+2025-11-23 09:15:43.322 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `this.prisma.usuario.findUnique()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\controllers\usuarioController.ts:161:54
+
+  158 }
+  159 
+  160 // Busca la categoría por su 'id' en la BD
+→ 161 const ticket = await this.prisma.usuario.findUnique(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
+2025-11-23 09:15:43.361 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `this.prisma.etiqueta.findMany()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\controllers\etiquetaController.ts:19:50
+
+  16 try {
+  17 
+  18   //Select * from etiqueta ordenado por id ascendente
+→ 19   const listado = await this.prisma.etiqueta.findMany(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.

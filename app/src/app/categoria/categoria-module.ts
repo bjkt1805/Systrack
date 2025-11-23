@@ -56,7 +56,6 @@ import { TranslateModule } from '@ngx-translate/core';
     MatTooltipModule,
     TranslateModule,
     ReactiveFormsModule,
-
   ]
 })
 export class CategoriaModule { }

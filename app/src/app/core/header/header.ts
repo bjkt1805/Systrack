@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ export class Header {
   // Hay que inyectar el servicio de autenticación para obtener el usuario autenticado
   private router = inject(Router);
   private authService = inject(AuthenticationService);
+  private translate = inject(TranslateService);
 
   /**
    * Signals para manejar la autenticación de usuario 
@@ -62,4 +64,9 @@ export class Header {
     this.router.navigate(['/']); // Redirigir a la página de inicio después del logout
   }
 
+  // Para cambiar el idioma
+  cambiarIdioma(lang: 'en' | 'es'): void {
+    this.translate.use(lang);
+    localStorage.setItem('selectedLanguage', lang);
+  }
 }

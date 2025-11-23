@@ -25,17 +25,17 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>info</mat-icon>
-          Información General
+          {{ 'CATEGORIA_DETALLE.INFORMACION_GENERAL' | translate }}
         </h3>
         
         <div class="info-grid">
           <div class="info-item">
-            <span class="label">Nombre</span>
+            <span class="label">{{ 'CATEGORIA_DETALLE.NOMBRE' | translate }}</span>
             <span class="value">{{ datos()?.nombre }}</span>
           </div>
           
           <div class="info-item full-width">
-            <span class="label">Descripción</span>
+            <span class="label">{{ 'CATEGORIA_DETALLE.DESCRIPCION' | translate }}</span>
             <span class="value description">{{ datos()?.descripcion }}</span>
           </div>
         </div>
@@ -45,7 +45,7 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>label</mat-icon>
-          Etiquetas ({{ datos()?.etiquetas?.length }})
+          {{ 'CATEGORIA_DETALLE.ETIQUETAS' | translate }} ({{ datos()?.etiquetas?.length }})
         </h3>
         
         <div class="chips-container">
@@ -62,7 +62,7 @@
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>workspace_premium</mat-icon>
-          Especialidades ({{ datos()?.especialidades?.length }})
+          {{ 'CATEGORIA_DETALLE.ESPECIALIDADES' | translate }} ({{ datos()?.especialidades?.length }})
         </h3>
         
         <div class="chips-container">
@@ -79,7 +79,7 @@
       <section class="info-section sla-section">
         <h3 class="section-title">
           <mat-icon>schedule</mat-icon>
-          Acuerdo de Nivel de Servicio (SLA)
+          {{ 'CATEGORIA_DETALLE.SLA' | translate }}
         </h3>
         
         <div class="sla-grid">
@@ -88,7 +88,7 @@
               <mat-icon>assignment</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">Nombre del SLA</span>
+              <span class="sla-label">{{ 'CATEGORIA_DETALLE.NOMBRE_SLA' | translate }}</span>
               <span class="sla-value">{{ datos()?.sla?.nombre }}</span>
             </div>
           </div>
@@ -98,7 +98,7 @@
               <mat-icon>reply</mat-icon>
             </div>
             <div class="sla-content">
-              <span class="sla-label">Tiempo de Respuesta</span>
+              <span class="sla-label">{{ 'CATEGORIA_DETALLE.TIEMPO_RESPUESTA' | translate }}</span>
               <span class="sla-value">{{ datos()?.sla?.maxMinutosRespuesta }} min</span>
             </div>
           </div>
@@ -121,7 +121,7 @@
     <mat-card-footer class="tech-card__footer">
       <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Regresar
+        {{ 'CATEGORIA_DETALLE.REGRESAR' | translate }}
       </button>
     </mat-card-footer>
   </mat-card>
@@ -134,11 +134,11 @@
       <div class="empty-icon">
         <mat-icon>category_off</mat-icon>
       </div>
-      <h2 class="empty-title">Categoría no encontrada</h2>
-      <p class="empty-text">No se pudo cargar la información de esta categoría.</p>
+      <h2 class="empty-title">{{ 'CATEGORIA_DETALLE.NO_ENCONTRADO_TITULO' | translate }}</h2>
+      <p class="empty-text">{{ 'CATEGORIA_DETALLE.NO_ENCONTRADO_TEXTO' | translate }}</p>
       <button mat-raised-button color="primary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
-        Volver al Listado
+        {{ 'CATEGORIA_DETALLE.VOLVER_LISTADO' | translate }}
       </button>
     </mat-card-content>
   </mat-card>
