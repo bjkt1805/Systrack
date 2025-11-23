@@ -2,7 +2,7 @@
 <div class="detail-container">
   <mat-card class="ticket-card" appearance="outlined">
 
-    <!-- HEADER MODERNO -->
+    <!-- HEADER -->
     <mat-card-header class="ticket-card__header">
       <div class="header-content">
         <div class="icon-wrapper">
@@ -19,7 +19,7 @@
       <!--  BOTÓN PARA CAMBIAR ESTADO DEL TIQUETE-->
       @if (puedeActualizarEstado()) {
       <div class="header-actions">
-        <button 
+        <button style="font-weight: 600;"
           mat-raised-button 
           color="primary" 
           (click)="abrirDialogoCambioEstado()"
@@ -233,6 +233,8 @@
               }
             </div>
           </mat-expansion-panel>
+          <br>
+
           }
         </mat-accordion>
       </section>

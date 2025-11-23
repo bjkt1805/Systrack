@@ -61,7 +61,7 @@ export class Header {
   // Para desloguearse
   logout = () => {
     this.authService.logout(); // Llamar al método logout del servicio de autenticación
-    this.router.navigate(['/']); // Redirigir a la página de inicio después del logout
+    this.router.navigate(['/usuario/login']); // Redirigir a la página de login después del logout
   }
 
   // Para cambiar el idioma

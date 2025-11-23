@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { TicketController } from '../controllers/ticketController'
+import { authenticateJWT } from '../middleware/authMiddleware';
 import uploadTicketImages from '../middleware/ticketImageConfig';
 
 export class TicketRoutes {
@@ -26,6 +27,10 @@ export class TicketRoutes {
 
         // POST localhost:3000/ticket/ - Crear un ticket (incluyendo imágenes)
         router.post('/', uploadTicketImages, controller.create)
+
+        // PUT localhost:3000/ticket/3/state - Actualizar el estado de un ticket por su ID (incluyendo imágenes)
+        router.put('/:id/estado', authenticateJWT, controller.updateEstado);
+
 
         // PUT localhost:3000/ticket/3 - Actualizar un ticket por su ID (incluyendo imágenes)
         router.put('/:id', uploadTicketImages, controller.update);

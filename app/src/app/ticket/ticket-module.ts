@@ -23,6 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TicketDetail } from './ticket-detail/ticket-detail';
 import { TicketImageViewDialog } from './ticket-image-view-dialog/ticket-image-view-dialog';
+import { TicketHistorialViewDialog } from './ticket-historial-view-dialog/ticket-historial-view-dialog';
 import { TicketIndex } from './ticket-index/ticket-index';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TicketForm } from './ticket-form/ticket-form';
@@ -34,7 +35,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TicketIndex,
     TicketDetail,
     TicketAdmin,
-    TicketImageViewDialog, 
+    TicketImageViewDialog,
+    TicketHistorialViewDialog, 
     TicketForm
   ],
   imports: [

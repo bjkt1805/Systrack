@@ -4,9 +4,10 @@ import { TicketModel } from '../../share/models/TicketModel';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TicketImageViewDialog } from '../ticket-image-view-dialog/ticket-image-view-dialog';
+import { NotificationService } from '../../share/services/app/notification.service';
 
 // importar dialogo de TicketEstado
-// import {TicketEstadoDialog} from '../ticket-estado-dialog/ticket-estado-dialog';
+import { TicketHistorialViewDialog } from '../ticket-historial-view-dialog/ticket-historial-view-dialog';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { EstadoTicket } from '../../share/models/EnumsModel';
 
@@ -31,16 +32,21 @@ export class TicketDetail {
   private router = inject(Router);
 
   // Para mostrar un dialog con las imagenes del historial del ticket
-  private imageDialog = inject(MatDialog);
+  private ticketDialog = inject(MatDialog);
 
   // Inyectar el servicio de autenticación
   private authService = inject(AuthenticationService);
+
+  // Inyectar servicio de notificaciones
+  private noti = inject(NotificationService);
 
   /**
  * Signals para manejar la autenticación de usuario 
  */
   readonly isAuthenticated = this.authService.authenticated;
+
   readonly currentUser = this.authService.usuario;
+
 
   // Mapa para manejar el flujo de estados del estado
   // Por ejemplo, pasar de Pendiente a Asignado
@@ -65,6 +71,10 @@ export class TicketDetail {
   }
 
   constructor() {
+
+    console.log("¿Usuario autenticado?", this.isAuthenticated());
+    console.log("Usuario actual:", this.currentUser());
+
 
     // Para obtener el id/parámetro de la ruta
     // Parsear el id a número
@@ -107,21 +117,24 @@ export class TicketDetail {
     // Si el estado del tiquete es CERRADO, devolver false (no se puede actualizar)
     if (ticket.estado === EstadoTicket.CERRADO) return false;
 
-    // Obtener los siguientes estados disponibles (basado en el estado actual del tiquete)
-    // Por ejemplo, si el tiquete está en estado Pendiente, debe devolverse Asignado
-    // En Proceso, Resuelto, Cerrado 
-    const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+    // Lógica para usuario con rol ADMIN (puede saltarse todo el flujo)
+    if (usuario.rol === 'ADMIN') {
+      // ADMIN siempre puede actualizar (ASIGNAR o CERRAR)
+      return true;
+    }
 
-    // Si la longitud de "siguientesEstadosTicket" es 0 devolver false 
-    if (siguientesEstadosTicket.length === 0) return false;
+    // Lógica para usuario con rol TECNICO 
+    if (usuario.rol === 'TECNICO') {
+      // Técnico puede cambiar si hay siguientes estados disponibles
+      const siguientesEstados = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+      return siguientesEstados.length > 0; // devolver true si siguientesEstados es mayor a 0
+    }
 
-    // Verificar el permiso sobre el siguiente estado del tiquete 
-    for (const siguienteEstado of siguientesEstadosTicket) {
-
-      // Si el usuario tiene permiso para cambiar el estado del tiquete, devolver true
-      if (this.tienePermisoParaEstado(siguienteEstado, ticket, usuario)) {
-        return true;
-      }
+    // Lógica para usuario con rol CLIENTE
+    if (usuario.rol === 'CLIENTE') {
+      // El cliente solo puede CERRAR su propio ticket si está RESUELTO
+      return ticket.estado === EstadoTicket.RESUELTO && 
+             ticket.solicitante.id === usuario.id;
     }
 
     // Devolver false por defecto
@@ -131,39 +144,39 @@ export class TicketDetail {
   /**
    * Método para verificar si el usuario tiene permiso para cambiar a un estado específico
    */
-  private tienePermisoParaEstado(estadoNuevo: EstadoTicket, ticket: TicketModel, usuario: any): boolean {
+  // private tienePermisoParaEstado(estadoNuevo: EstadoTicket, ticket: TicketModel, usuario: any): boolean {
 
-    // Obtener el id de usuario y el rol a partir del usuario 
-    const { id: usuarioId, rol } = usuario;
+  //   // Obtener el id de usuario y el rol a partir del usuario 
+  //   const { id: usuarioId, rol } = usuario;
 
-    // SOLO LOS TÉCNICOS PUEDEN CAMBIAR EL TIQUETE A EN_PROCESO O RESUELTO
-    // A partir del record FLUJO_ESTADOS se revisa si EstadoTicket 
-    // es "EN_PROCESO" o "RESUELTO"
-    if ([EstadoTicket.EN_PROCESO, EstadoTicket.RESUELTO].includes(estadoNuevo)) {
+  //   // SOLO LOS TÉCNICOS PUEDEN CAMBIAR EL TIQUETE A EN_PROCESO O RESUELTO
+  //   // A partir del record FLUJO_ESTADOS se revisa si EstadoTicket 
+  //   // es "EN_PROCESO" o "RESUELTO"
+  //   if ([EstadoTicket.EN_PROCESO, EstadoTicket.RESUELTO].includes(estadoNuevo)) {
 
-      // retornar true si el rol es TECNICO
-      return rol === 'TECNICO';
-    }
+  //     // retornar true si el rol es TECNICO
+  //     return rol === 'TECNICO';
+  //   }
 
-    // SOLO EL CLIENTE QUE CREÓ EL TIQUETE O EL ADMIN PUEDEN CERRARLO
-    if (estadoNuevo === EstadoTicket.CERRADO) {
+  //   // SOLO EL CLIENTE QUE CREÓ EL TIQUETE O EL ADMIN PUEDEN CERRARLO
+  //   if (estadoNuevo === EstadoTicket.CERRADO) {
 
-      //retornar true si el id de usuario es el del solicitanteId del tiquete 
-      // o si el rol es ADMIN 
-      return ticket.solicitanteId === usuarioId || rol === 'ADMIN'
-    }
+  //     //retornar true si el id de usuario es el del solicitanteId del tiquete 
+  //     // o si el rol es ADMIN 
+  //     return ticket.solicitanteId === usuarioId || rol === 'ADMIN'
+  //   }
 
-    // TÉCNICO O ADMIN PUEDEN CAMBIAR EL ESTADO DEL TIQUETE A ASIGNADO
-    if (estadoNuevo === EstadoTicket.ASIGNADO) {
+  //   // ADMIN PUEDE CAMBIAR EL ESTADO DEL TIQUETE A ASIGNADO
+  //   if (estadoNuevo === EstadoTicket.ASIGNADO) {
 
-      // retornar true si el rol del usuario es TECNICO o ADMIN 
-      return rol === 'TECNICO' || rol === 'ADMIN';
-    }
+  //     // retornar true si el rol del usuario es ADMIN 
+  //     return rol === 'ADMIN';
+  //   }
 
-    // devoler false por defecto
-    return false;
+  //   // devoler false por defecto
+  //   return false;
 
-  }
+  // }
 
   /**
    * Método para abrir el diálogo de cambio de estado del ticket
@@ -176,20 +189,98 @@ export class TicketDetail {
     // Obtener el usuario autenticado
     const usuario = this.currentUser();
 
-    // Si no hay tiquete o usuario, salir del método
+    // Si no hay tiquete o usuario, salir del 
+    // método
     if (!ticket || !usuario) return;
 
-    // Obtener los siguientes estados disponibles 
-    const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+    // Declarar un arreglo de estadosPermitidos de tipo EstadoTicket
+    let estadosPermitidos: EstadoTicket[] = [];
 
-    // Filtrar los estados a los que el usuario tiene permiso para cambiar
-    const estadosDisponibles = siguientesEstadosTicket.filter(estado =>
-      this.tienePermisoParaEstado(estado, ticket, usuario) // invocar el método de permiso
-    );
+    // Lógica para usuario con rol ADMIN
+    if (usuario.rol === 'ADMIN'){
 
-    // Si no hay estados disponibles, salir del método
-    if (estadosDisponibles.length === 0) return;
+      // Si el estado del tiquete es PENDIENTE, puede asignarlo
+      if (ticket.estado === EstadoTicket.PENDIENTE) {
+        estadosPermitidos.push(EstadoTicket.ASIGNADO); // Agregar el estado ASIGNADO al array de estadosPermitidos
+      }
 
+      // Si el estado del tiquete es cualquier otro (EN_PROCESO, RESUELTO), puede cerrarlo directamente
+      if (ticket.estado !== EstadoTicket.CERRADO) {
+        estadosPermitidos.push(EstadoTicket.CERRADO); // Agregar el estado CERRADO al array de estadosPermitidos
+      }
+
+      console.log('[ADMIN] Estados disponibles:', estadosPermitidos); // Imprimir los estadosPermitidos para Admin
+    }
+
+    // Lógica para usuario con rol TECNICO
+    else if (usuario.rol === 'TECNICO') {
+
+      // Utilizar una variable tipo Record/Mapa para mapear los estados disponibles para el usuario Técnico
+
+      const FLUJO_TECNICO: Record<EstadoTicket, EstadoTicket[]> = {
+        [EstadoTicket.PENDIENTE]: [],
+        [EstadoTicket.ASIGNADO]: [EstadoTicket.EN_PROCESO],
+        [EstadoTicket.EN_PROCESO]: [EstadoTicket.RESUELTO],
+        [EstadoTicket.RESUELTO]: [],
+        [EstadoTicket.CERRADO]: []
+      };
+
+      // Asignar al arreglo estadosPermitidos el Record de FLUJO_TECNICO
+      estadosPermitidos = FLUJO_TECNICO[ticket.estado as EstadoTicket] || [];
+      console.log('[TÉCNICO] Estados disponibles:', estadosPermitidos);
+    }
+
+    // Lógica para usuario con rol CLIENTE
+    else if (usuario.rol === 'CLIENTE') {
+      // Cliente solo puede CERRAR su propio ticket si está RESUELTO
+      if (ticket.estado === EstadoTicket.RESUELTO && ticket.solicitante.id === usuario.id) {
+        estadosPermitidos.push(EstadoTicket.CERRADO);
+      }
+      console.log('[CLIENTE] Estados disponibles:', estadosPermitidos);
+    }
+
+    // Validar que haya estados disponibles 
+    if (estadosPermitidos.length === 0) {
+      this.noti.warning(
+        'Sin permisos',
+        'No puede cambiar el estado de este ticket en su estado actual'
+      );
+      return;
+    }
+
+    // // Obtener los siguientes estados disponibles 
+    // const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
+
+    // // Filtrar los estados a los que el usuario tiene permiso para cambiar
+    // const estadosDisponibles = siguientesEstadosTicket.filter(estado =>
+    //   this.tienePermisoParaEstado(estado, ticket, usuario) // invocar el método de permiso
+    // );
+
+    // // Si no hay estados disponibles, salir del método
+    // if (estadosDisponibles.length === 0) return;
+
+    // Constante para abrir el diálogo de cambio de estado del ticket
+    const dialogRef = this.ticketDialog.open(TicketHistorialViewDialog, {
+      width: '700px', // Ancho fijo
+      maxWidth: '95vw', // Ancho máximo para pantallas pequeñas
+      disableClose: false, // Permitir cerrar el diálogo haciendo clic fuera de él
+
+      // Pasar datos al diálogo (ticket, estadosDisponibles, usuarioLogueado)
+      data: {
+        ticket: ticket,
+        estadosDisponibles: estadosPermitidos,
+        usuarioLogueado: usuario
+      }
+    });
+
+    // Suscribirse al cierre del diálogo para recargar el ticket si se actualizó el estado
+    dialogRef.afterClosed().subscribe(result => {
+      // Si el resultado es verdadero, significa que se actualizó el estado
+      if (result === true) {
+        console.log("[DIALOG DETALLE TIQUETE] - Estado actualizado, recargando ticket ...");
+        this.obtenerTicket(ticket.id); // Recargar el tiquete
+      }
+    });
   }
 
   /**
@@ -395,7 +486,7 @@ export class TicketDetail {
 
     // Obtener la URL completa de la imagen y abrir el dialog
     const src = `http://localhost:3000/images/${img.url}`;
-    this.imageDialog.open(TicketImageViewDialog, {
+    this.ticketDialog.open(TicketImageViewDialog, {
       data: { src },
       panelClass: 'img-dialog-panel'
     });

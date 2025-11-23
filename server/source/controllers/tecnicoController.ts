@@ -93,6 +93,27 @@ export class TecnicoController {
     }
   };
 
+  // OBTENER LOS TÉCNICOS CUYO ESTADO SEA DISPONIBLE Y ACTIVO = TRUE
+  getAvailable = async (request: Request,response: Response, next: NextFunction) => {
+    try {
+      
+      const tecnicos = await this.prisma.usuario.findMany({
+
+        // Filtrar por rol de técnico, estado disponible y activo
+        where: {
+          rol: Rol.TECNICO,
+          estadoTecnico: EstadoTecnico.DISPONIBLE,
+          activo: true
+        }
+      })
+
+      // Devolver listado de técnicos disponibles y activos
+      response.json(tecnicos);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   // OBTENER UN TÉCNICO A TRAVÉS DE SU ID (devolver solo si es técnico)
   getById = async (
     request: Request,
