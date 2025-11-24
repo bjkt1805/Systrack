@@ -8,6 +8,7 @@ import { etiquetas } from "./seeds/etiquetas";
 import { historialTicket } from "./seeds/historialTicket";
 import { imagenTicket } from "./seeds/imagenTicket";
 import { valoracionServicio } from "./seeds/valoracionServicio";
+import { regla } from "./seeds/regla";
 
 const prisma = new PrismaClient();
 const main = async () => {
@@ -52,6 +53,13 @@ const main = async () => {
       // Respetar campo unique
       skipDuplicates: true,
     });
+
+    // Reglas - createMany (crear varios registros sin registrar relaciones)
+
+    await prisma.regla.createMany({
+      data: regla,
+    });
+    
 
     // Ticket - createMany (crear varios registros sin registrar relaciones)
     await prisma.ticket.createMany({
@@ -345,9 +353,137 @@ const main = async () => {
       },
     });
 
+    // MAPEO 1:m ENTRE REGLA Y CATEGORIA (ASIGNAR REGLAS A CATEGORIAS CORRESPONDIENTES)
+
+    // Actualizar la Categoría 1 Hardware creada con sus reglas (Regla 1 y Regla 6)
+    await prisma.categoria.update({
+      where: { id: 1 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 1 }, // Conectar con la regla id 1
+            { id: 6 }, // Conectar con la regla id 6
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 2 Redes y Conectividad creada con sus reglas (Regla 2)
+    await prisma.categoria.update({
+      where: { id: 2 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 2 }, // Conectar con la regla id 2
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 3 Soporte a usuario final creada con sus reglas (Regla 3)
+    await prisma.categoria.update({
+      where: { id: 3 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 3 }, // Conectar con la regla id 3
+            { id: 5 }, // Conectar con la regla id 5
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Categoría 4 Aplicaciones y sistemas internos creada con sus reglas (Regla 4)
+    await prisma.categoria.update({
+      where: { id: 4 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 4 }, // Conectar con la regla id 4
+          ],
+        },
+      },
+    });
+
+    // MAPEO 1:m ENTRE REGLA Y ESPECIALIDAD (ASIGNAR REGLAS A ESPECIALIDADES CORRESPONDIENTES)
+
+    // Actualizar la Especialidad 3 Mantenimiento preventivo y correctivo creada con sus reglas (Regla 1)
+    await prisma.especialidad.update({
+      where: { id: 3 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 1 }, // Conectar con la regla id 1
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Especialidad 6 Especialista en ciberseguridad creada con sus reglas (Regla 2)
+    await prisma.especialidad.update({
+      where: { id: 6 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 2 }, // Conectar con la regla id 2
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Especialidad 7 Administrador de sistemas creada con sus reglas (Regla 3)
+    await prisma.especialidad.update({
+      where: { id: 7 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 3 }, // Conectar con la regla id 3
+          ],
+        },
+      },
+    });
+
+    // Actualizar la Especialidad 9 Desarrollador de software creada con sus reglas (Regla 4)
+    await prisma.especialidad.update({
+      where: { id: 9 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 4 }, // Conectar con la regla id 4
+          ],
+        },
+      },
+    });
+
+    // Actualizar la especialidad 5 Soporte en infraestructura creada con sus reglas (Regla 5)
+    await prisma.especialidad.update({
+      where: { id: 5 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 5 }, // Conectar con la regla id 5
+          ],
+        },
+      },
+    });
+
+    // Actualizar la especialidad 1 Técnico en reparación de equipos electrónicos creada con sus reglas (Regla 6)
+    await prisma.especialidad.update({
+      where: { id: 1 },
+      data: {
+        reglas: {
+          connect: [
+            { id: 6 }, // Conectar con la regla id 6
+          ],
+        },
+      },
+    });
+
+
   } catch (error) {
     throw error;
   }
+  
 };
 
 main()

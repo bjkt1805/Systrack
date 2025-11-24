@@ -76,6 +76,7 @@ model Especialidad {
   // Relaciones
   tecnicos   Usuario[] // M2M implícita (con PK compuesta) Usuarios con rol TECNICO y esta especialidad
   categorias Categoria[] // M2M implícita (con PK compuesta) Categorías asociadas a esta especialidad
+  reglas      Regla[] // 1-M
 }
 
 // -- MODELO SLA -- 
@@ -105,6 +106,7 @@ model Categoria {
   etiquetas      Etiqueta[] // M2M implícita (con PK compuesta)
   especialidades Especialidad[] // M2M implícita (con PK compuesta)
   tickets        Ticket[] // 1-M
+  reglas         Regla[] // 1-M
 }
 
 // -- MODELO DE ETIQUETA --
@@ -204,16 +206,25 @@ model Regla {
   id          Int       @id @default(autoincrement())
   nombre      String    @unique
   activa      Boolean   @default(true)
-  eliminadaAt DateTime?
 
-  // Pesos simples (opcional) o `criterios` JSON
-  pesoPrioridad    Float?
-  pesoSlaRestante  Float?
-  pesoCargaTrabajo Float?
+  // Filtros para aplicar la regla 
+  categoriaId Int // Hardware, Software, Red, etc.
+  prioridad   Prioridad? // Baja, Media, Alta, Urgente
+  especialidadId Int // Especialidad del técnico 
+  aplicaATodasPrioridades Boolean @default(false) // En caso de que la regla aplique a todas las prioridades
+  
+  // Peso o límite de carga (cant Tiquetes del técnico) 
+  pesoCargaTrabajo Int? // null = Sin restricción
 
+  // Orden de prioridad de regla 
+  ordenPrioridad Int @default(1) // 1, 2, 3, ...
+
+  creadoAt  DateTime @default(now()) @db.DateTime(0)
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(0)
 
   // Relaciones
+  categoria    Categoria?    @relation(fields: [categoriaId], references: [id]) 
+  especialidad Especialidad? @relation(fields: [especialidadId], references: [id])
   asignaciones Asignacion[] // 1-M
 
   @@index([activa]) // para búsquedas frecuentes por activa
@@ -234,7 +245,7 @@ model Asignacion {
   // Relaciones
   ticket  Ticket  @relation(fields: [ticketId], references: [id])
   usuario Usuario @relation(fields: [usuarioTecnicoId], references: [id])
-  regla   Regla?  @relation(fields: [reglaId], references: [id])
+  regla   Regla?  @relation(fields: [reglaId], references: [id]) // M-1
 
   @@id([ticketId, usuarioTecnicoId]) // PK compuesta
   @@index([reglaId]) // para búsquedas frecuentes por regla

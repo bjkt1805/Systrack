@@ -65,19 +65,21 @@
                     <h3 class="section-title">{{'ACTUALIZAR_ESTADO.ASIGNACION_TECNICO' | translate}}</h3>
                 </div>
 
-                <!-- BOTONES: AUTOMÁTICO Y MANUAL -->
-                <div class="botones-asignacion" style="gap: 15px">
-                    <button style="padding-right: 10px;" type="button" mat-raised-button color="primary"
-                        class="btn-tipo-asignacion">
-                        <mat-icon>auto_awesome</mat-icon>
-                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_AUTOMATICA' | translate}}</span>
-                    </button>
-
-                    <button type="button" mat-raised-button class="btn-tipo-asignacion">
+                <!-- BOTÓN DE ASIGNACIÓN -->
+                <div class="boton-asignacion" style="gap: 15px">
+                    <button type="button" mat-raised-button class="btn-asignacion">
                         <mat-icon>person_search</mat-icon>
                         <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_MANUAL' | translate}}</span>
                     </button>
                 </div>
+
+                <!-- BOTÓN DE ASIGNACIÓN (CON EVENTO CLICK INCLUIDO)-->
+                <!-- <div class="botones-asignacion" style="gap: 15px">
+                    <button type="button" mat-raised-button class="btn-tipo-asignacion" (click)="abrirAsignacionManualDialog()">
+                        <mat-icon>person_search</mat-icon>
+                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_MANUAL' | translate}}</span>
+                    </button>
+                </div> -->
 
                 <mat-hint class="hint-asignacion">
                     <mat-icon class="hint-icon">info</mat-icon>

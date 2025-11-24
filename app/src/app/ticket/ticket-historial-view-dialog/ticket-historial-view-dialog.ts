@@ -1,5 +1,6 @@
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 // Servicios
@@ -36,6 +37,9 @@ export class TicketHistorialViewDialog implements OnInit {
     private uploadService = inject(FileUploadService);
     private noti = inject(NotificationService);
     private dialogRef = inject(MatDialogRef<TicketHistorialViewDialog>);
+
+    // Inyeccion de MatDialog para abrir un nuevo dialogo de asignación de técnico
+    private dialog = inject(MatDialog);
 
     // Formulario reactivo por medio de FormGroup
     estadoForm!: FormGroup;
@@ -401,6 +405,34 @@ export class TicketHistorialViewDialog implements OnInit {
     getEstadoIcon(estado: EstadoTicket): string {
         return this.estadoIcons[estado] || 'help_outline'; // Valor por defecto si no se encuentra
     }
+
+   /**
+    * Abrir el dialog de asignación manual de técnico
+    */
+//    abrirAsignacionManualDialog(): void {
+//     //Método para abrir el diálogo de asignación manual de técnico
+//     const dialogRef = this.dialog.open(AsignacionManualDialog, {
+//         width: '600px', // Ancho del diálogo
+//         maxHeight: '80vh', // Altura máxima del diálogo
+//         disableClose: true, // No permitir cerrar haciendo clic fuera (valor "false" deja cerrarlo)
+//         // Pasar datos al diálogo
+//         data: {
+//             tecnicos: this.tecnicos(),
+//             ticketId: this.data.ticket.id
+//         }
+//     });
+
+//     // Subscribirse al cierre del diálogo
+//     dialogRef.afterClosed().subscribe(result => {
+//         if (result === true) {
+//             // Debuguear que el técnico fue asignado manualmente
+//             console.log('[DIALOG] Técnico asignado manualmente al tiquete.', result);
+
+//             // Actualizar el formulario de cambio de estado con el nuevo técnico asignado
+//             this.estadoForm.patchValue({usuarioAsignadoId: result.usuarioAsignadoId});
+//         }
+//     });
+//    }
 
 
 }

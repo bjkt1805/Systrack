@@ -220,14 +220,15 @@
   margin-bottom: 20px;
 }
 
-.botones-asignacion {
-  display: grid;
+.boton-asignacion {
+  display: flex;
+  justify-content: center;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 16px;
 }
 
-.btn-tipo-asignacion {
+.btn--asignacion {
   display: flex !important;
   flex-direction: column;
   align-items: center;
@@ -238,18 +239,18 @@
   transition: all 0.3s ease;
 }
 
-.btn-tipo-asignacion:hover {
+.btn-asignacion:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.btn-tipo-asignacion mat-icon {
+.btn-asignacion mat-icon {
   font-size: 48px;
   width: 48px;
   height: 48px;
 }
 
-.btn-tipo-asignacion span {
+.btn-asignacion span {
   font-size: 14px;
   font-weight: 600;
   text-align: center;
