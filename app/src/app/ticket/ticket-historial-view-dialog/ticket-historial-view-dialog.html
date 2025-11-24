@@ -3,7 +3,7 @@
     <!-- ========== HEADER ========== -->
     <h2 mat-dialog-title class="dialog-title">
         <mat-icon class="title-icon">swap_horiz</mat-icon>
-        Actualizar Estado del Ticket
+        {{'ACTUALIZAR_ESTADO.TITULO' | translate}}
     </h2>
 
     <!-- ========== CONTENIDO ========== -->
@@ -16,7 +16,7 @@
                     <div class="info-row">
                         <mat-icon class="info-icon">confirmation_number</mat-icon>
                         <div class="info-text">
-                            <span class="info-label">Ticket:</span>
+                            <span class="info-label">{{'ACTUALIZAR_ESTADO.TICKET_INFO' | translate}}:</span>
                             <strong class="info-value">{{ data.ticket.codigo }} - {{ data.ticket.titulo }}</strong>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                             {{ getEstadoIcon(data.ticket.estado) }}
                         </mat-icon>
                         <div class="info-text">
-                            <span class="info-label">Estado actual:</span>
+                            <span class="info-label">{{'ACTUALIZAR_ESTADO.ESTADO_ACTUAL' | translate}}:</span>
                             <span class="estado-badge" [ngClass]="'estado-' + data.ticket.estado.toLowerCase()">
                                 {{ data.ticket.estado }}
                             </span>
@@ -40,7 +40,7 @@
 
             <!-- ========== NUEVO ESTADO ========== -->
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Nuevo Estado</mat-label>
+                <mat-label>{{'ACTUALIZAR_ESTADO.NUEVO_ESTADO' | translate}}</mat-label>
                 <mat-select formControlName="nuevoEstado" required>
                     @for (estado of data.estadosDisponibles; track estado) {
                     <mat-option [value]="estado">
@@ -53,7 +53,7 @@
                 </mat-select>
                 <mat-icon matPrefix>flag</mat-icon>
                 @if (estadoForm.get('nuevoEstado')?.invalid && estadoForm.get('nuevoEstado')?.touched) {
-                <mat-error>Seleccione el nuevo estado</mat-error>
+                <mat-error>{{'ACTUALIZAR_ESTADO.SELECCIONE_ESTADO' | translate}}</mat-error>
                 }
             </mat-form-field>
 
@@ -62,7 +62,7 @@
             <div class="asignacion-tecnico-section">
                 <div class="section-header">
                     <mat-icon class="section-icon">engineering</mat-icon>
-                    <h3 class="section-title">Asignación de Técnico</h3>
+                    <h3 class="section-title">{{'ACTUALIZAR_ESTADO.ASIGNACION_TECNICO' | translate}}</h3>
                 </div>
 
                 <!-- BOTONES: AUTOMÁTICO Y MANUAL -->
@@ -70,18 +70,18 @@
                     <button style="padding-right: 10px;" type="button" mat-raised-button color="primary"
                         class="btn-tipo-asignacion">
                         <mat-icon>auto_awesome</mat-icon>
-                        <span>Asignación Automática</span>
+                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_AUTOMATICA' | translate}}</span>
                     </button>
 
                     <button type="button" mat-raised-button class="btn-tipo-asignacion">
                         <mat-icon>person_search</mat-icon>
-                        <span>Asignación Manual</span>
+                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_MANUAL' | translate}}</span>
                     </button>
                 </div>
 
                 <mat-hint class="hint-asignacion">
                     <mat-icon class="hint-icon">info</mat-icon>
-                    Seleccione cómo desea asignar el técnico a este ticket
+                    {{'ACTUALIZAR_ESTADO.SELECCIONE_TECNICO' | translate}}
                 </mat-hint>
             </div>
             }
@@ -91,7 +91,7 @@
             <div class="info-tecnico-asignado">
                 <mat-icon class="info-icon">info</mat-icon>
                 <div class="info-content">
-                    <span class="info-label">Técnico asignado:</span>
+                    <span class="info-label">{{'ACTUALIZAR_ESTADO.TECNICO_ASIGNADO' | translate}}:</span>
                     <span class="info-value">{{ data.ticket.usuarioAsignado.nombreCompleto }}</span>
                 </div>
             </div>
@@ -99,19 +99,19 @@
 
             <!-- ========== COMENTARIO OBLIGATORIO ========== -->
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Observación Obligatoria</mat-label>
+                <mat-label>{{'ACTUALIZAR_ESTADO.OBSERVACION_OBLIGATORIA' | translate}}</mat-label>
                 <textarea matInput formControlName="nota" rows="4"
-                    placeholder="Describa detalladamente el motivo del cambio de estado..." maxlength="500" required>
+                    placeholder="{{'ACTUALIZAR_ESTADO.OBSERVACION_PLACEHOLDER' | translate}}" maxlength="500" required>
         </textarea>
                 <mat-icon matPrefix>comment</mat-icon>
                 <mat-hint align="end">{{ estadoForm.get('nota')?.value?.length || 0 }}/500</mat-hint>
                 @if (estadoForm.get('nota')?.invalid && estadoForm.get('nota')?.touched) {
                 <mat-error>
                     @if (estadoForm.get('nota')?.errors?.['required']) {
-                    La observación es obligatoria
+                    {{'ACTUALIZAR_ESTADO.OBSERVACION_OBLIGATORIA' | translate}}
                     }
                     @if (estadoForm.get('nota')?.errors?.['minlength']) {
-                    Mínimo 10 caracteres (actual: {{ estadoForm.get('nota')?.value?.length || 0 }})
+                    {{'ACTUALIZAR_ESTADO.OBSERVACION_MINIMO' | translate}} (actual: {{ estadoForm.get('nota')?.value?.length || 0 }})
                     }
                 </mat-error>
                 }
@@ -122,10 +122,10 @@
                 <div class="section-header">
                     <mat-icon class="section-icon">photo_camera</mat-icon>
                     <h3 class="section-title">
-                        Evidencia Visual
+                        {{'ACTUALIZAR_ESTADO.EVIDENCIA_VISUAL' | translate}}
                         <span class="required-badge">
                             <mat-icon>warning</mat-icon>
-                            Obligatoria
+                            {{'ACTUALIZAR_ESTADO.EVIDENCIA_OBLIGATORIO' | translate}}
                         </span>
                     </h3>
                 </div>
@@ -138,7 +138,7 @@
                     <label style="color: black;" for="file-upload" class="upload-button" mat-raised-button
                         color="primary">
                         <mat-icon>add_photo_alternate</mat-icon>
-                        Seleccionar Imágenes
+                        {{'ACTUALIZAR_ESTADO.SELECCIONAR_IMAGENES' | translate}}
                         <span class="upload-count" [class.complete]="imagenesSeleccionadas().length > 0">
                             ({{ imagenesSeleccionadas().length }}/{{ maxImagenes }})
                         </span>
@@ -146,8 +146,7 @@
 
                     <div class="upload-info">
                         <mat-icon class="info-icon">info</mat-icon>
-                        <span>Máximo {{ maxImagenes }} imágenes · {{ maxTamanoImagenMB }}MB por imagen · JPG, PNG, GIF,
-                            WEBP</span>
+                        <span>{{'ACTUALIZAR_ESTADO.INFO_IMAGENES' | translate:{maxImagenes: maxImagenes, maxTamanoImagenMB: maxTamanoImagenMB} }}</span>
                     </div>
                 </div>
 
@@ -171,8 +170,8 @@
                 } @else {
                 <div class="no-images-message">
                     <mat-icon class="message-icon">image_not_supported</mat-icon>
-                    <p class="message-title">No hay imágenes seleccionadas</p>
-                    <p class="message-hint">Debe cargar al menos 1 imagen como evidencia del cambio de estado</p>
+                    <p class="message-title">{{'ACTUALIZAR_ESTADO.NO_HAY_IMAGENES_TITULO' | translate}}</p>
+                    <p class="message-hint">{{'ACTUALIZAR_ESTADO.NO_HAY_IMAGENES_MENSAJE' | translate}}</p>
                 </div>
                 }
             </div>
@@ -185,16 +184,16 @@
     <mat-dialog-actions align="end" class="dialog-actions">
         <button mat-button (click)="onCancel()" [disabled]="enviando()">
             <mat-icon>cancel</mat-icon>
-            Cancelar
+            {{'ACTUALIZAR_ESTADO.CANCELAR' | translate}}
         </button>
         <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!puedeEnviar()" class="btn-submit">
             @if (enviando()) {
             <mat-spinner diameter="20" class="spinner"></mat-spinner>
-            <span>Procesando...</span>
+            <span>{{'ACTUALIZAR_ESTADO.PROCESANDO' | translate}}</span>
             } @else {
             <ng-container>
                 <mat-icon>check_circle</mat-icon>
-                <span>Actualizar Estado</span>
+                <span>{{'ACTUALIZAR_ESTADO.ACTUALIZAR_ESTADO' | translate}}</span>
             </ng-container>
 
             }

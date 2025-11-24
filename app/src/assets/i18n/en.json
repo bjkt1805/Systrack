@@ -163,6 +163,8 @@
   }, 
 
   "CATEGORIA_CREATE": {
+    "TITULO_CREAR": "Create",
+    "TITULO_EDITAR": "Edit",
     "TITULO": "Category",
     "SUBTITULO_CREAR": "Complete the information to add a new category to the system",
     "SUBTITULO_EDITAR": "Modify the information of the selected category",
@@ -195,10 +197,24 @@
     "LIMPIAR": "Clear Form",
     "CANCELAR": "Cancel",
     "CREAR_CATEGORIA": "Create Category", 
-    "ACTUALIZAR_CATEGORIA": "Update Category"
+    "ACTUALIZAR_CATEGORIA": "Update Category",
+    "NOTIFICACIONES": {
+      "CREAR_TITULO": "Create Category",
+      "CREAR_MENSAJE": "Category {{nombre}} created",
+      "ACTUALIZAR_TITULO": "Update Category",
+      "ACTUALIZAR_MENSAJE": "Category {{nombre}} updated",
+      "ERROR_TITULO": "Error",
+      "ERROR_MENSAJE": "Could not process the category",
+      "FORMULARIO_INVALIDO_TITULO": "Invalid Form",
+      "FORMULARIO_INVALIDO_MENSAJE": "Check the marked fields.",
+      "ESPECIALIDAD_REQUERIDA_TITULO": "Specialty required",
+      "ESPECIALIDAD_REQUERIDA_MENSAJE": "You must have at least one specialty to create a category",
+      "ETIQUETA_REQUERIDA_TITULO": "Tag required",
+      "ETIQUETA_REQUERIDA_MENSAJE": "You must have at least one tag to create a specialty"
+    }
   },
 
-  
+
 
     "CATEGORIA_DETALLE": {
     "INFORMACION_GENERAL": "General Information",
@@ -326,6 +342,35 @@
   "CREAR_TICKET": "Create Ticket",
   "ACTUALIZAR_TICKET": "Update Ticket"
 },
+
+
+  "ACTUALIZAR_ESTADO": {
+    "TITULO": "Update Ticket Status",
+    "TICKET_INFO": "Ticket:",
+    "ESTADO_ACTUAL": "Current Status:",
+    "NUEVO_ESTADO": "New Status",
+    "SELECCIONE_ESTADO": "Select the new status",
+    "ASIGNACION_TECNICO": "Technician Assignment",
+    "ASIGNACION_AUTOMATICA": "Automatic Assignment",
+    "ASIGNACION_MANUAL": "Manual Assignment",
+    "SELECCIONE_TECNICO": "Select how you want to assign the technician to this ticket",
+    "TECNICO_ASIGNADO": "Assigned Technician:",
+    "OBSERVACION": "Mandatory Observation",
+    "OBSERVACION_PLACEHOLDER": "Describe in detail the reason for the status change...",
+    "OBSERVACION_REQUERIDA": "Observation is mandatory",
+    "OBSERVACION_MINIMO": "Minimum 10 characters (current:",
+    "EVIDENCIA_VISUAL": "Visual Evidence",
+    "EVIDENCIA_OBLIGATORIA": "Mandatory",
+    "SELECCIONAR_IMAGENES": "Select Images",
+    "INFO_IMAGENES": "Maximum {{max}} images · {{size}}MB per image · JPG, PNG, GIF, WEBP",
+    "NO_IMAGENES_TITULO": "No images selected",
+    "NO_IMAGENES_MENSAJE": "You must upload at least 1 image as evidence of the status change",
+    "ELIMINAR_IMAGEN": "Delete image",
+    "CANCELAR": "Cancel",
+    "PROCESANDO": "Processing...",
+    "ACTUALIZAR": "Update Status"
+  },
+
 "ASIGNACION": {
   "VISTA_ASIGNACIONES": "Assignment View",
   "SEMANA": "Week from October 27 to November 2, 2025",

@@ -163,6 +163,8 @@
   }, 
 
   "CATEGORIA_CREATE": {
+    "TITULO_CREAR": "Crear",
+    "TITULO_EDITAR": "Editar",
     "TITULO": "Categoría",
     "SUBTITULO_CREAR": "Complete la información para agregar una nueva categoría al sistema",
     "SUBTITULO_EDITAR": "Modifique la información de la categoría seleccionada",
@@ -195,7 +197,21 @@
     "LIMPIAR": "Limpiar Formulario",
     "CANCELAR": "Cancelar",
     "CREAR_CATEGORIA": "Crear Categoría", 
-    "ACTUALIZAR_CATEGORIA": "Actualizar Categoría"
+    "ACTUALIZAR_CATEGORIA": "Actualizar Categoría",
+    "NOTIFICACIONES": {
+      "CREAR_TITULO": "Crear Categoría",
+      "CREAR_MENSAJE": "Categoría {{nombre}} creada",
+      "ACTUALIZAR_TITULO": "Actualizar Categoría",
+      "ACTUALIZAR_MENSAJE": "Categoría {{nombre}} actualizada",
+      "ERROR_TITULO": "Error",
+      "ERROR_MENSAJE": "No se pudo procesar la categoría",
+      "FORMULARIO_INVALIDO_TITULO": "Formulario Inválido",
+      "FORMULARIO_INVALIDO_MENSAJE": "Revise los campos marcados.",
+      "ESPECIALIDAD_REQUERIDA_TITULO": "Especialidad requerida",
+      "ESPECIALIDAD_REQUERIDA_MENSAJE": "Debe tener al menos una especialidad para crear una categoría",
+      "ETIQUETA_REQUERIDA_TITULO": "Etiqueta requerida",
+      "ETIQUETA_REQUERIDA_MENSAJE": "Debe tener al menos una etiqueta para crear una especialidad"
+    }
   },
 
   "CATEGORIA_DETALLE": {
@@ -326,6 +342,33 @@
   "ACTUALIZAR_TICKET": "Actualizar Ticket"
 },
 
+  "ACTUALIZAR_ESTADO": {
+    "TITULO": "Actualizar Estado del Ticket",
+    "TICKET_INFO": "Ticket:",
+    "ESTADO_ACTUAL": "Estado actual:",
+    "NUEVO_ESTADO": "Nuevo Estado",
+    "SELECCIONE_ESTADO": "Seleccione el nuevo estado",
+    "ASIGNACION_TECNICO": "Asignación de Técnico",
+    "ASIGNACION_AUTOMATICA": "Asignación Automática",
+    "ASIGNACION_MANUAL": "Asignación Manual",
+    "SELECCIONE_TECNICO": "Seleccione cómo desea asignar el técnico a este ticket",
+    "TECNICO_ASIGNADO": "Técnico asignado:",
+    "OBSERVACION": "Observación Obligatoria",
+    "OBSERVACION_PLACEHOLDER": "Describa detalladamente el motivo del cambio de estado...",
+    "OBSERVACION_REQUERIDA": "La observación es obligatoria",
+    "OBSERVACION_MINIMO": "Mínimo 10 caracteres (actual:",
+    "EVIDENCIA_VISUAL": "Evidencia Visual",
+    "EVIDENCIA_OBLIGATORIA": "Obligatoria",
+    "SELECCIONAR_IMAGENES": "Seleccionar Imágenes",
+    "INFO_IMAGENES": "Máximo {{max}} imágenes · {{size}}MB por imagen · JPG, PNG, GIF, WEBP",
+    "NO_IMAGENES_TITULO": "No hay imágenes seleccionadas",
+    "NO_IMAGENES_MENSAJE": "Debe cargar al menos 1 imagen como evidencia del cambio de estado",
+    "ELIMINAR_IMAGEN": "Eliminar imagen",
+    "CANCELAR": "Cancelar",
+    "PROCESANDO": "Procesando...",
+    "ACTUALIZAR": "Actualizar Estado"
+  },
+
 "ASIGNACION": {
   "VISTA_ASIGNACIONES": "Vista de Asignaciones",
   "SEMANA": "Semana del 27 de Octubre al 2 de Noviembre, 2025",
@@ -341,7 +384,18 @@
   "VER_DETALLE": "Ver detalle",
   "CAMBIAR_ESTADO": "Cambiar estado",
   "AGREGAR_COMENTARIO": "Agregar comentario",
-  "SIN_TICKETS": "Sin tickets"
+  "SIN_TICKETS": "Sin tickets",
+  "LUNES": "Lunes",
+  "MARTES": "Martes",
+  "MIERCOLES": "Miércoles",
+  "JUEVES": "Jueves",
+  "VIERNES": "Viernes",
+  "SABADO": "Sábado",
+  "DOMINGO": "Domingo",
+  "DIAS": "d",
+  "HORAS": "h",
+  "MINUTOS": "m",
+  "ERROR_FORMATO": "Error: Formato de respuesta inválido"
 },
 
 "PAGE_NOT_FOUND": {

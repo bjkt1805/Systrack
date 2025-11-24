@@ -14,6 +14,7 @@ import { CategoriaModel } from '../../share/models/CategoriaModel';
 import { EtiquetaModel } from '../../share/models/EtiquetaModel';
 import { SLAService } from '../../share/services/api/sla.service';
 import { SLAModel } from '../../share/models/SLAModel';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-categoria-form',
@@ -26,7 +27,7 @@ export class CategoriaForm implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   // Título del formulario, id de la categoría y bandera de creación/actualización
-  titleForm = 'Crear';
+  titleForm = '';
   idCategoria: number | null = null;
   isCreate = true;
 
@@ -54,7 +55,8 @@ export class CategoriaForm implements OnInit, OnDestroy {
     private uploadService: FileUploadService,
 
     // Importar servicio de notificaciones
-    private noti: NotificationService
+    private noti: NotificationService,
+    private translate: TranslateService
   ) {}
 
   /**
@@ -71,7 +73,13 @@ export class CategoriaForm implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       this.idCategoria = params['id'] ?? null;
       this.isCreate = this.idCategoria === null;
-      this.titleForm = this.isCreate ? 'Crear' : 'Actualizar';
+      const tituloKey = this.isCreate 
+        ? 'CATEGORIA_CREATE.TITULO_CREAR' 
+        : 'CATEGORIA_CREATE.TITULO_EDITAR';
+      
+      this.translate.get(tituloKey).subscribe(titulo => {
+        this.titleForm = titulo;
+      });
 
       //Si hay id se obtiene la categoría a actualizar
       if (this.idCategoria) {
@@ -222,11 +230,16 @@ export class CategoriaForm implements OnInit, OnDestroy {
     // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
     // En modo creación, mantener al menos una
     if (this.isCreate && this.especialidades.length <= 1) {
-      this.noti.warning(
-        'Especialidad requerida',
-        'Debe tener al menos una especialidad para crear una categoría',
-        3000
-      );
+      this.translate.get([
+        'CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO',
+        'CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.warning(
+          translations['CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO'],
+          translations['CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'],
+          3000
+        );
+      });
       return;
     }
 
@@ -252,11 +265,16 @@ export class CategoriaForm implements OnInit, OnDestroy {
     // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin etiquetas
     // En modo creación, mantener al menos una
     if (this.isCreate && this.etiquetas.length <= 1) {
-      this.noti.warning(
-        'Etiqueta requerida',
-        'Debe tener al menos una etiqueta para crear una especialidad',
-        3000
-      );
+      this.translate.get([
+        'CATEGORIA.NOTIFICACIONES.ETIQUETA_REQUERIDA_TITULO',
+        'CATEGORIA.NOTIFICACIONES.ETIQUETA_REQUERIDA_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.warning(
+          translations['CATEGORIA.NOTIFICACIONES.ETIQUETA_REQUERIDA_TITULO'],
+          translations['CATEGORIA.NOTIFICACIONES.ETIQUETA_REQUERIDA_MENSAJE'],
+          3000
+        );
+      });
       return;
     }
 
@@ -381,7 +399,16 @@ export class CategoriaForm implements OnInit, OnDestroy {
 
     // Si el formulario es inválido, mostrar notificación de error y salir
     if (this.categoriaForm.invalid) {
-      this.noti.error('Formulario Inválido', 'Revise los campos marcados.', 5000);
+      this.translate.get([
+        'CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO',
+        'CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.error(
+          translations['CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO'],
+          translations['CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'],
+          5000
+        );
+      });
       return;
     }
 
@@ -414,13 +441,38 @@ export class CategoriaForm implements OnInit, OnDestroy {
       : this.categoriaService.update(payload);
 
     // Suscribirse a la respuesta del API y mostrar notificación de éxito
-    request$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.noti.success(
-        this.isCreate ? 'Crear Categoría' : 'Actualizar Categoría',
-        `Categoría ${data.nombre} ${this.isCreate ? 'creada' : 'actualizada'}`,
-        5000,
-        '/categoria'
-      );
+    request$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
+        const tituloKey = this.isCreate 
+          ? 'CATEGORIA_CREATE.NOTIFICACIONES.CREAR_TITULO' 
+          : 'CATEGORIA_CREATE.NOTIFICACIONES.ACTUALIZAR_TITULO';
+        
+        const mensajeKey = this.isCreate 
+          ? 'CATEGORIA_CREATE.NOTIFICACIONES.CREAR_MENSAJE' 
+          : 'CATEGORIA_CREATE.NOTIFICACIONES.ACTUALIZAR_MENSAJE';
+
+        this.translate.get([tituloKey, mensajeKey], { nombre: data.nombre }).subscribe(translations => {
+          this.noti.success(
+            translations[tituloKey],
+            translations[mensajeKey],
+            5000,
+            '/categoria'
+          );
+        });
+      },
+      error: (error) => {
+        console.error('Error al procesar categoría:', error);
+        this.translate.get([
+          'CATEGORIA_CREATE.NOTIFICACIONES.ERROR_TITULO',
+          'CATEGORIA_CREATE.NOTIFICACIONES.ERROR_MENSAJE'
+        ]).subscribe(translations => {
+          this.noti.error(
+            translations['CATEGORIA_CREATE.NOTIFICACIONES.ERROR_TITULO'],
+            translations['CATEGORIA_CREATE.NOTIFICACIONES.ERROR_MENSAJE'],
+            5000
+          );
+        });
+      }
     });
   }
 
