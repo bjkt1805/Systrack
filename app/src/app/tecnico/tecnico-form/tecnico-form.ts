@@ -11,15 +11,15 @@ import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { NotificationService } from '../../share/services/app/notification.service';
 import { EstadoTecnico } from '../../share/models/EnumsModel';
 import { passwordsMatchValidator } from '../../share/validators/password-match-validator';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-tecnico-form',
   standalone: false,
   templateUrl: './tecnico-form.html',
-  styleUrl: './tecnico-form.css'
+  styleUrl: './tecnico-form.css',
 })
 export class TecnicoForm implements OnInit, OnDestroy {
-
   hidePassword = true; // Para mostrar/ocultar la contraseña
   hideConfirmPassword = true; // Para mostrar/ocultar la confirmación de contraseña
 
@@ -59,77 +59,94 @@ export class TecnicoForm implements OnInit, OnDestroy {
     private uploadService: FileUploadService,
 
     // Importar servicio de notificaciones
-    private noti: NotificationService
-  ) { }
+    private noti: NotificationService,
+
+    // Servicio de traducción
+    private translate: TranslateService
+  ) {}
 
   /**
    * Ciclo de vida OnInit: inicializa el formulario, carga listas y verifica si es actualización
    */
   ngOnInit(): void {
-    this.initForm();                  // Inicializa formulario reactivo
-    this.debugFormulario();           // Función de debug del formulario
-    this.loadEspecialidades();       // Carga lista de especialidades
+    this.initForm(); // Inicializa formulario reactivo
+    this.debugFormulario(); // Función de debug del formulario
+    this.loadEspecialidades(); // Carga lista de especialidades
 
     // Suscripción a parámetros de ruta para determinar si es crear o actualizar
     this.route.params.subscribe((params) => {
-      this.idTecnico = params['id'] ?? null
-      this.isCreate = this.idTecnico === null
-      this.titleForm = this.isCreate ? 'Crear' : 'Actualizar'
+      this.idTecnico = params['id'] ?? null;
+      this.isCreate = this.idTecnico === null;
+      this.titleForm = this.isCreate ? 'Crear' : 'Actualizar';
 
-      //Configurar la bandera changePassword según el modo 
+      //Configurar la bandera changePassword según el modo
       this.changePassword = this.isCreate;
 
       //Si hay id se obtiene el técnico a actualizar
       if (this.idTecnico) {
-        this.tecnicoService.getById(this.idTecnico).subscribe((data) => this.patchFormValues(data))
+        this.tecnicoService.getById(this.idTecnico).subscribe((data) => this.patchFormValues(data));
       }
-    })
+    });
   }
 
   /**
    * Inicializar el formulario reactivo con validaciones
    */
   private initForm(): void {
-    this.tecnicoForm = this.fb.group({
-      id: [null],
-      nombreUsuario: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(20)]], // Nombre de usuario requerido, mínimo 5 caracteres y máximo 20 
-      nombreCompleto: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]], // Nombre completo requerido, mínimo 3 caracteres y máximo 50
-      correo: [null, [Validators.required, Validators.pattern(this.emailPattern)]], // Correo requerido y formato válido (utilizando la expresión regular)
-      telefono: [null, [Validators.required, Validators.pattern(this.phonePattern), Validators.minLength(8), Validators.maxLength(8)]], // Teléfono requerido y formato válido (utilizando la expresión regular)
-      password: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
-      confirmpassword: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
-      foto: [this.nameImage],
-      rol: ['TECNICO'], // Rol fijo para técnicos
-      estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido (valor por defecto 'DISPONIBLE')
-      cargaTrabajo: [0], // Campo por defecto que viene en 0
-      activo: [true, Validators.required], // Campo de estado (valor por defecto true)
-      especialidades: this.fb.array([], [Validators.required]) // FormArray para especialidades con validación requerida
-    }, { validators: passwordsMatchValidator }); // Validador personalizado para verificar que las contraseñas coincidan
+    this.tecnicoForm = this.fb.group(
+      {
+        id: [null],
+        nombreUsuario: [
+          null,
+          [Validators.required, Validators.minLength(5), Validators.maxLength(20)],
+        ], // Nombre de usuario requerido, mínimo 5 caracteres y máximo 20
+        nombreCompleto: [
+          null,
+          [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+        ], // Nombre completo requerido, mínimo 3 caracteres y máximo 50
+        correo: [null, [Validators.required, Validators.pattern(this.emailPattern)]], // Correo requerido y formato válido (utilizando la expresión regular)
+        telefono: [
+          null,
+          [
+            Validators.required,
+            Validators.pattern(this.phonePattern),
+            Validators.minLength(8),
+            Validators.maxLength(8),
+          ],
+        ], // Teléfono requerido y formato válido (utilizando la expresión regular)
+        password: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
+        confirmpassword: [''], // Campo vacío para determinar si utilizarlo en la vista de creación o edición
+        foto: [this.nameImage],
+        rol: ['TECNICO'], // Rol fijo para técnicos
+        estadoTecnico: ['DISPONIBLE', Validators.required], // Campo requerido (valor por defecto 'DISPONIBLE')
+        cargaTrabajo: [0], // Campo por defecto que viene en 0
+        activo: [true, Validators.required], // Campo de estado (valor por defecto true)
+        especialidades: this.fb.array([], [Validators.required]), // FormArray para especialidades con validación requerida
+      },
+      { validators: passwordsMatchValidator }
+    ); // Validador personalizado para verificar que las contraseñas coincidan
 
     // Aplicar los validators a los campos password y confirmpassword dependiendo del modo (creación o Edición)
     this.updatePasswordValidators();
-
   }
 
   /**
    * Método para actualizar validators de contraseña según el modo (Creación o Edición)
    */
   private updatePasswordValidators(): void {
-
     const passwordControl = this.tecnicoForm.get('password'); // Obtener el control de campo password desde el formulario
-    const confirmPasswordControl = this.tecnicoForm.get('confirmpassword') // Obtener el control de campo confirmpassword desde el formulario
+    const confirmPasswordControl = this.tecnicoForm.get('confirmpassword'); // Obtener el control de campo confirmpassword desde el formulario
 
-    // Si se está en modo de creación O la bandera "changePassword" es true, configurar los validators de los campos 
+    // Si se está en modo de creación O la bandera "changePassword" es true, configurar los validators de los campos
     if (this.isCreate || this.changePassword) {
       passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
       confirmPasswordControl?.setValidators([Validators.required]);
     }
 
-    // Si no es modo creación o la bandera "changePassword" es false, limpiar/quitar los validators de los campos 
+    // Si no es modo creación o la bandera "changePassword" es false, limpiar/quitar los validators de los campos
     else {
       passwordControl?.clearValidators();
       confirmPasswordControl?.clearValidators();
-
     }
 
     // Actualizar el estado de validez de los controles después de cambiar los validators
@@ -148,18 +165,17 @@ export class TecnicoForm implements OnInit, OnDestroy {
     if (this.changePassword) {
       this.tecnicoForm.patchValue({
         password: '',
-        confirmpassword: ''
+        confirmpassword: '',
       });
 
-      // Marcar los campos password y confirmpassword como no tocados 
+      // Marcar los campos password y confirmpassword como no tocados
       this.tecnicoForm.get('password')?.markAsUntouched();
       this.tecnicoForm.get('confirmpassword')?.markAsUntouched();
-    }
-    else {
-      // Restaurar los valores vacíos y limpiar los errores 
+    } else {
+      // Restaurar los valores vacíos y limpiar los errores
       this.tecnicoForm.patchValue({
         password: '',
-        confirmpassword: ''
+        confirmpassword: '',
       });
 
       // Marcar los campos password y confirmpassword como no tocados
@@ -182,8 +198,10 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * Carga las especialidades desde el API y actualiza la signal
    */
   private loadEspecialidades() {
-    this.especialidadService.get().pipe(takeUntil(this.destroy$))
-      .subscribe(data => this.especialidadesList.set(data));
+    this.especialidadService
+      .get()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => this.especialidadesList.set(data));
   }
 
   /**
@@ -191,7 +209,6 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * @param data Datos del técnico obtenidos del API
    */
   private patchFormValues(data: UsuarioModel) {
-
     //setValue de los campos del formulario
     this.tecnicoForm.patchValue({
       id: data.id,
@@ -199,7 +216,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
       nombreCompleto: data.nombreCompleto,
       telefono: data.telefono ? data.telefono : '', // Si el teléfono es null, asignar cadena vacía
       correo: data.correo,
-      rol: "TECNICO", // Rol fijo para técnico
+      rol: 'TECNICO', // Rol fijo para técnico
       estadoTecnico: data.estadoTecnico || 'DISPONIBLE', // Incluir estado
       cargaTrabajo: data.cargaTrabajo || 0, // Incluir carga
       activo: data.activo ?? true, // Incluir activo
@@ -213,14 +230,13 @@ export class TecnicoForm implements OnInit, OnDestroy {
     // Limpia y agrega especialidades al FormArray de especialidades
     this.especialidades.clear();
     if (data.especialidades?.length) {
-      data.especialidades.forEach(esp => {
+      data.especialidades.forEach((esp) => {
         this.especialidades.push(
           this.fb.group({
-            especialidadId: [esp.id, Validators.required]
+            especialidadId: [esp.id, Validators.required],
           })
         );
       });
-
     } else {
       // Si no hay especialidades, agregar una vacía
       this.addEspecialidad();
@@ -248,7 +264,6 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * @param index Índice de la especialidad a eliminar
    */
   removeEspecialidad(index: number) {
-
     // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
     // En modo creación, mantener al menos una
     if (this.isCreate && this.especialidades.length <= 1) {
@@ -272,10 +287,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
     this.especialidades.removeAt(index);
 
     // Actualizar el control del formulario
-    this.tecnicoForm.setControl(
-      'especialidades',
-      this.fb.array(this.especialidades.controls)
-    );
+    this.tecnicoForm.setControl('especialidades', this.fb.array(this.especialidades.controls));
 
     console.log(`Especialidad ${index} eliminada. Quedan: ${this.especialidades.length}`);
 
@@ -290,14 +302,12 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * @param event Evento de cambio de input file
    */
   selectFile(event: Event) {
-
     // constante para el input de archivo
     const input = event.target as HTMLInputElement;
 
     // Si existe un archivo seleccionado, leerlo y generar vista previa
     if (input.files?.[0]) {
-
-      // Validar primero el tipo de archivo 
+      // Validar primero el tipo de archivo
       if (!input.files?.[0].type.startsWith('image/')) {
         this.noti.error('Tipo de archivo inválido', 'Solo se permiten archivos de imagen.', 3000);
         return;
@@ -319,12 +329,11 @@ export class TecnicoForm implements OnInit, OnDestroy {
       const reader = new FileReader();
 
       // Leer el archivo y asignar el resultado a la variable preview para vista previa
-      reader.onload = e => (this.preview = e.target?.result as string);
+      reader.onload = (e) => (this.preview = e.target?.result as string);
       reader.readAsDataURL(this.currentFile);
 
       // Si no hay un archivo seleccionado, restaurar la imagen previa
     } else {
-
       // Limpiar currentFile y restaurar preview y nameImage
       this.currentFile = undefined;
       this.preview = '';
@@ -359,19 +368,15 @@ export class TecnicoForm implements OnInit, OnDestroy {
       console.log('Imagen marcada para eliminación en modo edición');
 
       // Opcional: Mostrar confirmación
-      this.noti.info(
-        'Imagen eliminada',
-        'La imagen será removida al guardar los cambios',
-        3000
-      );
+      this.noti.info('Imagen eliminada', 'La imagen será removida al guardar los cambios', 3000);
     }
   }
 
   /**
- * Obtiene las especialidades disponibles para un índice específico
- * @param currentIndex Índice actual del select de especialidades
- * @returns Array de especialidades no seleccionadas o la especialidad actual
- */
+   * Obtiene las especialidades disponibles para un índice específico
+   * @param currentIndex Índice actual del select de especialidades
+   * @returns Array de especialidades no seleccionadas o la especialidad actual
+   */
   getEspecialidadesDisponibles(currentIndex: number): EspecialidadModel[] {
     // Obtener todas las especialidades seleccionadas actualmente
     const especialidadesSeleccionadas = this.especialidades.value
@@ -381,15 +386,21 @@ export class TecnicoForm implements OnInit, OnDestroy {
       })
       .filter((id: any) => id !== null && id !== undefined);
 
-    console.log(`Especialidades ya seleccionadas (excluyendo índice ${currentIndex}):`, especialidadesSeleccionadas);
+    console.log(
+      `Especialidades ya seleccionadas (excluyendo índice ${currentIndex}):`,
+      especialidadesSeleccionadas
+    );
 
     // Filtrar especialidades disponibles
-    const disponibles = this.especialidadesList().filter(especialidad => {
+    const disponibles = this.especialidadesList().filter((especialidad) => {
       const yaSeleccionada = especialidadesSeleccionadas.includes(especialidad.id);
       return !yaSeleccionada;
     });
 
-    console.log(`Especialidades disponibles para índice ${currentIndex}:`, disponibles.map(e => e.nombre));
+    console.log(
+      `Especialidades disponibles para índice ${currentIndex}:`,
+      disponibles.map((e) => e.nombre)
+    );
 
     return disponibles;
   }
@@ -401,12 +412,10 @@ export class TecnicoForm implements OnInit, OnDestroy {
    * @returns true si ya está seleccionada, false si está disponible
    */
   isEspecialidadSeleccionada(especialidadId: number, currentIndex: number): boolean {
-    return this.especialidades.value.some((esp: any, index: number) =>
-      index !== currentIndex && esp.especialidadId === especialidadId
+    return this.especialidades.value.some(
+      (esp: any, index: number) => index !== currentIndex && esp.especialidadId === especialidadId
     );
   }
-
-
 
   /**
    * Envía el formulario: valida, carga la imagen y guarda/actualiza el técnico
@@ -418,7 +427,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
     this.tecnicoForm.markAllAsTouched();
 
     // Marcar cada control dentro del FormArray 'especialidades' como "tocado"
-    this.especialidades.controls.forEach(group => group.markAllAsTouched());
+    this.especialidades.controls.forEach((group) => group.markAllAsTouched());
 
     // Si el formulario es inválido, mostrar notificación de error y salir
     if (this.tecnicoForm.invalid) {
@@ -431,14 +440,13 @@ export class TecnicoForm implements OnInit, OnDestroy {
     console.log('Datos a enviar al API:', formValue); // MOSTRAR LOS VALORES DEL FORMULARIO EN CONSOLA
 
     // Preparar payload de especialidades
-    const especialidadesIds = this.especialidades.value.map(
-      (esp: any) => esp.especialidadId
-    ).filter((id: any) => id !== null && id !== undefined);
+    const especialidadesIds = this.especialidades.value
+      .map((esp: any) => esp.especialidadId)
+      .filter((id: any) => id !== null && id !== undefined);
 
     // Función interna para guardar o actualizar técnico
     const saveTecnico = () => {
       let payload = {
-
         // Copiar todos los valores del formulario y además asignar especialidades e imagen
         ...formValue,
         // Enviar especialidades como objetos con id
@@ -448,7 +456,6 @@ export class TecnicoForm implements OnInit, OnDestroy {
 
       // En modo edición, incluir password solo si changePassword es true (el usuario va a cambiar la contraseña)
       if (!this.isCreate) {
-
         // Si hay campo password en el formulario, incluirlo en el payload
         if (this.changePassword && formValue.password) {
           payload.password = formValue.password;
@@ -459,9 +466,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
           const { password, confirmpassword, ...payloadSinPassword } = payload;
           payload = payloadSinPassword;
         }
-      }
-
-      else {
+      } else {
         // Remover confirm password del payload ya que no es necesario enviarlo al API
         const { confirmpassword, ...payloadSinConfirmPassword } = payload;
 
@@ -478,36 +483,38 @@ export class TecnicoForm implements OnInit, OnDestroy {
       // Suscribirse a la respuesta del API y mostrar notificación de éxito
       request$.pipe(takeUntil(this.destroy$)).subscribe({
         next: (response) => {
-
           const tecnico = response; // Obtener el técnico desde la respuesta del API
           console.log('Técnico procesado exitosamente:', tecnico.nombreCompleto);
           // Éxito: mostrar notificación y navegar
-          this.noti.success(
-            this.isCreate ? 'Crear Técnico' : 'Actualizar Técnico',
-            `Técnico ${tecnico.nombreCompleto} ${this.isCreate ? 'creado' : 'actualizado'}`,
-            5000,
-            '/tecnico'
-          );
+
+          const titleKey = this.isCreate ? 'TECNICO_NOTIFICACION.CREAR_TITULO' : 'TECNICO_NOTIFICACION.ACTUALIZAR_TITULO';
+          const messageKey = this.isCreate ? 'TECNICO_NOTIFICACION.CREAR_EXITO' : 'TECNICO_NOTIFICACION.ACTUALIZAR_EXITO';
+
+          this.translate
+            .get([titleKey, messageKey], { nombre: tecnico.nombreCompleto })
+            .subscribe((translations) => {
+              this.noti.success(translations[titleKey], translations[messageKey], 5000, '/tecnico');
+            });
         },
         error: (error) => {
-          // Manejo de errores 
+          // Manejo de errores
           console.error('[FRONTEND] Error al procesar técnico:', error);
 
           // Variable tipo string para mostrar error en la notificación
           let errorMessage = 'Error al procesar el técnico. Inténtelo de nuevo.';
 
-          // Manejo de errores http específicos 
+          // Manejo de errores http específicos
+          let errorMessageKey = 'TECNICO_NOTIFICACION.ERROR_GENERICO';
 
           // Si se recibe un error 400 (Bad Request) o 500 (Internal Server Error) desde el API
           if (error.status === 400 || error.status === 500) {
-
             // Si el mensaje del error incluye 'nombreUsuario' asignarlo a errorMessage
             if (error.error?.message?.includes('nombreUsuario')) {
-              errorMessage = 'El nombre de usuario ya está en uso.';
+              errorMessageKey = 'TECNICO_NOTIFICACION.ERROR_NOMBRE_USUARIO';
             }
             // Si el mensaje del error incluye 'correo' asignarlo a errorMessage
             else if (error.error?.message?.includes('correo')) {
-              errorMessage = 'El correo electrónico ya está registrado.';
+              errorMessageKey = 'TECNICO_NOTIFICACION.ERROR_CORREO';
             }
             // Si el error tiene un mensaje asignarlo a errorMessage
             else if (error.error?.message) {
@@ -515,21 +522,26 @@ export class TecnicoForm implements OnInit, OnDestroy {
             }
           }
 
-          // Mostrar el toast de error con el mensaje personalizado
-          this.noti.error(
-            this.isCreate ? 'Error al Crear Técnico' : 'Error al Actualizar Técnico',
-            errorMessage,
-            5000
-          );
-        }
+          // Mostrar el toast de error con el mensaje personalizado y traducido
+          const titleKey = this.isCreate ? 'TECNICO_NOTIFICACION.ERROR_CREAR_TITULO' : 'TECNICO_NOTIFICACION.ERROR_ACTUALIZAR_TITULO';
+
+          this.translate.get([titleKey, errorMessageKey]).subscribe(translations => {
+            this.noti.error(
+              translations[titleKey],
+              translations[errorMessageKey],
+              5000
+            );
+          });
+          },
       });
     };
 
     // Primero subir imagen si se seleccionó archivo
     if (this.currentFile) {
-      this.uploadService.upload(this.currentFile, this.previousImage)
+      this.uploadService
+        .upload(this.currentFile, this.previousImage)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(data => {
+        .subscribe((data) => {
           this.nameImage = data.fileName;
           saveTecnico();
         });
@@ -537,7 +549,6 @@ export class TecnicoForm implements OnInit, OnDestroy {
       saveTecnico();
     }
   }
-
 
   /**
    * Resetea el formulario a valores iniciales
@@ -548,7 +559,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
       estadoTecnico: 'DISPONIBLE',
       cargaTrabajo: 0,
       activo: true,
-      foto: 'image-not-found.jpg'
+      foto: 'image-not-found.jpg',
     });
     this.preview = '';
     this.currentFile = undefined;
@@ -556,7 +567,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
     this.especialidades.clear();
     this.addEspecialidad();
 
-    // Resetear la bandera changePassword según el modo 
+    // Resetear la bandera changePassword según el modo
     // y actualizar los validators de contraseña
     this.changePassword = this.isCreate;
     this.updatePasswordValidators();
@@ -590,8 +601,7 @@ export class TecnicoForm implements OnInit, OnDestroy {
     console.log('====== CAMPOS INDIVIDUALES DEL FORMULARIO ======');
 
     // Iterar sobre cada control del formulario y mostrar su estado
-    Object.keys(this.tecnicoForm.controls).forEach(key => {
-
+    Object.keys(this.tecnicoForm.controls).forEach((key) => {
       // Obtener el control por su clave
       const control = this.tecnicoForm.get(key);
 
@@ -601,7 +611,6 @@ export class TecnicoForm implements OnInit, OnDestroy {
           valor: control.value,
           tocado: control.touched,
           errores: control.errors,
-
         });
       }
     });
@@ -614,12 +623,15 @@ export class TecnicoForm implements OnInit, OnDestroy {
 
     // Iterar sobre cada especialidad en el FormArray y mostrar su estado
     this.especialidades.controls.forEach((control, index) => {
-      console.log(`ESPECIALIDAD ${index}: ${control.valid ? 'ESPECIALIDAD VÁLIDA' : 'ESPECIALIDAD INVÁLIDA'}`, {
-        valor: control.value,
-        válido: control.valid,
-        errores: control.errors,
-        tocado: control.touched
-      });
+      console.log(
+        `ESPECIALIDAD ${index}: ${control.valid ? 'ESPECIALIDAD VÁLIDA' : 'ESPECIALIDAD INVÁLIDA'}`,
+        {
+          valor: control.value,
+          válido: control.valid,
+          errores: control.errors,
+          tocado: control.touched,
+        }
+      );
     });
 
     console.log('====== FIN DEL DEBUG DEL FORMULARIO ======\n');

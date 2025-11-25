@@ -243,11 +243,11 @@
                             }
                         </mat-icon>
                         @if (tecnicoForm.get('password')?.value.length < 8) {
-                            {{'TECNICO_FORM.DEBIL' | translate}}
+                            {{'TECNICO_FORM.CONTRASENNA_DEBIL' | translate}}
                         } @else if (tecnicoForm.get('password')?.value.length < 12) {
-                            {{'TECNICO_FORM.MEDIA' | translate}}
+                            {{'TECNICO_FORM.CONTRASENNA_MEDIA' | translate}}
                         } @else {
-                            {{'TECNICO_FORM.FUERTE' | translate}}
+                            {{'TECNICO_FORM.CONTRASENNA_FUERTE' | translate}}
                         }
                     </span>
                 </div>

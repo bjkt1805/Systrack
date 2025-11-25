@@ -6,8 +6,8 @@
             <div class="logo-container">
                 <mat-icon class="logo-icon">support_agent</mat-icon>
             </div>
-            <h1 class="login-title">Bienvenido a SysTrack</h1>
-            <p class="login-subtitle">Inicia sesión para continuar</p>
+            <h1 class="login-title">{{'USUARIO_LOGIN.TITULO' | translate}}</h1>
+            <p class="login-subtitle">{{'USUARIO_LOGIN.SUBTITULO' | translate}}</p>
         </div>
 
         <!-- Formulario -->
@@ -15,39 +15,39 @@
 
             <!-- Campo Email -->
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Correo electrónico</mat-label>
-                <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com"
+                <mat-label>{{'USUARIO_LOGIN.CORREO_LABEL' | translate}}</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="{{'USUARIO_LOGIN.CORREO_PLACEHOLDER' | translate}}"
                     autocomplete="email">
                 <mat-icon matPrefix>email</mat-icon>
                 <mat-error>
                     @if (loginForm.get('email')?.errors?.['required']){
-                    El correo es requerido
+                    {{'USUARIO_LOGIN.CORREO_REQUERIDO' | translate}}
                     }
                     @if (loginForm.get('email')?.errors?.['pattern']) {
-                    Formato de correo inválido
+                    {{'USUARIO_LOGIN.CORREO_FORMATO_INVALIDO' | translate}}
                     }
                 </mat-error>
             </mat-form-field>
 
             <!-- Campo contraseña -->
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Contraseña</mat-label>
+                <mat-label>{{'USUARIO_LOGIN.CONTRASENNA_LABEL' | translate}}</mat-label>
                 <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
                     placeholder="••••••••" autocomplete="current-password" minlength="6" maxlength="20">
                 <mat-icon matPrefix>lock</mat-icon>
                 <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
-                    [attr.aria-label]="'Ocultar contraseña'" [attr.aria-pressed]="hidePassword">
+                    [attr.aria-label]="'USUARIO_LOGIN.CONTRASENNA_ARIA_LABEL' | translate" [attr.aria-pressed]="hidePassword">
                     <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 <mat-error>
                     @if (loginForm.get('password')?.errors?.['required']){
-                    La contraseña es requerida
+                    {{'USUARIO_LOGIN.CONTRASENNA_REQUERIDA' | translate}}
                     }
                     @if (loginForm.get('password')?.errors?.['minlength']) {
-                    La contraseña debe tener al menos 6 caracteres
+                    {{'USUARIO_LOGIN.CONTRASENNA_MINIMO' | translate}}
                     }
                     @if (loginForm.get('password')?.errors?.['maxlength']) {
-                    La contraseña no debe exceder los 20 caracteres
+                    {{'USUARIO_LOGIN.CONTRASENNA_MAXIMO' | translate}}
                     }
                 </mat-error>
             </mat-form-field>
@@ -60,27 +60,27 @@
                     [disabled]="loginForm.invalid || loading">
                     <mat-icon style="color: white;">login</mat-icon>
                     <!-- <mat-spinner diameter="20" class="spinner-inline"></mat-spinner> -->
-                    <span style="color: white;">{{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
+                    <span style="color: white;">{{ loading ? ('USUARIO_LOGIN.INICIANDO_SESION' | translate) : ('USUARIO_LOGIN.INICIAR_SESION' | translate) }}</span>
                 </button>
 
                 <!-- Botón para limpiar y resetear el formulario -->
                 <button mat-stroked-button type="button" class="btn-reset full-width" (click)="onReset()"
                     [disabled]="loading">
                     <mat-icon>refresh</mat-icon>
-                    <span>Limpiar</span>
+                    <span>{{'USUARIO_LOGIN.LIMPIAR' | translate}}</span>
                 </button>
             </div>
 
             <!-- Divider -->
             <div class="divider">
-                <span>o</span>
+                <span>{{'USUARIO_LOGIN.DIVIDER' | translate}}</span>
             </div>
 
             <!-- Link para ir a registrar el usuario -->
             <div class="register-link">
-                <p>¿No tienes una cuenta?</p>
+                <p>{{'USUARIO_LOGIN.NO_CUENTA' | translate}}</p>
                 <button mat-button color="accent" type="button" (click)="goToRegister()" [disabled]="loading">
-                    Regístrate aquí
+                    {{'USUARIO_LOGIN.REGISTRATE_AQUI' | translate}}
                 </button>
             </div>
 

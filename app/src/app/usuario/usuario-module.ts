@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsuarioRoutingModule } from './usuario-routing-module';
 import { UsuarioLogin } from './usuario-login/usuario-login';
 import { UsuarioRegister } from './usuario-register/usuario-register';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { UsuarioRegister } from './usuario-register/usuario-register';
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    UsuarioRoutingModule
+    UsuarioRoutingModule,
+    TranslateModule
   ]
 })
 export class UsuarioModule { }
