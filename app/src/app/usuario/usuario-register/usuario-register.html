@@ -6,20 +6,20 @@
             <div class="logo-container">
                 <mat-icon class="logo-icon">person_add</mat-icon>
             </div>
-            <h1 class="register-title">Crear Cuenta</h1>
-            <p class="register-subtitle">Únete a SysTrack hoy</p>
+            <h1 class="register-title">{{'USUARIO_REGISTRO.TITULO' | translate}}</h1>
+            <p class="register-subtitle">{{'USUARIO_REGISTRO.SUBTITULO' | translate}}</p>
         </div>
 
         <!-- Indicador de progreso-->
         <div class="progress-indicator">
             <div class="progress-step" [class.active]="registerForm.get('nombreUsuario')?.valid">
                 <div class="step-circle">1</div>
-                <span class="step-label">Datos básicos</span>
+                <span class="step-label">{{'USUARIO_REGISTRO.PASO_1' | translate}}</span>
             </div>
             <div class="progress-line" [class.active]="registerForm.get('correo')?.valid"></div>
             <div class="progress-step" [class.active]="registerForm.get('correo')?.valid">
                 <div class="step-circle">2</div>
-                <span class="step-label">Contacto</span>
+                <span class="step-label">{{'USUARIO_REGISTRO.PASO_2' | translate}}</span>
             </div>
             <div class="progress-line"
                 [class.active]="registerForm.get('password')?.valid && registerForm.get('confirmpassword')?.valid">
@@ -27,7 +27,7 @@
             <div class="progress-step"
                 [class.active]="registerForm.get('password')?.valid && registerForm.get('confirmpassword')?.valid">
                 <div class="step-circle">3</div>
-                <span class="step-label">Seguridad</span>
+                <span class="step-label">{{'USUARIO_REGISTRO.PASO_3' | translate}}</span>
             </div>
         </div>
 
@@ -38,42 +38,42 @@
             <div class="form-section">
                 <h3 class="section-title">
                     <mat-icon>person</mat-icon>
-                    Datos Básicos
+                    {{'USUARIO_REGISTRO.DATOS_BASICOS' | translate}}
                 </h3>
 
                 <!-- Nombre de Usuario -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nombre de Usuario</mat-label>
-                    <input matInput formControlName="nombreUsuario" placeholder="usuario123" autocomplete="username" minlength="5" maxlength="20">
+                    <mat-label>{{'USUARIO_REGISTRO.NOMBRE_USUARIO' | translate}}</mat-label>
+                    <input matInput formControlName="nombreUsuario" placeholder="{{'USUARIO_REGISTRO.NOMBRE_USUARIO_PLACEHOLDER' | translate}}" autocomplete="username" minlength="5" maxlength="20">
                     <mat-icon matPrefix>account_circle</mat-icon>
-                    <mat-hint>Mínimo 5 caracteres</mat-hint>
+                    <mat-hint>{{'USUARIO_REGISTRO.NOMBRE_USUARIO_HINT' | translate}}</mat-hint>
                     <mat-error>
                         @if(registerForm.get('nombreUsuario')?.hasError('required')) {
-                        El nombre de usuario es requerido
+                        {{'USUARIO_REGISTRO.NOMBRE_USUARIO_REQUERIDO' | translate}}
                         }
                         @if(registerForm.get('nombreUsuario')?.hasError('minlength')) {
-                        Debe tener al menos 5 caracteres
+                        {{'USUARIO_REGISTRO.NOMBRE_USUARIO_MINIMO' | translate}}
                         }
                         @if(registerForm.get('nombreUsuario')?.hasError('maxlength')) {
-                        Debe tener al menos 20 caracteres
+                        {{'USUARIO_REGISTRO.NOMBRE_USUARIO_MAXIMO' | translate}}
                         }
                     </mat-error>
                 </mat-form-field>
 
                 <!-- Nombre Completo -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nombre Completo</mat-label>
-                    <input matInput formControlName="nombreCompleto" placeholder="Juan Pérez" autocomplete="name" minlength="3" maxlength="50">
+                    <mat-label>{{'USUARIO_REGISTRO.NOMBRE_COMPLETO' | translate}}</mat-label>
+                    <input matInput formControlName="nombreCompleto" placeholder="{{'USUARIO_REGISTRO.NOMBRE_COMPLETO_PLACEHOLDER' | translate}}" autocomplete="name" minlength="3" maxlength="50">
                     <mat-icon matPrefix>badge</mat-icon>
                     <mat-error>
                         @if(registerForm.get('nombreCompleto')?.hasError('required')) {
-                        El nombre completo es requerido
+                        {{'USUARIO_REGISTRO.NOMBRE_COMPLETO_REQUERIDO' | translate}}
                         }
                         @if(registerForm.get('nombreCompleto')?.hasError('minlength')) {
-                        Debe tener al menos 3 caracteres
+                        {{'USUARIO_REGISTRO.NOMBRE_COMPLETO_MINIMO' | translate}}
                         }
                         @if(registerForm.get('nombreCompleto')?.hasError('maxlength')) {
-                        Debe tener al menos 50 caracteres
+                        {{'USUARIO_REGISTRO.NOMBRE_COMPLETO_MAXIMO' | translate}}
                         }
                     </mat-error>
                 </mat-form-field>
@@ -83,42 +83,42 @@
             <div class="form-section">
                 <h3 class="section-title">
                     <mat-icon>contact_mail</mat-icon>
-                    Información de Contacto
+                    {{'USUARIO_REGISTRO.CONTACTO' | translate}}
                 </h3>
 
                 <!-- Correo Electrónico -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Correo Electrónico</mat-label>
-                    <input matInput type="email" formControlName="correo" placeholder="ejemplo@correo.com"
+                    <mat-label>{{'USUARIO_REGISTRO.CORREO' | translate}}</mat-label>
+                    <input matInput type="email" formControlName="correo" placeholder="{{'USUARIO_REGISTRO.CORREO_PLACEHOLDER' | translate}}"
                         autocomplete="email">
                     <mat-icon matPrefix>email</mat-icon>
                     <mat-error>
                         @if(registerForm.get('correo')?.hasError('required')) {
-                        El correo es requerido
+                        {{'USUARIO_REGISTRO.CORREO_REQUERIDO' | translate}}
                         }
                         @if(registerForm.get('correo')?.hasError('pattern')) {
-                        Formato de correo inválido
+                        {{'USUARIO_REGISTRO.CORREO_FORMATO_INVALIDO' | translate}}
                         }
                     </mat-error>
                 </mat-form-field>
 
                 <!-- Teléfono -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Teléfono (+506) OPCIONAL</mat-label>
+                    <mat-label>{{'USUARIO_REGISTRO.TELEFONO' | translate}}</mat-label>
                     <input matInput type="tel" formControlName="telefono" placeholder="88888888" autocomplete="tel" minlength="8" maxlength="8">
                     <mat-icon matPrefix>phone</mat-icon>
                     <!-- <mat-hint>Incluya código de país si aplica</mat-hint> -->
                     <mat-error>
                 
                         @if (registerForm.get('telefono')?.errors?.['required']) {
-                        El teléfono es requerido
+                        {{'USUARIO_REGISTRO.TELEFONO_REQUERIDO' | translate}}
                         }
                         @if (registerForm.get('telefono')?.errors?.['pattern']) {
-                        Formato de teléfono inválido
+                        {{'USUARIO_REGISTRO.TELEFONO_FORMATO_INVALIDO' | translate}}
                         }
                         @if ((registerForm.get('telefono')?.errors?.['minlength']) || registerForm.get('telefono')?.errors?.['maxlength'])
                         {
-                        Debe ser de 8 caracteres
+                        {{'USUARIO_REGISTRO.TELEFONO_LONGITUD' | translate}}
                         }
                 
                     </mat-error>
@@ -129,53 +129,53 @@
             <div class="form-section">
                 <h3 class="section-title">
                     <mat-icon>security</mat-icon>
-                    Seguridad
+                    {{'USUARIO_REGISTRO.SEGURIDAD' | translate}}
                 </h3>
 
                 <!-- Contraseña -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Contraseña</mat-label>
+                    <mat-label>{{'USUARIO_REGISTRO.CONTRASENNA' | translate}}</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
                         placeholder="••••••••" autocomplete="new-password" minlength="6" maxlength="20">
                     <mat-icon matPrefix>lock</mat-icon>
                     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
-                        [attr.aria-label]="'Ocultar contraseña'">
+                        [attr.aria-label]="'USUARIO_REGISTRO.CONTRASENNA_ARIA_LABEL' | translate">
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
-                    <mat-hint>Mínimo 6 caracteres</mat-hint>
+                    <mat-hint>{{'USUARIO_REGISTRO.CONTRASENNA_HINT' | translate}}</mat-hint>
                     <mat-error>
                     
                         @if (registerForm.get('password')?.errors?.['required']) {
-                        La contraseña es requerida
+                        {{'USUARIO_REGISTRO.CONTRASENNA_REQUERIDA' | translate}}
                         }
 
                         @if (registerForm.get('password')?.errors?.['minlength']) {
-                        Debe tener al menos 6 caracteres
+                        {{'USUARIO_REGISTRO.CONTRASENNA_MINIMO' | translate}}
                         }
 
                         @if (registerForm.get('password')?.errors?.['maxlength']) {
-                        Debe tener como máximo 20 caracteres
+                        {{'USUARIO_REGISTRO.CONTRASENNA_MAXIMO' | translate}}
                         }
                     </mat-error>
                 </mat-form-field>
 
                 <!-- Confirmar Contraseña -->
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Confirmar Contraseña</mat-label>
+                    <mat-label>{{'USUARIO_REGISTRO.CONFIRMAR_CONTRASENNA' | translate}}</mat-label>
                     <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmpassword"
                         placeholder="••••••••" autocomplete="new-password" minlength="6" maxlength="20">
                     <mat-icon matPrefix>lock_outline</mat-icon>
                     <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button"
-                        [attr.aria-label]="'Ocultar contraseña'">
+                        [attr.aria-label]="'USUARIO_REGISTRO.CONFIRMAR_CONTRASENNA_ARIA_LABEL' | translate">
                         <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-error>
                         @if(registerForm.get('confirmpassword')?.hasError('required')) {
-                        Confirme su contraseña
+                        {{'USUARIO_REGISTRO.CONFIRMAR_CONTRASENNA_REQUERIDA' | translate}}
                         }
                         @if(registerForm.hasError('passwordsMismatch') && registerForm.get('confirmpassword')?.touched) {
-                        Las contraseñas no coinciden }
-                    
+                        {{'USUARIO_REGISTRO.CONTRASENNAS_NO_COINCIDEN' | translate}}
+                    }
                     </mat-error>
                         
                 </mat-form-field>
@@ -190,17 +190,17 @@
                     <span class="strength-text">
                         <ng-container>
                             @if(registerForm.get('password')?.value.length < 8) {
-                                Débil
+                                {{'USUARIO_REGISTRO.DEBIL' | translate}}
                             }
                         </ng-container>
                         <ng-container>
                             @if(registerForm.get('password')?.value.length >= 8 && registerForm.get('password')?.value.length < 12) { 
-                                Media
+                                {{'USUARIO_REGISTRO.MEDIA' | translate}}
                          }
                         </ng-container>
                         <ng-container>
                             @if(registerForm.get('password')?.value.length >= 12) {
-                                Fuerte
+                                {{'USUARIO_REGISTRO.FUERTE' | translate}}
                             }
                         </ng-container>
                     </span>
@@ -213,26 +213,26 @@
                     [disabled]="registerForm.invalid || loading">
                     <mat-icon style="color: white;">person_add</mat-icon>
                     <!-- <mat-spinner diameter="20" class="spinner-inline"></mat-spinner> -->
-                    <span style="color: white">{{ loading ? 'Registrando...' : 'Crear Cuenta' }}</span>
+                    <span style="color: white">{{ loading ? ('USUARIO_REGISTRO.REGISTRANDO' | translate) : ('USUARIO_REGISTRO.CREAR_CUENTA' | translate) }}</span>
                 </button>
 
                 <button mat-stroked-button type="button" class="btn-reset full-width" (click)="onReset()"
                     [disabled]="loading">
                     <mat-icon>refresh</mat-icon>
-                    <span>Limpiar Formulario</span>
+                    <span>{{'USUARIO_REGISTRO.LIMPIAR' | translate}}</span>
                 </button>
             </div>
 
             <!-- Divider -->
             <div class="divider">
-                <span>o</span>
+                <span>{{'USUARIO_REGISTRO.DIVIDER' | translate}}</span>
             </div>
 
             <!-- Link a login -->
             <div class="login-link">
-                <p>¿Ya tienes una cuenta?</p>
+                <p>{{'USUARIO_REGISTRO.YA_TIENE_CUENTA' | translate}}</p>
                 <button mat-button color="accent" type="button" (click)="goToLogin()" [disabled]="loading">
-                    Inicia sesión aquí
+                    {{'USUARIO_REGISTRO.INICIA_SESION' | translate}}
                 </button>
             </div>
         </form>

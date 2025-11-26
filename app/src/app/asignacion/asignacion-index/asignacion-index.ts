@@ -2,6 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { TicketModel } from '../../share/models/TicketModel';
+import { TranslateService } from '@ngx-translate/core';
 
 // Interfaz para armar el tablero de asignaciones (tipo Kanban)
 
@@ -38,6 +39,9 @@ export class AsignacionIndex implements OnInit {
   // Inyectar Router
   private router = inject(Router);
 
+  // Inyectar TranslateService
+  private translate = inject(TranslateService);
+
   // Signal para obtener los tickets
   tickets = signal<TicketModel[]>([]);
 
@@ -49,13 +53,13 @@ export class AsignacionIndex implements OnInit {
 
   // Columnas por días de la semana
   columnas = [
-    { dia: 'lunes', titulo: 'Lunes', color: '#2196f3', fecha: '' }, // azul
-    { dia: 'martes', titulo: 'Martes', color: '#4caf50', fecha: '' }, // verde
-    { dia: 'miercoles', titulo: 'Miércoles', color: '#ff9800', fecha: '' }, // naranja
-    { dia: 'jueves', titulo: 'Jueves', color: '#9c27b0', fecha: '' }, // morado
-    { dia: 'viernes', titulo: 'Viernes', color: '#f44336', fecha: '' }, // rojo
-    { dia: 'sabado', titulo: 'Sábado', color: '#795548', fecha: '' }, // marrón
-    { dia: 'domingo', titulo: 'Domingo', color: '#607d8b', fecha: '' } // gris
+    { dia: 'lunes', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.LUNES'), color: '#2196f3', fecha: '' }, // azul
+    { dia: 'martes', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.MARTES'), color: '#4caf50', fecha: '' }, // verde
+    { dia: 'miercoles', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.MIERCOLES'), color: '#ff9800', fecha: '' }, // naranja
+    { dia: 'jueves', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.JUEVES'), color: '#9c27b0', fecha: '' }, // morado
+    { dia: 'viernes', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.VIERNES'), color: '#f44336', fecha: '' }, // rojo
+    { dia: 'sabado', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.SABADO'), color: '#795548', fecha: '' }, // marrón
+    { dia: 'domingo', titulo: this.translate.instant('ASIGNACION_NOTIFICACION.DOMINGO'), color: '#607d8b', fecha: '' } // gris
   ];
 
   // Computed signal para organizar los tickets por día de la semana

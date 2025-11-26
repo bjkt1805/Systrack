@@ -74,8 +74,8 @@ export class CategoriaForm implements OnInit, OnDestroy {
       this.idCategoria = params['id'] ?? null;
       this.isCreate = this.idCategoria === null;
       const tituloKey = this.isCreate 
-        ? 'CATEGORIA_CREATE.TITULO_CREAR' 
-        : 'CATEGORIA_CREATE.TITULO_EDITAR';
+        ? 'CATEGORIA_NOTIFICACIONES.TITULO_CREAR' 
+        : 'CATEGORIA_NOTIFICACIONES.TITULO_EDITAR';
       
       this.translate.get(tituloKey).subscribe(titulo => {
         this.titleForm = titulo;
@@ -231,12 +231,12 @@ export class CategoriaForm implements OnInit, OnDestroy {
     // En modo creación, mantener al menos una
     if (this.isCreate && this.especialidades.length <= 1) {
       this.translate.get([
-        'CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO',
-        'CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'
+        'CATEGORIA_NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO',
+        'CATEGORIA_NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'
       ]).subscribe(translations => {
         this.noti.warning(
-          translations['CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO'],
-          translations['CATEGORIA.NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'],
+          translations['CATEGORIA_NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_TITULO'],
+          translations['CATEGORIA_NOTIFICACIONES.ESPECIALIDAD_REQUERIDA_MENSAJE'],
           3000
         );
       });
@@ -400,12 +400,12 @@ export class CategoriaForm implements OnInit, OnDestroy {
     // Si el formulario es inválido, mostrar notificación de error y salir
     if (this.categoriaForm.invalid) {
       this.translate.get([
-        'CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO',
-        'CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'
+        'CATEGORIA_NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO',
+        'CATEGORIA_NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'
       ]).subscribe(translations => {
         this.noti.error(
-          translations['CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO'],
-          translations['CATEGORIA_CREATE.NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'],
+          translations['CATEGORIA_NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO'],
+          translations['CATEGORIA_NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'],
           5000
         );
       });
@@ -444,12 +444,12 @@ export class CategoriaForm implements OnInit, OnDestroy {
     request$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         const tituloKey = this.isCreate 
-          ? 'CATEGORIA_CREATE.NOTIFICACIONES.CREAR_TITULO' 
-          : 'CATEGORIA_CREATE.NOTIFICACIONES.ACTUALIZAR_TITULO';
+          ? 'CATEGORIA_NOTIFICACIONES.CREAR_TITULO' 
+          : 'CATEGORIA_NOTIFICACIONES.ACTUALIZAR_TITULO';
         
         const mensajeKey = this.isCreate 
-          ? 'CATEGORIA_CREATE.NOTIFICACIONES.CREAR_MENSAJE' 
-          : 'CATEGORIA_CREATE.NOTIFICACIONES.ACTUALIZAR_MENSAJE';
+          ? 'CATEGORIA_NOTIFICACIONES.CREAR_MENSAJE' 
+          : 'CATEGORIA_NOTIFICACIONES.ACTUALIZAR_MENSAJE';
 
         this.translate.get([tituloKey, mensajeKey], { nombre: data.nombre }).subscribe(translations => {
           this.noti.success(
@@ -463,12 +463,12 @@ export class CategoriaForm implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error al procesar categoría:', error);
         this.translate.get([
-          'CATEGORIA_CREATE.NOTIFICACIONES.ERROR_TITULO',
-          'CATEGORIA_CREATE.NOTIFICACIONES.ERROR_MENSAJE'
+          'CATEGORIA_NOTIFICACIONES.ERROR_TITULO',
+          'CATEGORIA_NOTIFICACIONES.ERROR_MENSAJE'
         ]).subscribe(translations => {
           this.noti.error(
-            translations['CATEGORIA_CREATE.NOTIFICACIONES.ERROR_TITULO'],
-            translations['CATEGORIA_CREATE.NOTIFICACIONES.ERROR_MENSAJE'],
+            translations['CATEGORIA_NOTIFICACIONES.ERROR_TITULO'],
+            translations['CATEGORIA_NOTIFICACIONES.ERROR_MENSAJE'],
             5000
           );
         });

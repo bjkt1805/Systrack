@@ -7,6 +7,7 @@ import { RolModel } from '../../share/models/RolModel';
 import { RolService } from '../../share/services/api/rol.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
 import { NotificationService } from '../../share/services/app/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-usuario-register',
@@ -39,7 +40,8 @@ export class UsuarioRegister implements OnInit, OnDestroy {
 
     // Inyección del servicio de notificaciones
     private notificacion: NotificationService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private translate: TranslateService
   ) {}
 
   /**
@@ -93,7 +95,13 @@ export class UsuarioRegister implements OnInit, OnDestroy {
 
     //Validación del formulario (si no es correcto no hacer nada)
     if (this.registerForm.invalid) {
-      this.notificacion.error('Formulario Inválido', 'Revise los campos marcados.', 5000);
+      this.translate.get(['USUARIO_NOTIFICACIONES.FORMULARIO_INVALIDO', 'USUARIO_NOTIFICACIONES.REVISE_CAMPOS']).subscribe(translations => {
+        this.notificacion.error(
+          translations['USUARIO_NOTIFICACIONES.FORMULARIO_INVALIDO'], 
+          translations['USUARIO_NOTIFICACIONES.REVISE_CAMPOS'], 
+          5000
+        );
+      });
       return;
     }
 
@@ -126,12 +134,14 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           console.log('Usuario registrado exitosamente:', data);
 
           // Mostrar el toast de éxito y devolver a /usuario/login después de 3 segundos
-          this.notificacion.success(
-            'Usuario Registrado', 
-            'El usuario ha sido registrado exitosamente.', 
-            3000, 
-            '/usuario/login'
-          );
+          this.translate.get(['USUARIO_NOTIFICACIONES.USUARIO_REGISTRADO', 'USUARIO_NOTIFICACIONES.REGISTRO_EXITOSO']).subscribe(translations => {
+            this.notificacion.success(
+              translations['USUARIO_NOTIFICACIONES.USUARIO_REGISTRADO'], 
+              translations['USUARIO_NOTIFICACIONES.REGISTRO_EXITOSO'], 
+              3000, 
+              '/usuario/login'
+            );
+          });
         },
 
         // En caso de haber error 
@@ -144,7 +154,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           console.error('Error al registrar usuario:', error);
           
           // Variable tipo string para mostrar error en la notificación
-          let errorMessage = 'Error al registrar usuario. Inténtelo de nuevo.';
+          let errorMessageKey = 'USUARIO_NOTIFICACIONES.ERROR_REGISTRO_GENERICO';
           
           // Manejo de errores http específicos
 
@@ -153,20 +163,26 @@ export class UsuarioRegister implements OnInit, OnDestroy {
 
             // Si el mensaje del error incluye 'nombreUsuario' asignarlo a errorMessage
             if (error.error?.message?.includes('nombreUsuario')) {
-              errorMessage = 'El nombre de usuario ya está en uso.';
+              errorMessageKey = 'USUARIO_NOTIFICACIONES.ERROR_NOMBRE_USUARIO_EXISTE';
 
             // En caso de que el mensaje de error contenga 'correo' asignarlo a errorMessage
             } else if (error.error?.message?.includes('correo')) {
-              errorMessage = 'El correo electrónico ya está registrado.';
+              errorMessageKey = 'USUARIO_NOTIFICACIONES.ERROR_CORREO_EXISTE';
             
             // Por último, si el error tiene un mensaje asignarlo a errorMessage
             } else if (error.error?.message) {
-              errorMessage = error.error.message;
+              errorMessageKey = 'USUARIO_NOTIFICACIONES.ERROR_REGISTRO_GENERICO';
             }
           }
           
           // Mostrar el toast de error con el mensaje correspondiente
-          this.notificacion.error('Error de Registro', errorMessage, 5000);
+          this.translate.get(['USUARIO_NOTIFICACIONES.ERROR_TITULO', errorMessageKey]).subscribe(translations => {
+            this.notificacion.error(
+              translations['USUARIO_NOTIFICACIONES.ERROR_TITULO'], 
+              translations[errorMessageKey], 
+              5000
+            );
+          });
         }
       });
   }

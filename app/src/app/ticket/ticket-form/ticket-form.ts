@@ -3,6 +3,7 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../share/services/app/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Modelos
 import { TicketModel } from '../../share/models/TicketModel';
@@ -89,7 +90,10 @@ export class TicketForm {
     private usuarioService: UsuarioService,
 
     // Importar servicio de notificaciones
-    private noti: NotificationService
+    private noti: NotificationService,
+
+    // Importar servicio de traducción
+    private translate: TranslateService
   ) { }
 
   /**
@@ -105,7 +109,15 @@ export class TicketForm {
     this.route.params.subscribe((params) => {
       this.idTicket = params['id'] ?? null
       this.isCreate = this.idTicket === null // Si no hay id del tiquete, es creación
-      this.titleForm = this.isCreate ? 'Crear' : 'Actualizar'
+      
+      // Actualizar el título del formulario según la acción (crear o actualizar)
+      const tituloKey = this.isCreate 
+        ? 'TICKET_NOTIFICACIONES.TITULO_CREAR' 
+        : 'TICKET_NOTIFICACIONES.TITULO_ACTUALIZAR';
+      
+      this.translate.get(tituloKey).subscribe(titulo => {
+        this.titleForm = titulo;
+      });
 
       //Si hay id se obtiene el ticket a actualizar
       if (this.idTicket) {
@@ -166,7 +178,16 @@ export class TicketForm {
 
     } catch (error) {
       console.error('[FRONTEND] Error cargando datos iniciales:', error);
-      this.noti.error('Error', 'No se pudieron cargar los datos iniciales', 5000);
+      this.translate.get([
+        'TICKET_NOTIFICACIONES.ERROR_TITULO',
+        'TICKET_NOTIFICACIONES.ERROR_DATOS_INICIALES'
+      ]).subscribe(translations => {
+        this.noti.error(
+          translations['TICKET_NOTIFICACIONES.ERROR_TITULO'],
+          translations['TICKET_NOTIFICACIONES.ERROR_DATOS_INICIALES'],
+          5000
+        );
+      });
     }
   }
 
@@ -190,7 +211,16 @@ export class TicketForm {
         },
         error: (error) => {
           console.error('[FRONTEND] Error cargando usuario solicitante:', error);
-          this.noti.error('Error', 'No se pudo cargar la información del usuario', 5000);
+          this.translate.get([
+            'TICKET_NOTIFICACIONES.ERROR_TITULO',
+            'TICKET_NOTIFICACIONES.ERROR_USUARIO'
+          ]).subscribe(translations => {
+            this.noti.error(
+              translations['TICKET_NOTIFICACIONES.ERROR_TITULO'],
+              translations['TICKET_NOTIFICACIONES.ERROR_USUARIO'],
+              5000
+            );
+          });
         }
       });
   }
@@ -276,7 +306,16 @@ export class TicketForm {
         },
         error: (error) => {
           console.error('[FRONTEND]Error cargando categoría:', error);
-          this.noti.error('Error', 'No se pudo cargar la categoría asociada', 3000);
+          this.translate.get([
+            'TICKET_NOTIFICACIONES.ERROR_TITULO',
+            'TICKET_NOTIFICACIONES.ERROR_CATEGORIA'
+          ]).subscribe(translations => {
+            this.noti.error(
+              translations['TICKET_NOTIFICACIONES.ERROR_TITULO'],
+              translations['TICKET_NOTIFICACIONES.ERROR_CATEGORIA'],
+              3000
+            );
+          });
         }
       });
   }
@@ -329,7 +368,16 @@ export class TicketForm {
       if (this.selectedImages.length + input.files.length > this.maxImages) {
 
         // Enviar error y salir de la función
-        this.noti.error('Límite de imágenes', `No puede seleccionar más de ${this.maxImages} imágenes.`, 3000);
+        this.translate.get([
+          'TICKET_NOTIFICACIONES.LIMITE_IMAGENES_TITULO',
+          'TICKET_NOTIFICACIONES.LIMITE_IMAGENES_MENSAJE'
+        ], { max: this.maxImages }).subscribe(translations => {
+          this.noti.error(
+            translations['TICKET_NOTIFICACIONES.LIMITE_IMAGENES_TITULO'],
+            translations['TICKET_NOTIFICACIONES.LIMITE_IMAGENES_MENSAJE'],
+            3000
+          );
+        });
         return;
       }
 
@@ -338,15 +386,34 @@ export class TicketForm {
 
         // Validar primero el tipo de archivo 
         if (!file.type.startsWith('image/')) {
-          this.noti.error('Tipo de archivo inválido', 'Solo se permiten archivos de imagen.', 3000);
+          this.translate.get([
+            'TICKET_NOTIFICACIONES.ARCHIVO_INVALIDO_TITULO',
+            'TICKET_NOTIFICACIONES.ARCHIVO_INVALIDO_MENSAJE'
+          ]).subscribe(translations => {
+            this.noti.error(
+              translations['TICKET_NOTIFICACIONES.ARCHIVO_INVALIDO_TITULO'],
+              translations['TICKET_NOTIFICACIONES.ARCHIVO_INVALIDO_MENSAJE'],
+              3000
+            );
+          });
           return;
         }
 
         // Validar el tamaño del archivo (2 MB máximo)
         if (file.size > 2 * 1024 * 1024) {
-          this.noti.error('Archivo demasiado grande', 'Tamaño máximo del archivo: 2 MB.', 3000);
+          this.translate.get([
+            'TICKET_NOTIFICACIONES.ARCHIVO_GRANDE_TITULO',
+            'TICKET_NOTIFICACIONES.ARCHIVO_GRANDE_MENSAJE'
+          ]).subscribe(translations => {
+            this.noti.error(
+              translations['TICKET_NOTIFICACIONES.ARCHIVO_GRANDE_TITULO'],
+              translations['TICKET_NOTIFICACIONES.ARCHIVO_GRANDE_MENSAJE'],
+              3000
+            );
+          });
           return;
         }
+
 
         // Agregar el archivo al array de archivos 
         this.selectedImages.push(file);
@@ -544,13 +611,31 @@ export class TicketForm {
 
     // Si el formulario es inválido, mostrar notificación de error y salir
     if (this.ticketForm.invalid) {
-      this.noti.error('Formulario Inválido', 'Revise los campos marcados.', 3000);
+      this.translate.get([
+        'TICKET_NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO',
+        'TICKET_NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.error(
+          translations['TICKET_NOTIFICACIONES.FORMULARIO_INVALIDO_TITULO'],
+          translations['TICKET_NOTIFICACIONES.FORMULARIO_INVALIDO_MENSAJE'],
+          3000
+        );
+      });
       return;
     }
 
     // Si no hay categoría seleccionada, mostrar notificación de error y salir
     if (!this.categoriaSeleccionada()) {
-      this.noti.error('Categoría requerida', 'Debe seleccionar una etiqueta para determinar la categoría.', 3000);
+      this.translate.get([
+        'TICKET_NOTIFICACIONES.CATEGORIA_REQUERIDA_TITULO',
+        'TICKET_NOTIFICACIONES.CATEGORIA_REQUERIDA_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.error(
+          translations['TICKET_NOTIFICACIONES.CATEGORIA_REQUERIDA_TITULO'],
+          translations['TICKET_NOTIFICACIONES.CATEGORIA_REQUERIDA_MENSAJE'],
+          3000
+        );
+      });
       return;
     }
 
@@ -604,12 +689,22 @@ export class TicketForm {
 
     // Suscribirse a la respuesta del API y mostrar notificación de éxito
     request$.pipe(takeUntil(this.destroy$)).subscribe(data => {
-      this.noti.success(
-        this.isCreate ? 'CREACIÓN' : 'ACTUALIZACIÓN',
-        `Ticket ${data.codigo} ${this.isCreate ? 'creado' : 'actualizado'}`,
-        2000,
-        '/ticket'
-      );
+      const tituloKey = this.isCreate 
+        ? 'TICKET_NOTIFICACIONES.CREAR_TITULO' 
+        : 'TICKET_NOTIFICACIONES.ACTUALIZAR_TITULO';
+      
+      const mensajeKey = this.isCreate 
+        ? 'TICKET_NOTIFICACIONES.CREAR_MENSAJE' 
+        : 'TICKET_NOTIFICACIONES.ACTUALIZAR_MENSAJE';
+
+      this.translate.get([tituloKey, mensajeKey], { codigo: data.codigo }).subscribe(translations => {
+        this.noti.success(
+          translations[tituloKey],
+          translations[mensajeKey],
+          2000,
+          '/ticket'
+        );
+      });
     });
   }
 
