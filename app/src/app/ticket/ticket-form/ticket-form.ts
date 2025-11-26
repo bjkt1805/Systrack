@@ -19,6 +19,9 @@ import { CategoriaService } from '../../share/services/api/categoria.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
 import { ImagenTicketModel } from '../../share/models/ImagenTicketModel';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
+import { AsignacionService } from '../../share/services/api/asignacion.service';
+import { AsignacionAutomaticaDialog } from '../ticket-asignacion-automatica-dialog/ticket-asignacion-automatica-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-ticket-form',
@@ -40,11 +43,20 @@ export class TicketForm {
   // Inyectar el servicio de autenticación
   private authService = inject(AuthenticationService);
 
+  // Inyectar el servicio de asignacion
+  private asignacionService = inject(AsignacionService);
+
+  // Inyectar el dialogo de asignacion automatica
+  private dialog = inject(MatDialog);
+
   /**
 * Signals para manejar la autenticación de usuario 
 */
   readonly isAuthenticated = this.authService.authenticated;
   readonly currentUser = this.authService.usuario;
+
+  // Signal para indicar si está procesando asignación automática
+  asignacionAutomatica = signal(false);
 
   // Acceder al id del usuario 
   getCurrentUserId(): number | null | undefined {
@@ -109,12 +121,12 @@ export class TicketForm {
     this.route.params.subscribe((params) => {
       this.idTicket = params['id'] ?? null
       this.isCreate = this.idTicket === null // Si no hay id del tiquete, es creación
-      
+
       // Actualizar el título del formulario según la acción (crear o actualizar)
-      const tituloKey = this.isCreate 
-        ? 'TICKET_NOTIFICACIONES.TITULO_CREAR' 
+      const tituloKey = this.isCreate
+        ? 'TICKET_NOTIFICACIONES.TITULO_CREAR'
         : 'TICKET_NOTIFICACIONES.TITULO_ACTUALIZAR';
-      
+
       this.translate.get(tituloKey).subscribe(titulo => {
         this.titleForm = titulo;
       });
@@ -688,16 +700,16 @@ export class TicketForm {
       : this.ticketService.updateTiquete(this.idTicket!, formData);
 
     // Suscribirse a la respuesta del API y mostrar notificación de éxito
-    request$.pipe(takeUntil(this.destroy$)).subscribe(data => {
-      const tituloKey = this.isCreate 
-        ? 'TICKET_NOTIFICACIONES.CREAR_TITULO' 
+    request$.pipe(takeUntil(this.destroy$)).subscribe(tiquete => {
+      const tituloKey = this.isCreate
+        ? 'TICKET_NOTIFICACIONES.CREAR_TITULO'
         : 'TICKET_NOTIFICACIONES.ACTUALIZAR_TITULO';
-      
-      const mensajeKey = this.isCreate 
-        ? 'TICKET_NOTIFICACIONES.CREAR_MENSAJE' 
+
+      const mensajeKey = this.isCreate
+        ? 'TICKET_NOTIFICACIONES.CREAR_MENSAJE'
         : 'TICKET_NOTIFICACIONES.ACTUALIZAR_MENSAJE';
 
-      this.translate.get([tituloKey, mensajeKey], { codigo: data.codigo }).subscribe(translations => {
+      this.translate.get([tituloKey, mensajeKey], { codigo: tiquete.codigo }).subscribe(translations => {
         this.noti.success(
           translations[tituloKey],
           translations[mensajeKey],
@@ -705,7 +717,86 @@ export class TicketForm {
           '/ticket'
         );
       });
+
+      // Si es creación, iniciar proceso de asignación automática
+      if (this.isCreate) {
+        console.log('[FRONTEND] Iniciando proceso de asignación automática para el tiquete');
+        this.asignarAutomaticamente(tiquete.id);
+      }
+
+      // Si es editar, navegar a la lista de tiquetes 
+      else {
+        this.router.navigate(['/ticket']);
+      }
     });
+  }
+
+  /**
+   * Método para asignar automáticamente el ticket creado
+   */
+  private asignarAutomaticamente(ticketId: number): void {
+
+    //Actualizar la señal de asignacion automática a verdadero
+    this.asignacionAutomatica.set(true);
+
+    // 
+    this.asignacionService.autoAsignarTicket(ticketId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('[FRONTEND] Asignación automática completada:', response);
+
+          if (response.success) {
+            // abrir el dialog de resultado de asignación automática
+            const dialogRef = this.dialog.open(AsignacionAutomaticaDialog, {
+              width: '900px',
+              maxWidth: '95vw',
+              maxHeight: '90vh',
+              disableClose: true, 
+              data: {
+                success: response.success,
+                ticketCodigo: response.data?.ticketId || ticketId,
+                tecnicoAsignado: response.data?.tecnicoAsignado,
+                reglaAplicada: response.data?.reglaAplicada,
+                calculosRealizados: response.data?.calculosRealizados,
+                justificacion: response.data?.justificacion
+              }
+            });
+
+            // Cuando se cierre el dialog, navegar a la lista
+            dialogRef.afterClosed().subscribe(() => {
+              this.asignacionAutomatica.set(false);
+              this.router.navigate(['/ticket']);
+            });
+
+          } else {
+            // Si no se pudo asignar automáticamente, mostrar advertencia
+            this.translate.get([
+              'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO',
+              'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'
+            ]).subscribe(translations => {
+              this.noti.warning(
+                translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO'],
+                translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'],
+                4000
+              );
+            });
+          }
+          // Navegar a la lista después de 1 segundo
+          setTimeout(() => {
+            this.asignacionAutomatica.set(false);
+            this.router.navigate(['/ticket']);
+          }, 1000);
+        },
+
+        error: (error) => {
+          console.error('[FRONTEND] Error en la asignación automática:', error);
+          this.asignacionAutomatica.set(false); // Actualizar señal a falso en caso de error
+
+          // Navegar a la lista de tickets
+          this.router.navigate(['/ticket']);
+        }
+      });
   }
 
   /**

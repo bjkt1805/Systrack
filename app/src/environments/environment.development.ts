@@ -5,6 +5,7 @@ export const environment = {
     endPointCategoria: 'categoria',
     endPointEspecialidad: 'especialidad',
     endPointSLA: 'sla',
+    endpointAsignacion: 'asignacion',
     endPointTicket: 'ticket',
     endPointEtiqueta: 'etiqueta',
     endPointRol: 'rol',

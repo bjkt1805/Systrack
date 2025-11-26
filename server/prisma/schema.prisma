@@ -235,7 +235,7 @@ model Asignacion {
   ticketId         Int
   usuarioTecnicoId Int
   metodo           MetodoAsignacion
-  motivo           String?
+  motivo           String?         @db.Text
   puntajePrioridad Int?
   slaRestanteMin   Int?
   reglaId          Int?

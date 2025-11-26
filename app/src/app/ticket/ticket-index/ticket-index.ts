@@ -44,9 +44,7 @@ export class TicketIndex implements OnInit {
     return this.currentUser()?.id;
   }
 
-  // ===== VARIABLES DEL USUARIO LOGUEADO ID (HARDCODEADA) =====
-  // Esta variable simula el usuario logueado
-  // Posteriormente se obtendrá del servicio de autenticación
+  // ID del usuario logueado
   USUARIO_LOGUEADO_ID = this.getCurrentUserId() || 1; // Valor por defecto 1 si es null
 
   // Signal para obtener el usuario logueado completo

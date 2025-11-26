@@ -25,7 +25,7 @@
                             {{ getEstadoIcon(data.ticket.estado) }}
                         </mat-icon>
                         <div class="info-text">
-                            <span class="info-label">{{'ACTUALIZAR_ESTADO.ESTADO_ACTUAL' | translate}}:</span>
+                            <span class="info-label">{{'ACTUALIZAR_ESTADO.ESTADO_ACTUAL' | translate}}</span>
                             <span class="estado-badge" [ngClass]="'estado-' + data.ticket.estado.toLowerCase()">
                                 {{ data.ticket.estado }}
                             </span>
@@ -65,22 +65,15 @@
                     <h3 class="section-title">{{'ACTUALIZAR_ESTADO.ASIGNACION_TECNICO' | translate}}</h3>
                 </div>
 
-                <!-- BOTÓN DE ASIGNACIÓN -->
-                <div class="boton-asignacion" style="gap: 15px">
-                    <button type="button" mat-raised-button class="btn-asignacion">
-                        <mat-icon>person_search</mat-icon>
-                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_MANUAL' | translate}}</span>
-                    </button>
-                </div>
-
-                <!-- BOTÓN DE ASIGNACIÓN (CON EVENTO CLICK INCLUIDO)-->
-                <!-- <div class="botones-asignacion" style="gap: 15px">
-                    <button type="button" mat-raised-button class="btn-tipo-asignacion" (click)="abrirAsignacionManualDialog()">
-                        <mat-icon>person_search</mat-icon>
-                        <span>{{'ACTUALIZAR_ESTADO.ASIGNACION_MANUAL' | translate}}</span>
-                    </button>
-                </div> -->
-
+                <!-- BOTÓN DE ASIGNACIÓN (HAY QUE AGREGAR (click)="asignarManualmente()")-->
+                <button 
+                    type="button" 
+                    mat-raised-button 
+                    color="accent" 
+                    class="btn-asignacion"
+                    [disabled]="data.ticket.estado !== 'PENDIENTE'">
+                    <mat-icon>person_search</mat-icon>>
+                </button>
                 <mat-hint class="hint-asignacion">
                     <mat-icon class="hint-icon">info</mat-icon>
                     {{'ACTUALIZAR_ESTADO.SELECCIONE_TECNICO' | translate}}
@@ -104,7 +97,7 @@
                 <mat-label>{{'ACTUALIZAR_ESTADO.OBSERVACION_OBLIGATORIA' | translate}}</mat-label>
                 <textarea matInput formControlName="nota" rows="4"
                     placeholder="{{'ACTUALIZAR_ESTADO.OBSERVACION_PLACEHOLDER' | translate}}" maxlength="500" required>
-        </textarea>
+                </textarea>
                 <mat-icon matPrefix>comment</mat-icon>
                 <mat-hint align="end">{{ estadoForm.get('nota')?.value?.length || 0 }}/500</mat-hint>
                 @if (estadoForm.get('nota')?.invalid && estadoForm.get('nota')?.touched) {
@@ -113,7 +106,8 @@
                     {{'ACTUALIZAR_ESTADO.OBSERVACION_OBLIGATORIA' | translate}}
                     }
                     @if (estadoForm.get('nota')?.errors?.['minlength']) {
-                    {{'ACTUALIZAR_ESTADO.OBSERVACION_MINIMO' | translate}} (actual: {{ estadoForm.get('nota')?.value?.length || 0 }})
+                    {{'ACTUALIZAR_ESTADO.OBSERVACION_MINIMO' | translate}} (actual: {{
+                    estadoForm.get('nota')?.value?.length || 0 }})
                     }
                 </mat-error>
                 }
@@ -148,7 +142,8 @@
 
                     <div class="upload-info">
                         <mat-icon class="info-icon">info</mat-icon>
-                        <span>{{'ACTUALIZAR_ESTADO.INFO_IMAGENES' | translate:{maxImagenes: maxImagenes, maxTamanoImagenMB: maxTamanoImagenMB} }}</span>
+                        <span>{{'ACTUALIZAR_ESTADO.INFO_IMAGENES' | translate:{maxImagenes: maxImagenes,
+                            maxTamanoImagenMB: maxTamanoImagenMB} }}</span>
                     </div>
                 </div>
 

@@ -386,7 +386,7 @@
     "ASIGNACION_TECNICO": "Technician Assignment",
     "ASIGNACION_AUTOMATICA": "Automatic Assignment",
     "ASIGNACION_MANUAL": "Assign Ticket",
-    "SELECCIONE_TECNICO": "Click the button to manually assign the ticket",
+    "SELECCIONE_TECNICO": "Click the button to automatically assign the ticket",
     "TECNICO_ASIGNADO": "Assigned Technician:",
     "OBSERVACION": "Mandatory Observation",
     "OBSERVACION_PLACEHOLDER": "Describe in detail the reason for the status change...",
@@ -401,8 +401,9 @@
     "ELIMINAR_IMAGEN": "Delete image",
     "CANCELAR": "Cancel",
     "PROCESANDO": "Processing...",
-    "ACTUALIZAR": "Update Status"
-  },
+    "ACTUALIZAR": "Update Status", 
+    "ASIGNANDO_AUTO": "Assigning..."
+ },
 
   "ASIGNACION": {
     "VISTA_ASIGNACIONES": "Assignment View",

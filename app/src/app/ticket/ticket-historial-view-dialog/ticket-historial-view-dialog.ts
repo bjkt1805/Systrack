@@ -8,6 +8,7 @@ import { TicketService } from '../../share/services/api/ticket.service';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { NotificationService } from '../../share/services/app/notification.service';
 import { FileUploadService } from '../../share/services/api/file-upload.service';
+import { AsignacionService } from '../../share/services/api/asignacion.service';
 
 // Modelos
 import { EstadoTicket } from '../../share/models/EnumsModel';
@@ -37,6 +38,7 @@ export class TicketHistorialViewDialog implements OnInit {
     private uploadService = inject(FileUploadService);
     private noti = inject(NotificationService);
     private dialogRef = inject(MatDialogRef<TicketHistorialViewDialog>);
+    private asignacionService = inject(AsignacionService);
 
     // Inyeccion de MatDialog para abrir un nuevo dialogo de asignación de técnico
     private dialog = inject(MatDialog);
@@ -53,10 +55,10 @@ export class TicketHistorialViewDialog implements OnInit {
     // Signal para manejar la carga de técnicos 
     cargandoTecnicos = signal(false);
 
-    // Signal computado para verificar si el usuario es ADMIN 
+    // Signal para verificar si el usuario es ADMIN 
     esAdmin = signal(false);
 
-    // Signal computado para verificar si puede asignar técnicos 
+    // Signal para verificar si puede asignar técnicos 
     puedeAsignarTecnicos = signal(false);
 
     // Manejo de imágenes a través de signals y limites (cant Imagenes y tamaño)

@@ -14,7 +14,6 @@
     "TODOSLOSTIQUETES": "Todos los Tiquetes",
     "RESPUESTASPERSONALIZADAS": "Respuestas Personalizadas"
   },
-
   "HEADER": {
     "INICIO": "Inicio",
     "LISTADOS": "Listados",
@@ -387,7 +386,7 @@
     "ASIGNACION_TECNICO": "Asignación de Técnico",
     "ASIGNACION_AUTOMATICA": "Asignación Automática",
     "ASIGNACION_MANUAL": "Asignar tiquete",
-    "SELECCIONE_TECNICO": "Haga clic en el botón para asignar el tiquete manualmente",
+    "SELECCIONE_TECNICO": "Haga clic en el botón para asignar el tiquete automáticamente",
     "TECNICO_ASIGNADO": "Técnico asignado:",
     "OBSERVACION": "Observación Obligatoria",
     "OBSERVACION_PLACEHOLDER": "Describa detalladamente el motivo del cambio de estado...",
@@ -402,7 +401,8 @@
     "ELIMINAR_IMAGEN": "Eliminar imagen",
     "CANCELAR": "Cancelar",
     "PROCESANDO": "Procesando...",
-    "ACTUALIZAR": "Actualizar Estado"
+    "ACTUALIZAR": "Actualizar Estado", 
+    "ASIGNANDO_AUTO": "Asignando..."
   },
 
   "ASIGNACION": {

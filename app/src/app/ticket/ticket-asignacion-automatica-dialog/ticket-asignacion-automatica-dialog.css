@@ -1,0 +1,406 @@
+/* ========================================
+   CONTENEDOR PRINCIPAL
+======================================== */
+.resultado-dialog-container {
+  padding: 0;
+  max-width: 800px;
+  background: linear-gradient(to bottom, #f5f5f5 0%, #ffffff 100%);
+}
+
+/* ========================================
+   HEADER
+======================================== */
+.dialog-header {
+  text-align: center;
+  padding: 32px 24px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 0;
+}
+
+.success-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.success-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.dialog-subtitle {
+  margin: 8px 0 0;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+/* ========================================
+   CONTENIDO
+======================================== */
+.dialog-content {
+  padding: 24px !important;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* ========================================
+   CARDS DE INFORMACIÓN
+======================================== */
+.info-card {
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.tecnico-card {
+  border-left-color: #2196f3;
+}
+
+.regla-card {
+  border-left-color: #9c27b0;
+}
+
+.calculos-card {
+  border-left-color: #ff9800;
+}
+
+.justificacion-card {
+  border-left-color: #4caf50;
+}
+
+.card-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.tecnico-icon {
+  background-color: #e3f2fd;
+  color: #2196f3;
+}
+
+.regla-icon {
+  background-color: #f3e5f5;
+  color: #9c27b0;
+}
+
+.calculos-icon {
+  background-color: #fff3e0;
+  color: #ff9800;
+}
+
+.justificacion-icon {
+  background-color: #e8f5e9;
+  color: #4caf50;
+}
+
+/* ========================================
+   FILAS DE INFORMACIÓN (JUSTIFICACIÓN)
+======================================== */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+}
+
+.row-icon {
+  color: #666;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.value {
+  color: #333;
+  font-weight: 500;
+}
+
+/* ========================================
+   ESPECIALIDADES
+======================================== */
+.especialidades-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.especialidad-chip {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+  font-size: 12px;
+  height: 28px;
+}
+
+/* ========================================
+   CÁLCULOS
+======================================== */
+.calculos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.calculo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.calculo-item:hover {
+  background-color: #e0e0e0;
+}
+
+.calculo-item.puntaje-total {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.calculo-item.puntaje-total .calculo-icon,
+.calculo-item.puntaje-total .calculo-label {
+  color: white;
+}
+
+.calculo-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.calculo-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.calculo-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.puntaje-destacado {
+  font-size: 32px !important;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ========================================
+   FÓRMULA
+======================================== */
+.formula-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 2px dashed #ff9800;
+}
+
+.formula-icon {
+  color: #ff9800;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.formula-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.formula-code {
+  flex: 1;
+  padding: 8px 12px;
+  background-color: #263238;
+  color: #aed581;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+/* ========================================
+   JUSTIFICACIÓN
+======================================== */
+.justificacion-content {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.justificacion-line {
+  margin: 8px 0;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.justificacion-line:first-child {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* ========================================
+   CONFIRMACIONES
+======================================== */
+.confirmaciones-section {
+  margin-top: 24px;
+  padding: 20px;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  border: 2px solid #4caf50;
+}
+
+.confirmacion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.confirmacion-item:not(:last-child) {
+  border-bottom: 1px solid #c8e6c9;
+}
+
+.confirmacion-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.confirmacion-icon.success {
+  color: #4caf50;
+  animation: checkBounce 0.6s ease-out;
+}
+
+@keyframes checkBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* ========================================
+   ACCIONES
+======================================== */
+mat-dialog-actions {
+  padding: 24px !important;
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-cerrar {
+  min-width: 200px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  gap: 8px;
+}
+
+.btn-cerrar mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 600px) {
+  .dialog-header {
+    padding: 24px 16px 16px;
+  }
+
+  .success-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .dialog-title {
+    font-size: 22px;
+  }
+
+  .dialog-content {
+    padding: 16px !important;
+  }
+
+  .calculos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-cerrar {
+    width: 100%;
+  }
+}
+
+
+

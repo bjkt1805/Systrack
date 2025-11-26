@@ -1,0 +1,137 @@
+<div class="resultado-dialog-container">
+
+    <!-- HEADER CON ICONO DE ÉXITO -->
+    <div class="dialog-header">
+        <div class="success-icon-wrapper">
+            <mat-icon class="success-icon">check_circle</mat-icon>
+        </div>
+        <h2 class="dialog-title">¡Asignación Automática Completada!</h2>
+        <p class="dialog-subtitle">Ticket {{ data.ticketCodigo }} asignado exitosamente</p>
+    </div>
+
+    <!-- CONTENIDO -->
+    <mat-dialog-content class="dialog-content">
+
+        <!-- SECCIÓN: TÉCNICO ASIGNADO -->
+        <mat-card class="info-card tecnico-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar class="card-icon tecnico-icon">person</mat-icon>
+                <mat-card-title>Técnico Asignado</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="info-row">
+                    <mat-icon class="row-icon">badge</mat-icon>
+                    <span class="label">Nombre:</span>
+                    <span class="value">{{ data.tecnicoAsignado.nombreCompleto }}</span>
+                </div>
+                <div class="info-row">
+                    <mat-icon class="row-icon">email</mat-icon>
+                    <span class="label">Correo:</span>
+                    <span class="value">{{ data.tecnicoAsignado.correo }}</span>
+                </div>
+                <div class="info-row">
+                    <mat-icon class="row-icon">stars</mat-icon>
+                    <span class="label">Especialidades:</span>
+                    <div class="especialidades-chips">
+                        @for (esp of data.tecnicoAsignado.especialidades; track esp) {
+                        <mat-chip class="especialidad-chip">{{ esp }}</mat-chip>
+                        }
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: REGLA APLICADA -->
+        <mat-card class="info-card regla-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar class="card-icon regla-icon">rule</mat-icon>
+                <mat-card-title>Regla de Asignación</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="info-row">
+                    <mat-icon class="row-icon">label</mat-icon>
+                    <span class="label">Regla:</span>
+                    <span class="value">{{ data.reglaAplicada.nombre }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: CÁLCULOS REALIZADOS -->
+        <mat-card class="info-card calculos-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar class="card-icon calculos-icon">calculate</mat-icon>
+                <mat-card-title>Cálculos de Asignación</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="calculos-grid">
+                    <div class="calculo-item">
+                        <mat-icon class="calculo-icon">priority_high</mat-icon>
+                        <span class="calculo-label">Prioridad</span>
+                        <span class="calculo-value">{{ data.calculosRealizados.prioridad }}</span>
+                    </div>
+                    <div class="calculo-item">
+                        <mat-icon class="calculo-icon">schedule</mat-icon>
+                        <span class="calculo-label">SLA Restante</span>
+                        <span class="calculo-value">{{ data.calculosRealizados.slaRestanteEnHoras.toFixed(2) }}h</span>
+                    </div>
+                    <div class="calculo-item puntaje-total">
+                        <mat-icon class="calculo-icon">emoji_events</mat-icon>
+                        <span class="calculo-label">Puntaje Total</span>
+                        <span class="calculo-value puntaje-destacado"
+                            [style.color]="getPuntajeColor(data.calculosRealizados.puntajeTotalTecnico)">
+                            {{ data.calculosRealizados.puntajeTotalTecnico.toFixed(2) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- FÓRMULA UTILIZADA -->
+                <div class="formula-container">
+                    <mat-icon class="formula-icon">functions</mat-icon>
+                    <span class="formula-label">Fórmula:</span>
+                    <code class="formula-code">{{ data.calculosRealizados.formulaUtilizada }}</code>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- SECCIÓN: JUSTIFICACIÓN DETALLADA -->
+        <mat-card class="info-card justificacion-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar class="card-icon justificacion-icon">description</mat-icon>
+                <mat-card-title>Justificación de la Asignación</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="justificacion-content">
+                    @for (linea of formatearJust(data.justificacion); track $index) {
+                    <p class="justificacion-line">{{ linea }}</p>
+                    }
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- CONFIRMACIONES -->
+        <div class="confirmaciones-section">
+            <div class="confirmacion-item">
+                <mat-icon class="confirmacion-icon success">check_circle</mat-icon>
+                <span>Asignación registrada en el sistema</span>
+            </div>
+            <div class="confirmacion-item">
+                <mat-icon class="confirmacion-icon success">swap_horiz</mat-icon>
+                <span>Estado del ticket cambiado a "Asignado"</span>
+            </div>
+            <!-- <div class="confirmacion-item">
+        <mat-icon class="confirmacion-icon success">notifications_active</mat-icon>
+        <span>Notificaciones enviadas al técnico y cliente</span>
+      </div> -->
+        </div>
+
+    </mat-dialog-content>
+
+    <!-- BOTÓN DE CIERRE -->
+    <mat-dialog-actions align="center">
+        <button mat-raised-button color="primary" class="btn-cerrar" (click)="onClose()">
+            <mat-icon>done</mat-icon>
+            Entendido
+        </button>
+    </mat-dialog-actions>
+
+</div>

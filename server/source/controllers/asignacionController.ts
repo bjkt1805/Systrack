@@ -19,7 +19,10 @@ type TecnicoPuntuado = {
     puntajeTecnico: number;
     slaRestante: number;
     pesoPrioridad: number;
-    reglaAplicada: Regla;
+    reglaAplicada: {
+        id: number;
+        nombre: string;
+    }
     criterios: {
         tieneEspecialidad: boolean;
         dentroCargaTrabajo: boolean;
@@ -84,7 +87,10 @@ export class AsignacionController {
     generarJustificacion = async (
         ticketP: Ticket,
         tecnicoId: number,
-        regla: Regla,
+        regla: {
+            id: number;
+            nombre: string;
+        },
         slaRestante: number,
         pesoPrioridad: number): Promise<string> => {
 
@@ -136,6 +142,8 @@ export class AsignacionController {
 
             });
 
+            console.log(`[AUTO-ASIGNACIÓN] Información del tiquete: ${JSON.stringify(ticket)}`);
+
             // Validar si el ticket existe, si no devolver error
             if (!ticket) {
                 return next(AppError.notFound('Ticket no encontrado'));
@@ -166,7 +174,7 @@ export class AsignacionController {
             // Obtener las especialidades requeridas de la categoria del tiquete
             const especialidadesRequeridas = ticket.categoria.especialidades.map(esp => esp.id);
 
-            // Buscar las reglas aplicables a la categoria
+            // Buscar las reglas aplicables a la categoria (incluyendo las especialidades del tiquete)
             const reglasAplicables = await this.prisma.regla.findMany({
                 where: {
                     activa: true,
@@ -201,7 +209,7 @@ export class AsignacionController {
             console.log(`[AUTO-ASIGNACIÓN] Reglas aplicables para el ticket ${ticket.codigo}:`, reglasAplicables);
 
             // Variable para guardar el mejor técnico disponible 
-            let mejorTecnico: TecnicoPuntuado | null = null;
+            let mejorTecnico: TecnicoPuntuado = null!;
 
             // Recorrer la lista de reglas y obtener la lista de técnicos potenciales
             for (const regla of reglasAplicables) {
@@ -215,6 +223,8 @@ export class AsignacionController {
                     // mediante el operador some
                     where: {
                         rol: 'TECNICO',
+                        estadoTecnico: 'DISPONIBLE',
+                        activo: true,
                         especialidades: {
                             some: { id: regla.especialidadId }
                         }
@@ -308,7 +318,7 @@ export class AsignacionController {
                 });
             }
 
-            // Actualizar el tiquete con el técnico asignado y generar el motivo de la asignación
+            // Actualizar el tiquete con el técnico asignado
             await this.prisma.ticket.update({
                 where: { id: ticket.id },
                 data: {
@@ -324,7 +334,7 @@ export class AsignacionController {
                     usuarioTecnicoId: mejorTecnico.tecnicoId,
                     metodo: MetodoAsignacion.AUTOMATICA,
                     motivo: await this.generarJustificacion(
-                        ticket, mejorTecnico, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad),
+                        ticket, mejorTecnico.tecnicoId, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad),
                     puntajePrioridad: pesoPrioridad,
                     slaRestanteMin: slaRestante,
                     reglaId: mejorTecnico.reglaAplicada.id,
@@ -335,11 +345,39 @@ export class AsignacionController {
             await this.prisma.historialTicket.create({
                 data: {
                     ticketId: ticketId,
-                    cambiadoPorId: null,
+                    // cambiadoPorId: null, // Se cambia por el sistema automáticamante
                     deEstado: ticket.estado,
                     aEstado: EstadoTicket.ASIGNADO,
                     nota: `Ticket asignado automáticamente al técnico ${mejorTecnico.nombreCompleto} mediante la regla ${mejorTecnico.reglaAplicada.nombre}.`
                 }
+            });
+
+            // Crear notificaciones
+            await this.prisma.notificacion.createMany({
+                data: [
+                    // Notificación para el técnico
+                    {
+                        tipo: 'TICKET_ASIGNADO',
+                        emisorId: null, // sistema
+                        receptorId: mejorTecnico.tecnicoId,
+                        ticketId: ticketId,
+                        estado: 'NO_LEIDA',
+                        mensaje: `Se le ha asignado un nuevo tiquete ${ticket.codigo}: ${ticket.titulo}`,
+                        leidoAt: null,
+                        atendidoAt: null
+                    },
+                    // Notificación para el cliente
+                    {
+                        tipo: 'ESTADO_CAMBIADO',
+                        emisorId: null, // sistema
+                        receptorId: ticket.solicitanteId,
+                        ticketId: ticketId,
+                        estado: 'NO_LEIDA',
+                        mensaje: `Su tiquete ${ticket.codigo} ha sido asignado a un técnico y está en proceso de atención.`,
+                        leidoAt: null,
+                        atendidoAt: null                    
+                    }
+                ]
             });
 
             // Retornar la respuesta  de éxito 
@@ -364,7 +402,7 @@ export class AsignacionController {
                         puntajeTotalTecnico: mejorTecnico.puntajeTecnico,
                         formulaUtilizada: `(${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${mejorTecnico.cargaTrabajo} × 50)`,
                     },
-                    justificacion: await this.generarJustificacion(ticket, mejorTecnico, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad)
+                    justificacion: await this.generarJustificacion(ticket, mejorTecnico.tecnicoId, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad)
                 }
             });
 
