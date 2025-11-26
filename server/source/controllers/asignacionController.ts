@@ -1,6 +1,6 @@
-import {Request, Response, NextFunction} from 'express';
-import {Prioridad, PrismaClient, Regla, Ticket, Usuario} from '../../generated/prisma';
-import {AppError} from '../errors/custom.error';
+import { Request, Response, NextFunction } from 'express';
+import { EstadoTicket, MetodoAsignacion, Prioridad, PrismaClient, Regla, Ticket, Usuario } from '../../generated/prisma';
+import { AppError } from '../errors/custom.error';
 
 // Tipo personalizado para traer el técnico con sus especialidades
 type Tecnico = Usuario & {
@@ -17,12 +17,9 @@ type TecnicoPuntuado = {
     especialidades: string[];
     cargaTrabajo: number;
     puntajeTecnico: number;
-    slaRestante: number;          
-    pesoPrioridad: number;        
-    reglaAplicada: {
-        id: number;
-        nombre: string;
-    };
+    slaRestante: number;
+    pesoPrioridad: number;
+    reglaAplicada: Regla;
     criterios: {
         tieneEspecialidad: boolean;
         dentroCargaTrabajo: boolean;
@@ -39,7 +36,7 @@ export class AsignacionController {
      * @param prioridad
      * @returns número que representa el peso de la prioridad
      */
-    getPesoPrioridad= (prioridad: Prioridad): number => {
+    getPesoPrioridad = (prioridad: Prioridad): number => {
 
         // Objeto de mapeo de prioridades a pesos
         const pesosPrioridad = {
@@ -62,8 +59,8 @@ export class AsignacionController {
     getTecnicoById = async (tecnicoId: number): Promise<Tecnico> => {
 
         const tecnico = await this.prisma.usuario.findUnique({
-            where: {id: tecnicoId, rol: 'TECNICO'},
-            include:{
+            where: { id: tecnicoId, rol: 'TECNICO' },
+            include: {
                 especialidades: true,
             }
         });
@@ -86,12 +83,12 @@ export class AsignacionController {
      */
     generarJustificacion = async (
         ticketP: Ticket,
-        tecnicoP: Usuario,
+        tecnicoId: number,
         regla: Regla,
         slaRestante: number,
         pesoPrioridad: number): Promise<string> => {
 
-        const tecnico = await this.getTecnicoById(tecnicoP.id);
+        const tecnico = await this.getTecnicoById(tecnicoId);
 
         return `
             Ticket ${ticketP.codigo} asignado a ${tecnico.nombreCompleto}
@@ -104,12 +101,12 @@ export class AsignacionController {
 
             TÉCNICO SELECCIONADO:
             - Nombre: ${tecnico.nombreCompleto}
-            - Especialidades: ${tecnico.especialidades.join(', ')}
+            - Especialidades: ${tecnico.especialidades.map(esp => esp.nombre).join(', ')}
             - Carga actual: ${tecnico.cargaTrabajo} tickets
 
             CÁLCULO:
             Puntaje = (Prioridad × 1000) - SLA restante - (Carga × 50)
-            Puntaje = (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnicoP.cargaTrabajo} × 50)
+            Puntaje = (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnico.cargaTrabajo} × 50)
             `
 
     }
@@ -119,9 +116,9 @@ export class AsignacionController {
      * al técnico más adecuado según las reglas definidas
      * 
      */
-    autoAsignarTicket = async (req: Request, res: Response,next: NextFunction) => {
-        
-        const ticketId = parseInt(req.params.id,10);
+    autoAsignarTicket = async (req: Request, res: Response, next: NextFunction) => {
+
+        const ticketId = parseInt(req.params.id, 10);
         // Obtener el tiquete con toda la información necesarioa
         try {
             const ticket = await this.prisma.ticket.findUnique({
@@ -140,13 +137,13 @@ export class AsignacionController {
             });
 
             // Validar si el ticket existe, si no devolver error
-            if(!ticket){
+            if (!ticket) {
                 return next(AppError.notFound('Ticket no encontrado'));
             }
 
             // Calcular el tiempoRestante del SLA de resolucion del tiquete
             const ahora = new Date();
-            const fechaLimite = new Date(ticket.fechaLimiteResolucion); // Cast a Date
+            const fechaLimite = new Date(ticket.fechaLimiteResolucion);
 
             // Obtener el SLA restante em milisegundos
             const slaRestanteMs = fechaLimite.getTime() - ahora.getTime();
@@ -159,7 +156,7 @@ export class AsignacionController {
 
             // Calcular el puntaje base del ticket 
             const pesoPrioridad = this.getPesoPrioridad(ticket.prioridad);
-            
+
             // Peso de prioridad * 1000 - SLA restante en horas
             const puntajeTicket = (pesoPrioridad * 1000) - slaRestante;
 
@@ -180,20 +177,20 @@ export class AsignacionController {
                         { aplicaATodasPrioridades: true }, // regla aplica a todas las prioridades
                         { prioridad: ticket.prioridad } // regla aplica a la prioridad del ticket
                     ]
-                }, 
+                },
 
                 // incluir las categorias y especialidades a las que se aplica la regla 
                 include: {
                     categoria: true,
                     especialidad: true
-                }, 
+                },
 
                 // ordenar por el orden de Prioridad
                 orderBy: { ordenPrioridad: 'asc' }
             });
 
             // Verificar si hay reglas aplicables. Si no las hay, el tiquete requiere asignación manual
-            if(reglasAplicables.length === 0){
+            if (reglasAplicables.length === 0) {
                 return res.status(400).json({
                     success: false,
                     error: "No hay reglas de asignación aplicables para este ticket. Se requiere asignación manual."
@@ -204,7 +201,7 @@ export class AsignacionController {
             console.log(`[AUTO-ASIGNACIÓN] Reglas aplicables para el ticket ${ticket.codigo}:`, reglasAplicables);
 
             // Variable para guardar el mejor técnico disponible 
-            let mejorTecnico: TecnicoPuntuado | null = null; 
+            let mejorTecnico: TecnicoPuntuado | null = null;
 
             // Recorrer la lista de reglas y obtener la lista de técnicos potenciales
             for (const regla of reglasAplicables) {
@@ -213,15 +210,15 @@ export class AsignacionController {
 
                 // Buscar los técnicos que tengan la especialidad requerida en la regla
                 const tecnicosPotenciales = await this.prisma.usuario.findMany({
-                    
+
                     // Filtrar las especialidades del técnico que coincidan con la de la regla
                     // mediante el operador some
-                    where: { 
+                    where: {
                         rol: 'TECNICO',
                         especialidades: {
                             some: { id: regla.especialidadId }
                         }
-                    }, 
+                    },
 
                     // Incluir las especialidades y los tiquetes asignados
                     include: {
@@ -250,7 +247,7 @@ export class AsignacionController {
                 })
 
                 // Si la longitud de los técnicos filtrados es 0 , salirse del ciclo y probar la siguiente regla
-                if(tecnicosFiltrados.length === 0){
+                if (tecnicosFiltrados.length === 0) {
                     console.log(`[AUTO-ASIGNACIÓN] Ningún técnico cumple con la carga de trabajo para la regla ${regla.nombre}. Probando siguiente regla.`);
                     continue; // probar la siguiente regla
                 }
@@ -272,7 +269,7 @@ export class AsignacionController {
                         correo: tecnico.correo,
                         especialidades: tecnico.especialidades.map(esp => esp.nombre),
                         cargaTrabajo,
-                        puntajeTecnico, 
+                        puntajeTecnico,
                         slaRestante,
                         pesoPrioridad,
                         reglaAplicada: {
@@ -280,36 +277,103 @@ export class AsignacionController {
                             nombre: regla.nombre
                         },
                         criterios: {
-                            tieneEspecialidad: true, 
-                            dentroCargaTrabajo: true, 
+                            tieneEspecialidad: true,
+                            dentroCargaTrabajo: true,
                             disponible: true
                         }
                     };
                 });
 
-                    // Seleccionar al técnico con el mejor puntaje (utiliar método sort)
-                    const tecnicoSeleccionado = tecnicosPuntuados.sort((a,b) => b.puntajeTecnico - a.puntajeTecnico)[0];
+                // Seleccionar al técnico con el mejor puntaje (utiliar método sort)
+                const tecnicoSeleccionado = tecnicosPuntuados.sort((a, b) => b.puntajeTecnico - a.puntajeTecnico)[0];
 
-                    // Si la variable mejorTecnico es nula o el puntaje del tecnico Seleccionado 
-                    // es mayor al puntaje de mejorTecnico, asignarle a mejorTecnico el valor de tecnicoSeleccionado
-                    // if (!mejorTecnico || tecnicoSeleccionado.puntajeTecnico > mejorTecnico.puntajeTecnico) {
-                    //     mejorTecnico = tecnicoSeleccionado;
-                    //     mejorTecnico.reglaAplicada = regla;
+                // Si la variable mejorTecnico es nula o el puntaje del tecnico Seleccionado 
+                // es mayor al puntaje de mejorTecnico, asignarle a mejorTecnico el valor de tecnicoSeleccionado
+                if (!mejorTecnico || tecnicoSeleccionado.puntajeTecnico > mejorTecnico.puntajeTecnico) {
+                    mejorTecnico = tecnicoSeleccionado;
+                    mejorTecnico.reglaAplicada = regla;
 
-                    //     // Mostrar en consola el mejor tecnico
-                    //     console.log(`[AUTO-ASIGNACIÓN] Nuevo mejor técnico seleccionado:`, mejorTecnico);
-                    // }
-
-                    break; // salir del ciclo de reglas una vez se encuentra un técnico adecuado
+                    // Mostrar en consola el mejor tecnico
+                    console.log(`[AUTO-ASIGNACIÓN] Nuevo mejor técnico seleccionado:`, mejorTecnico);
                 }
 
+                break; // salir del ciclo de reglas una vez se encuentra un técnico adecuado
             }
 
-         catch (error: any) {
-            throw error;
+            // Si finalmente no se encontró un mejor técnico, devolver error
+            if (!mejorTecnico) {
+                return res.status(400).json({
+                    success: false,
+                    error: "No se encontró un técnico adecuado para asignar el ticket. Se requiere asignación manual."
+                });
+            }
+
+            // Actualizar el tiquete con el técnico asignado y generar el motivo de la asignación
+            await this.prisma.ticket.update({
+                where: { id: ticket.id },
+                data: {
+                    usuarioAsignadoId: mejorTecnico.tecnicoId,
+                    estado: EstadoTicket.ASIGNADO,
+                }
+            });
+
+            // Registrar la asignación en la tabla de asignaciones
+            await this.prisma.asignacion.create({
+                data: {
+                    ticketId: ticketId,
+                    usuarioTecnicoId: mejorTecnico.tecnicoId,
+                    metodo: MetodoAsignacion.AUTOMATICA,
+                    motivo: await this.generarJustificacion(
+                        ticket, mejorTecnico, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad),
+                    puntajePrioridad: pesoPrioridad,
+                    slaRestanteMin: slaRestante,
+                    reglaId: mejorTecnico.reglaAplicada.id,
+                }
+            });
+
+            // Crear entrada en historial del tiquete 
+            await this.prisma.historialTicket.create({
+                data: {
+                    ticketId: ticketId,
+                    cambiadoPorId: null,
+                    deEstado: ticket.estado,
+                    aEstado: EstadoTicket.ASIGNADO,
+                    nota: `Ticket asignado automáticamente al técnico ${mejorTecnico.nombreCompleto} mediante la regla ${mejorTecnico.reglaAplicada.nombre}.`
+                }
+            });
+
+            // Retornar la respuesta  de éxito 
+            return res.status(200).json({
+                success: true,
+                message: `Ticket ${ticket.codigo} asignado automáticamente al técnico ${mejorTecnico.nombreCompleto}.`,
+                data: {
+                    ticketId: ticket.id,
+                    tecnicoAsignado: {
+                        tecnicoId: mejorTecnico.tecnicoId,
+                        nombreCompleto: mejorTecnico.nombreCompleto,
+                        correo: mejorTecnico.correo,
+                        especialidades: mejorTecnico.especialidades,
+                    },
+                    reglaAplicada: {
+                        id: mejorTecnico.reglaAplicada.id,
+                        nombre: mejorTecnico.reglaAplicada.nombre,
+                    },
+                    calculosRealizados: {
+                        prioridad: pesoPrioridad,
+                        slaRestanteEnHoras: slaRestante,
+                        puntajeTotalTecnico: mejorTecnico.puntajeTecnico,
+                        formulaUtilizada: `(${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${mejorTecnico.cargaTrabajo} × 50)`,
+                    },
+                    justificacion: await this.generarJustificacion(ticket, mejorTecnico, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad)
+                }
+            });
+
+        } catch (error) {
+            console.error('[AUTO ASIGNACIÓN]Error en auto-asignación de ticket:', error);
+            next(error);
         }
     }
 
-    
+
 
 }

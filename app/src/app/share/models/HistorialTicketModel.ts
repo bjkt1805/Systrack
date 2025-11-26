@@ -6,7 +6,7 @@ import { UsuarioModel } from "./UsuarioModel";
 export interface HistorialTicketModel {
   id: number;
   ticketId: number;
-  cambiadoPorId: number;
+  cambiadoPorId?: number;
   deEstado?: EstadoTicket | null;
   aEstado: EstadoTicket;
   nota?: string | null;
@@ -16,6 +16,6 @@ export interface HistorialTicketModel {
 
   // Relaciones
   ticket: TicketModel;                  // M-1
-  cambiadoPor: UsuarioModel;            // M-1
+  cambiadoPor?: UsuarioModel;            // M-1
   imagenes?: ImagenTicketModel[];       // 1-M
 }

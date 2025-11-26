@@ -169,7 +169,7 @@ model Ticket {
 model HistorialTicket {
   id            Int           @id @default(autoincrement())
   ticketId      Int
-  cambiadoPorId Int
+  cambiadoPorId Int?
   deEstado      EstadoTicket?
   aEstado       EstadoTicket
   nota          String?
@@ -179,7 +179,7 @@ model HistorialTicket {
 
   // Relaciones
   ticket      Ticket         @relation(fields: [ticketId], references: [id]) // M-1
-  cambiadoPor Usuario        @relation("HistorialCambiadoPor", fields: [cambiadoPorId], references: [id]) // M-1
+  cambiadoPor Usuario?        @relation("HistorialCambiadoPor", fields: [cambiadoPorId], references: [id]) // M-1
   imagenes    ImagenTicket[] // 1-M
 
   @@index([ticketId]) // para búsquedas frecuentes por ticket
