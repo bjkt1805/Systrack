@@ -1,25 +1,18 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 // Interfaz para agrupar los datos a mostrar en el dialog
 interface AsignacionResultadoDatos {
     success: boolean; 
-    ticketCodigo: string; 
-    tecnicoAsignado: {
+    ticketCodigo: string;
+    cargando?: boolean;
+    error?: boolean; 
+    mensajeError?: string;
+    tecnicoAsignado?: {
         nombreCompleto: string; 
         correo: string; 
         especialidades: string [];
-    };
-    reglaAplicada: {
-        nombre: string; 
     }; 
-    calculosRealizados: {
-        prioridad: number; 
-        slaRestanteEnHoras: number; 
-        puntajeTotalTecnico: number; 
-        formulaUtilizada: string; 
-    };
-    justificacion: string; 
 }
 
     @Component({
@@ -31,12 +24,35 @@ interface AsignacionResultadoDatos {
 
     export class AsignacionAutomaticaDialog {
 
+        // Signal para recargar el dialog
+        datos = signal<AsignacionResultadoDatos>({
+            success: false,
+            ticketCodigo: '',
+            cargando: true, 
+        })
+
         constructor (
             public dialogRef: MatDialogRef<AsignacionAutomaticaDialog>,
-            @Inject(MAT_DIALOG_DATA) public data: AsignacionResultadoDatos
+            @Inject(MAT_DIALOG_DATA) public data: AsignacionResultadoDatos,
         ) {
             // Deshabilitar cierre con ESC o clic fuera del dialog
             dialogRef.disableClose = true;
+
+            // Configurar el signal con los datos iniciales
+            this.datos.set(data);
+            console.log('Datos del dialog iniciales:', this.data);
+        }
+
+        /**
+         * Método para actualizar los datos del dialog y hacer detección de cambios
+         */
+        actualizarDatos(nuevosDatos: Partial<AsignacionResultadoDatos>): void {
+            console.log('[DIALOG] Actualizando datos:', nuevosDatos);
+
+            // Signal se actualiza automáticamente y Angular detecta el cambio
+            this.datos.update(current => ({ ...current, ...nuevosDatos }));
+
+            console.log('[DIALOG] Datos actualizada:', this.datos());
         }
 
         /**

@@ -152,7 +152,7 @@ export const usuarios = [
     nombreCompleto: "Ricardo Solís",
     telefono: "+506 8299 4455",
     correo: "rsolis@icloud.com",
-    contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
+    contrasenaHash: "$2b$10$zn3fsRaO6OJUr1hpJ2r2cevfV9NpPNGfXiVD25srx6FODX3B6n//i",
   },
 
   // id: 15

@@ -259,7 +259,7 @@ model Notificacion {
   receptorId Int
   ticketId   Int?
   estado     EstadoNotificacion @default(NO_LEIDA)
-  mensaje    String?
+  mensaje    String?            @db.Text
   creadoAt   DateTime           @default(now()) @db.DateTime(0)
   leidoAt    DateTime?          @db.DateTime(0)
   atendidoAt DateTime?          @db.DateTime(0)

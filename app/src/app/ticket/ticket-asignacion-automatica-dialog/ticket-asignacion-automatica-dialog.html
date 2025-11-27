@@ -1,17 +1,92 @@
 <div class="resultado-dialog-container">
 
-    <!-- HEADER CON ICONO DE ÉXITO -->
+    <!-- ========== ESTADO: CARGANDO ========== -->
+    @if (datos().cargando) {
+    <div class="dialog-header loading">
+        <div class="loading-icon-wrapper">
+            <mat-spinner diameter="64"></mat-spinner>
+        </div>
+        <h2 class="dialog-title">Asignando Técnico</h2>
+        <p class="dialog-subtitle">Por favor espere mientras buscamos el técnico más adecuado...</p>
+    </div>
+
+    <mat-dialog-content class="dialog-content loading-content">
+        <div class="loading-steps">
+            <div class="loading-step">
+                <mat-icon class="step-icon">search</mat-icon>
+                <span>Analizando reglas de asignación</span>
+            </div>
+            <div class="loading-step">
+                <mat-icon class="step-icon">calculate</mat-icon>
+                <span>Calculando prioridades y SLA</span>
+            </div>
+            <div class="loading-step">
+                <mat-icon class="step-icon">person_search</mat-icon>
+                <span>Buscando técnicos disponibles</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+    }
+
+    <!-- ========== ESTADO: ERROR ========== -->
+    @else if (datos().error) {
+    <div class="dialog-header error">
+        <div class="error-icon-wrapper">
+            <mat-icon class="error-icon">info</mat-icon>
+        </div>
+        <h2 class="dialog-title">Tiquete creado exitosamente</h2>
+        <p class="dialog-subtitle">Tiquete {{ datos().ticketCodigo }}</p>
+    </div>
+
+    <mat-dialog-content class="dialog-content">
+        <mat-card class="info-card error-card">
+            <mat-card-content>
+                <div class="error-message">
+                    <mat-icon class="message-icon">schedule</mat-icon>
+                    <div class="message-content">
+                        <h3>Asignación Manual Requerida</h3>
+                        <p>{{ datos().mensajeError || 'No se encontraron técnicos disponibles en este momento. Buscaremos un técnico lo más pronto posible para atender su solicitud.' }}</p>
+                        <p class="reassurance">No se preocupe, su tiquete ha sido registrado correctamente y será asignado a la brevedad por nuestro equipo.</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <div class="info-section">
+            <div class="info-item">
+                <mat-icon class="info-icon">check_circle</mat-icon>
+                <span>Su tiquete está en estado <strong>PENDIENTE</strong></span>
+            </div>
+            <div class="info-item">
+                <mat-icon class="info-icon">notifications_active</mat-icon>
+                <span>Recibirá una notificación cuando sea asignado</span>
+            </div>
+            <div class="info-item">
+                <mat-icon class="info-icon">support_agent</mat-icon>
+                <span>Nuestro equipo está revisando su solicitud</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button color="primary" class="btn-cerrar" (click)="onClose()">
+            <mat-icon>done</mat-icon>
+            Entendido
+        </button>
+    </mat-dialog-actions>
+    }
+
+    <!-- ESTADO DE ÉXITO DE ASIGNACIÓN -->
+    @else {
     <div class="dialog-header">
         <div class="success-icon-wrapper">
             <mat-icon class="success-icon">check_circle</mat-icon>
         </div>
-        <h2 class="dialog-title">¡Asignación Automática Completada!</h2>
-        <p class="dialog-subtitle">Ticket {{ data.ticketCodigo }} asignado exitosamente</p>
+        <h2 class="dialog-title">¡Asignación Completada!</h2>
+        <p class="dialog-subtitle">Ticket {{ datos().ticketCodigo }} asignado exitosamente</p>
     </div>
 
-    <!-- CONTENIDO -->
     <mat-dialog-content class="dialog-content">
-
         <!-- SECCIÓN: TÉCNICO ASIGNADO -->
         <mat-card class="info-card tecnico-card">
             <mat-card-header>
@@ -22,88 +97,21 @@
                 <div class="info-row">
                     <mat-icon class="row-icon">badge</mat-icon>
                     <span class="label">Nombre:</span>
-                    <span class="value">{{ data.tecnicoAsignado.nombreCompleto }}</span>
+                    <span class="value">{{ datos().tecnicoAsignado?.nombreCompleto }}</span>
                 </div>
                 <div class="info-row">
                     <mat-icon class="row-icon">email</mat-icon>
                     <span class="label">Correo:</span>
-                    <span class="value">{{ data.tecnicoAsignado.correo }}</span>
+                    <span class="value">{{ datos().tecnicoAsignado?.correo }}</span>
                 </div>
                 <div class="info-row">
                     <mat-icon class="row-icon">stars</mat-icon>
                     <span class="label">Especialidades:</span>
                     <div class="especialidades-chips">
-                        @for (esp of data.tecnicoAsignado.especialidades; track esp) {
+                        @for (esp of datos().tecnicoAsignado?.especialidades; track esp) {
                         <mat-chip class="especialidad-chip">{{ esp }}</mat-chip>
                         }
                     </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- SECCIÓN: REGLA APLICADA -->
-        <mat-card class="info-card regla-card">
-            <mat-card-header>
-                <mat-icon mat-card-avatar class="card-icon regla-icon">rule</mat-icon>
-                <mat-card-title>Regla de Asignación</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="info-row">
-                    <mat-icon class="row-icon">label</mat-icon>
-                    <span class="label">Regla:</span>
-                    <span class="value">{{ data.reglaAplicada.nombre }}</span>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- SECCIÓN: CÁLCULOS REALIZADOS -->
-        <mat-card class="info-card calculos-card">
-            <mat-card-header>
-                <mat-icon mat-card-avatar class="card-icon calculos-icon">calculate</mat-icon>
-                <mat-card-title>Cálculos de Asignación</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="calculos-grid">
-                    <div class="calculo-item">
-                        <mat-icon class="calculo-icon">priority_high</mat-icon>
-                        <span class="calculo-label">Prioridad</span>
-                        <span class="calculo-value">{{ data.calculosRealizados.prioridad }}</span>
-                    </div>
-                    <div class="calculo-item">
-                        <mat-icon class="calculo-icon">schedule</mat-icon>
-                        <span class="calculo-label">SLA Restante</span>
-                        <span class="calculo-value">{{ data.calculosRealizados.slaRestanteEnHoras.toFixed(2) }}h</span>
-                    </div>
-                    <div class="calculo-item puntaje-total">
-                        <mat-icon class="calculo-icon">emoji_events</mat-icon>
-                        <span class="calculo-label">Puntaje Total</span>
-                        <span class="calculo-value puntaje-destacado"
-                            [style.color]="getPuntajeColor(data.calculosRealizados.puntajeTotalTecnico)">
-                            {{ data.calculosRealizados.puntajeTotalTecnico.toFixed(2) }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- FÓRMULA UTILIZADA -->
-                <div class="formula-container">
-                    <mat-icon class="formula-icon">functions</mat-icon>
-                    <span class="formula-label">Fórmula:</span>
-                    <code class="formula-code">{{ data.calculosRealizados.formulaUtilizada }}</code>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- SECCIÓN: JUSTIFICACIÓN DETALLADA -->
-        <mat-card class="info-card justificacion-card">
-            <mat-card-header>
-                <mat-icon mat-card-avatar class="card-icon justificacion-icon">description</mat-icon>
-                <mat-card-title>Justificación de la Asignación</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="justificacion-content">
-                    @for (linea of formatearJust(data.justificacion); track $index) {
-                    <p class="justificacion-line">{{ linea }}</p>
-                    }
                 </div>
             </mat-card-content>
         </mat-card>
@@ -118,20 +126,15 @@
                 <mat-icon class="confirmacion-icon success">swap_horiz</mat-icon>
                 <span>Estado del ticket cambiado a "Asignado"</span>
             </div>
-            <!-- <div class="confirmacion-item">
-        <mat-icon class="confirmacion-icon success">notifications_active</mat-icon>
-        <span>Notificaciones enviadas al técnico y cliente</span>
-      </div> -->
         </div>
-
     </mat-dialog-content>
 
-    <!-- BOTÓN DE CIERRE -->
     <mat-dialog-actions align="center">
         <button mat-raised-button color="primary" class="btn-cerrar" (click)="onClose()">
             <mat-icon>done</mat-icon>
             Entendido
         </button>
     </mat-dialog-actions>
+    }
 
 </div>

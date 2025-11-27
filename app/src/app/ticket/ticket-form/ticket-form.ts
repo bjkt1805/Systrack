@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map } from 'rxjs';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map, delay, finalize } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../share/services/app/notification.service';
@@ -721,7 +721,7 @@ export class TicketForm {
       // Si es creación, iniciar proceso de asignación automática
       if (this.isCreate) {
         console.log('[FRONTEND] Iniciando proceso de asignación automática para el tiquete');
-        this.asignarAutomaticamente(tiquete.id);
+        this.asignarAutomaticamente(tiquete.id, tiquete.codigo);
       }
 
       // Si es editar, navegar a la lista de tiquetes 
@@ -734,60 +734,102 @@ export class TicketForm {
   /**
    * Método para asignar automáticamente el ticket creado
    */
-  private asignarAutomaticamente(ticketId: number): void {
+  private asignarAutomaticamente(ticketId: number, ticketCodigo: string): void {
+
+    console.log('[FRONTEND] Iniciando la asignación automática:', ticketId);
+    console.log('[FRONTEND] Id del tiquete:', ticketId);
+    console.log('[FRONTEND] Código del tiquete:', ticketCodigo);
+
+    // Armar la información necesaria para el diálogo inicial
+    const dialogRef = this.dialog.open(AsignacionAutomaticaDialog, {
+      width: '1000px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: true,
+      data: {
+        success: false,
+        ticketCodigo: ticketCodigo,
+        cargando: true, 
+      }
+    });
+
+    console.log('[FRONTEND] Diálogo de asignación automática abierto, Valor de la señal: ', dialogRef.componentInstance.datos().cargando);
+
 
     //Actualizar la señal de asignacion automática a verdadero
     this.asignacionAutomatica.set(true);
 
-    // 
+    // Llamar al servicio para autoasignar el tiquete
     this.asignacionService.autoAsignarTicket(ticketId)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        // delay(2000), // Retraso de 2 segundos para mostrar mensaje de "Asignando Técnico" en el dialog
+        takeUntil(this.destroy$),
+        // finalize(() => {
+        //   console.log("[FRONTEND] Finalización del servicio" )
+        //   this.asignacionAutomatica.set(false)}) // Actualizar la señal a falso al finalizar
+      )
       .subscribe({
         next: (response) => {
-          console.log('[FRONTEND] Asignación automática completada:', response);
+          console.log('[DIALOG] Respuesta del backend:', response);
+          console.log('[DIALOG] Valor de response.success:', response.success);
+          console.log('[DIALOG] Datos de la respuesta:', response.data);
+          console.log('[DIALOG] Valor del técnico asignado', response.data?.tecnicoAsignado);
 
-          if (response.success) {
-            // abrir el dialog de resultado de asignación automática
-            const dialogRef = this.dialog.open(AsignacionAutomaticaDialog, {
-              width: '900px',
-              maxWidth: '95vw',
-              maxHeight: '90vh',
-              disableClose: true, 
-              data: {
-                success: response.success,
-                ticketCodigo: response.data?.ticketId || ticketId,
-                tecnicoAsignado: response.data?.tecnicoAsignado,
-                reglaAplicada: response.data?.reglaAplicada,
-                calculosRealizados: response.data?.calculosRealizados,
-                justificacion: response.data?.justificacion
-              }
-            });
-
-            // Cuando se cierre el dialog, navegar a la lista
-            dialogRef.afterClosed().subscribe(() => {
-              this.asignacionAutomatica.set(false);
-              this.router.navigate(['/ticket']);
-            });
-
-          } else {
-            // Si no se pudo asignar automáticamente, mostrar advertencia
-            this.translate.get([
-              'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO',
-              'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'
-            ]).subscribe(translations => {
-              this.noti.warning(
-                translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO'],
-                translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'],
-                4000
-              );
-            });
-          }
-          // Navegar a la lista después de 1 segundo
+          // Generar un delay de 3 segundos para cambiar el contenido del dialog de "Asignando"
+          // a cargar la información del técnico asignado 
           setTimeout(() => {
-            this.asignacionAutomatica.set(false);
-            this.router.navigate(['/ticket']);
-          }, 1000);
+            if (response.success) {
+
+              console.log('[DIALOG] Llamando a actualizarDatos:', response);
+
+              const nuevosDatos = {
+                success: true,
+                ticketCodigo: ticketCodigo,
+                cargando: false,
+                error: false,
+                tecnicoAsignado: {
+                  nombreCompleto: response.data?.tecnicoAsignado.nombreCompleto,
+                  correo: response.data?.tecnicoAsignado.correo,
+                  especialidades: response.data?.tecnicoAsignado.especialidades
+                }
+              }
+
+              console.log('[DIALOG] Datos nuevos a enviar al dialog: ', nuevosDatos);
+              // Actualizar el dialog para mostrar las asignación exitosa
+              dialogRef.componentInstance.actualizarDatos(nuevosDatos);
+
+              console.log('[DIALOG] Datos nuevos a enviar al dialog: ', nuevosDatos);
+            } else {
+
+              // Mostrar el error de asignación (requiere asignación manual)
+
+              dialogRef.componentInstance.actualizarDatos({
+                success: false,
+                ticketCodigo: ticketCodigo,
+                cargando: false,
+                error: true,
+                mensajeError: response.message || 'No se encontraron técnicos disponibles en este momento.'
+              });
+
+              this.asignacionAutomatica.set(false);
+            }
+          }, 3000); // Fin del setTimeout de 3 segundos
         },
+
+
+
+
+            // Si no se pudo asignar automáticamente, mostrar advertencia
+            // this.translate.get([
+            //   'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO',
+            //   'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'
+            // ]).subscribe(translations => {
+            //   this.noti.warning(
+            //     translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO'],
+            //     translations['TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'],
+            //     4000
+            //   );
+            // });
 
         error: (error) => {
           console.error('[FRONTEND] Error en la asignación automática:', error);
@@ -796,6 +838,11 @@ export class TicketForm {
           // Navegar a la lista de tickets
           this.router.navigate(['/ticket']);
         }
+      });
+
+      // Navegar a la lista de tiquetes cuando se cierre el dialog
+      dialogRef.afterClosed().subscribe(() => {
+        this.router.navigate(['/ticket']);
       });
   }
 

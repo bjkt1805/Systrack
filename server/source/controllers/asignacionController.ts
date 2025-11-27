@@ -92,7 +92,8 @@ export class AsignacionController {
             nombre: string;
         },
         slaRestante: number,
-        pesoPrioridad: number): Promise<string> => {
+        pesoPrioridad: number, 
+        ): Promise<string> => {
 
         const tecnico = await this.getTecnicoById(tecnicoId);
 
@@ -111,8 +112,8 @@ export class AsignacionController {
             - Carga actual: ${tecnico.cargaTrabajo} tickets
 
             CÁLCULO:
-            Puntaje = (Prioridad × 1000) - SLA restante - (Carga × 50)
-            Puntaje = (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnico.cargaTrabajo} × 50)
+            - Puntaje = (Prioridad × 1000) - SLA restante - (Carga × 50)
+            - Puntaje = (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnico.cargaTrabajo} × 50)
             `
 
     }
@@ -170,9 +171,6 @@ export class AsignacionController {
 
             // Debuguear la respuesta de autoasignación
             console.log(`Puntaje base para el ticket ${ticket.codigo}: ${puntajeTicket}`);
-
-            // Obtener las especialidades requeridas de la categoria del tiquete
-            const especialidadesRequeridas = ticket.categoria.especialidades.map(esp => esp.id);
 
             // Buscar las reglas aplicables a la categoria (incluyendo las especialidades del tiquete)
             const reglasAplicables = await this.prisma.regla.findMany({
@@ -236,7 +234,7 @@ export class AsignacionController {
                         ticketsAsignados: {
                             where: {
                                 estado: {
-                                    in: ['PENDIENTE', 'ASIGNADO', 'EN_PROCESO']
+                                    in: ['ASIGNADO', 'EN_PROCESO']
                                 }
                             }
                         }
@@ -301,7 +299,6 @@ export class AsignacionController {
                 // es mayor al puntaje de mejorTecnico, asignarle a mejorTecnico el valor de tecnicoSeleccionado
                 if (!mejorTecnico || tecnicoSeleccionado.puntajeTecnico > mejorTecnico.puntajeTecnico) {
                     mejorTecnico = tecnicoSeleccionado;
-                    mejorTecnico.reglaAplicada = regla;
 
                     // Mostrar en consola el mejor tecnico
                     console.log(`[AUTO-ASIGNACIÓN] Nuevo mejor técnico seleccionado:`, mejorTecnico);
@@ -335,9 +332,19 @@ export class AsignacionController {
                     metodo: MetodoAsignacion.AUTOMATICA,
                     motivo: await this.generarJustificacion(
                         ticket, mejorTecnico.tecnicoId, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad),
-                    puntajePrioridad: pesoPrioridad,
-                    slaRestanteMin: slaRestante,
+                    puntajePrioridad: pesoPrioridad * 1000,
+                    slaRestanteMin: Math.floor(slaRestante * 60), // convertir a minutos
                     reglaId: mejorTecnico.reglaAplicada.id,
+                }
+            });
+
+            // Actualizar la carga de trabajo del técnico (incrementar en 1)
+            await this.prisma.usuario.update({
+                where: { id: mejorTecnico.tecnicoId },
+                data: {
+                    cargaTrabajo: {
+                        increment: 1 // incrementar en 1 la carga de trabajo
+                    }
                 }
             });
 
@@ -352,6 +359,9 @@ export class AsignacionController {
                 }
             });
 
+            // Variable para almacenar la justificación de la asignación 
+            const justificacion = await this.generarJustificacion(ticket, mejorTecnico.tecnicoId, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad);
+
             // Crear notificaciones
             await this.prisma.notificacion.createMany({
                 data: [
@@ -362,10 +372,33 @@ export class AsignacionController {
                         receptorId: mejorTecnico.tecnicoId,
                         ticketId: ticketId,
                         estado: 'NO_LEIDA',
-                        mensaje: `Se le ha asignado un nuevo tiquete ${ticket.codigo}: ${ticket.titulo}`,
+                        mensaje: `Se le ha asignado un nuevo tiquete ${ticket.codigo}: ${ticket.titulo}. Justificación: ${justificacion}`,
                         leidoAt: null,
                         atendidoAt: null
                     },
+
+                    // Notificación para los administradores
+                    {
+                        tipo: 'TICKET_ASIGNADO',
+                        emisorId: null, // sistema
+                        receptorId: 1, // administrador
+                        ticketId: ticketId,
+                        estado: 'NO_LEIDA',
+                        mensaje: `Se ha asignado automáticamente el tiquete ${ticket.codigo} al técnico ${mejorTecnico.nombreCompleto}. Justificación: ${justificacion}`,
+                        leidoAt: null,
+                        atendidoAt: null
+                    },
+                    {
+                        tipo: 'TICKET_ASIGNADO',
+                        emisorId: null, // sistema
+                        receptorId: 2, // administrador
+                        ticketId: ticketId,
+                        estado: 'NO_LEIDA',
+                        mensaje: `Se ha asignado automáticamente el tiquete ${ticket.codigo} al técnico ${mejorTecnico.nombreCompleto}. Justificación: ${justificacion}`,
+                        leidoAt: null,
+                        atendidoAt: null
+                    },
+
                     // Notificación para el cliente
                     {
                         tipo: 'ESTADO_CAMBIADO',
@@ -386,23 +419,13 @@ export class AsignacionController {
                 message: `Ticket ${ticket.codigo} asignado automáticamente al técnico ${mejorTecnico.nombreCompleto}.`,
                 data: {
                     ticketId: ticket.id,
+                    ticketCodigo: ticket.codigo,
                     tecnicoAsignado: {
                         tecnicoId: mejorTecnico.tecnicoId,
                         nombreCompleto: mejorTecnico.nombreCompleto,
                         correo: mejorTecnico.correo,
                         especialidades: mejorTecnico.especialidades,
                     },
-                    reglaAplicada: {
-                        id: mejorTecnico.reglaAplicada.id,
-                        nombre: mejorTecnico.reglaAplicada.nombre,
-                    },
-                    calculosRealizados: {
-                        prioridad: pesoPrioridad,
-                        slaRestanteEnHoras: slaRestante,
-                        puntajeTotalTecnico: mejorTecnico.puntajeTecnico,
-                        formulaUtilizada: `(${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${mejorTecnico.cargaTrabajo} × 50)`,
-                    },
-                    justificacion: await this.generarJustificacion(ticket, mejorTecnico.tecnicoId, mejorTecnico.reglaAplicada, slaRestante, pesoPrioridad)
                 }
             });
 

@@ -63,7 +63,8 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
               break;
           }
         }
-        this.noti.error('Error '+error.status,message,5000)
+        // this.noti.error('Error '+error.status,message,5000); 
+        console.error(`Error HTTP: ${error.status}, mensaje: ${message}`);
 
         // throw new Error(error.message);
 
