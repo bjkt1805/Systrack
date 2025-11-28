@@ -379,15 +379,15 @@
 
   "ACTUALIZAR_ESTADO": {
     "TITULO": "Update Ticket Status",
-    "TICKET_INFO": "Ticket:",
-    "ESTADO_ACTUAL": "Current Status:",
+    "TICKET_INFO": "Ticket",
+    "ESTADO_ACTUAL": "Current Status",
     "NUEVO_ESTADO": "New Status",
     "SELECCIONE_ESTADO": "Select the new status",
     "ASIGNACION_TECNICO": "Technician Assignment",
     "ASIGNACION_AUTOMATICA": "Automatic Assignment",
     "ASIGNACION_MANUAL": "Assign Ticket",
     "SELECCIONE_TECNICO": "Click the button to automatically assign the ticket",
-    "TECNICO_ASIGNADO": "Assigned Technician:",
+    "TECNICO_ASIGNADO": "Assigned Technician",
     "OBSERVACION": "Mandatory Observation",
     "OBSERVACION_PLACEHOLDER": "Describe in detail the reason for the status change...",
     "OBSERVACION_OBLIGATORIA": "Observation is mandatory",

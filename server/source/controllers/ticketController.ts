@@ -607,26 +607,6 @@ export class TicketController {
         return next(AppError.badRequest('ID de ticket inválido'));
       }
 
-      // Validación de nuevoEstado
-      if (!nuevoEstado) {
-        return next(AppError.badRequest('El nuevo estado es requerido'))
-      }
-
-      // Validación de nota
-      if (!nota || nota.trim().length < 10) {
-        return next(AppError.badRequest('La observación debe tener al menos 10 caracteres'));
-      }
-
-      // Validación de imagenes
-      // if (!imagenes || imagenes.length === 0) {
-      //   return next(AppError.badRequest('Debe incluir al menos una imagen como evidencia'));
-      // }
-
-      // Validación de id de usuario
-      if (!usuarioActualId) {
-        return next(AppError.unauthorized('Usuario no autenticado'));
-      }
-
       // OBTENER EL TIQUETE ACTUAL POR MEDIO DE FINDUNIQUE 
       const ticket = await this.prisma.ticket.findUnique({
         where: { id: ticketId },
@@ -713,7 +693,22 @@ export class TicketController {
             else {
               dataActualizacion.cumplioResolucion = false;
             }
+
+            // Bajar en uno la carga del técnico
+            if (ticket.usuarioAsignadoId) {
+              await this.prisma.usuario.update ({
+                where: {id: ticket.usuarioAsignadoId} ,
+                data: {
+                  cargaTrabajo: {
+                    decrement: 1 // Bajar en uno la carga de trabajo
+                  }
+                }
+              })
+              console.log("Carga de trabajo dismunuida para el técnico con id: ", ticket.usuarioAsignadoId, );
+            }
           }
+
+
           break;
 
         case 'CERRADO':
@@ -745,6 +740,18 @@ export class TicketController {
               else {
                 dataActualizacion.cumplioRespuesta = false;
               }
+            }
+
+            // Bajar en uno la carga del técnico (Admin cierra directamente desde Asignado o EN_PROCESO)
+            if (!ticket.resueltoAt && ticket.usuarioAsignadoId) {
+              await this.prisma.usuario.update ({
+                where: {id: ticket.usuarioAsignadoId} ,
+                data: {
+                  cargaTrabajo: {
+                    decrement: 1 // Bajar en uno la carga de trabajo
+                  }
+                }
+              })
             }
           }
           break;

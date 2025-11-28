@@ -379,15 +379,15 @@
 
   "ACTUALIZAR_ESTADO": {
     "TITULO": "Actualizar Estado del Ticket",
-    "TICKET_INFO": "Ticket:",
-    "ESTADO_ACTUAL": "Estado actual:",
+    "TICKET_INFO": "Ticket",
+    "ESTADO_ACTUAL": "Estado actual",
     "NUEVO_ESTADO": "Nuevo Estado",
     "SELECCIONE_ESTADO": "Seleccione el nuevo estado",
     "ASIGNACION_TECNICO": "Asignación de Técnico",
     "ASIGNACION_AUTOMATICA": "Asignación Automática",
     "ASIGNACION_MANUAL": "Asignar tiquete",
     "SELECCIONE_TECNICO": "Haga clic en el botón para asignar el tiquete automáticamente",
-    "TECNICO_ASIGNADO": "Técnico asignado:",
+    "TECNICO_ASIGNADO": "Técnico asignado",
     "OBSERVACION": "Observación Obligatoria",
     "OBSERVACION_PLACEHOLDER": "Describa detalladamente el motivo del cambio de estado...",
     "OBSERVACION_OBLIGATORIA": "La observación es obligatoria",

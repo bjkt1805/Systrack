@@ -25,7 +25,7 @@
                             {{ getEstadoIcon(data.ticket.estado) }}
                         </mat-icon>
                         <div class="info-text">
-                            <span class="info-label">{{'ACTUALIZAR_ESTADO.ESTADO_ACTUAL' | translate}}</span>
+                            <span class="info-label">{{'ACTUALIZAR_ESTADO.ESTADO_ACTUAL' | translate}}:</span>
                             <span class="estado-badge" [ngClass]="'estado-' + data.ticket.estado.toLowerCase()">
                                 {{ data.ticket.estado }}
                             </span>

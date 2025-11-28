@@ -32,7 +32,7 @@ export const usuarios = [
     nombreCompleto: "Andrés González",
     telefono: "+506 8485 9721",
     correo: "andres-tecnico1@systrack.com",
-    contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
+    contrasenaHash: "$2b$10$D9Tg7529WWuYdrsyejfv8.4j5MYBKo.Ntho5Gn2de0P8Eq6kHS8pG",
     rol: Rol.TECNICO,
     estadoTecnico: EstadoTecnico.DISPONIBLE,
     cargaTrabajo: 0,

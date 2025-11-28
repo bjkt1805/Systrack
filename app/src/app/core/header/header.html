@@ -67,7 +67,7 @@
 
 
     
-    <!-- Usuario -->
+    <!-- Usuario (info, login, logout) e idioma -->
     <div class="user-section">
         <!-- Botón de idioma -->
         <button mat-icon-button [matMenuTriggerFor]="menuIdioma" matTooltip="{{ 'HEADER.IDIOMA' | translate }}">
@@ -86,19 +86,32 @@
         <!-- <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
             <mat-icon>shopping_cart</mat-icon>
         </button> -->
+
+        <!-- Mostrar el correo del usuario logueado -->
+         @if (isAuthenticated()) {
+        <span class="small-text user-email" style="font-size: 12px;">{{ currentUser()?.correo }}</span>
+         }
         <!-- <span class="small-text user-email">Email</span> -->
         <button mat-icon-button [matMenuTriggerFor]="menu5" matTooltip="{{ 'HEADER.USUARIO' | translate }}">
             <mat-icon>person</mat-icon>
         </button>
         <mat-menu #menu5="matMenu">
+
+            <!-- Si no está autenticado, mostrar login-->
+             @if (!isAuthenticated()) {
             <button mat-menu-item (click)="irLogin()">
                 <mat-icon style="color: white">person_add</mat-icon>
                 <span>{{ 'HEADER.LOGIN' | translate }}</span>
             </button>
+            }
+
+            <!-- Si está autenticado, mostrar logout-->
+             @else {
             <button mat-menu-item (click)="logout()">
                 <mat-icon style="color: white">person_remove</mat-icon>
                 <span>{{ 'HEADER.LOGOUT' | translate }}</span>
             </button>
+            }
         </mat-menu>
     </div>
 </mat-toolbar>

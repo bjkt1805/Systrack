@@ -383,22 +383,20 @@ export class TicketDetail {
     if (diffDias > 0) {
 
       // Ejemplo de salida: "3 días"
-      return `${diffDias} día${diffDias > 1 ? 's' : ''}`;
+      return `${diffDias} d`;
     }
 
-    // Si no tiene dias (dias = 0), mostrar horas y minutos
-    if (diffDias === 0) {
-
-      // Si tiene horas, mostrar horas y minutos
-      if (diffHoras > 0) {
-
-        // Ejemplo de salida: "3 horas 15 minutos"
-        return `0 (${diffHoras} hr${diffHoras > 1 ? 's' : ''} ${diffMinutos} min${diffMinutos !== 1 ? 's' : ''})`;
-      }
+    // Si no tiene dias (dias = 0), pero sí más de 0 horas, mostrar formato: 0 d (X hrs Y mins)
+    if (diffDias === 0 && diffHoras > 0) {
+      return `0 d (${diffHoras} hrs ${diffMinutos} min)`;
     }
 
-    // Si es menos de una hora, mostrar solo minutos
-    return `${diffMinutos} min${diffMinutos === 1 ? '' : 's'}`;
+    // Si no tiene dias (dias = 0) y tampoco horas (hr = 0) mostrar 0 d (0 hrs Y mins)
+    if (diffDias === 0 && diffHoras === 0) {
+      return `0 d (0 hrs ${diffMinutos} min)`;
+    }
+
+    return 0; 
 
   });
 

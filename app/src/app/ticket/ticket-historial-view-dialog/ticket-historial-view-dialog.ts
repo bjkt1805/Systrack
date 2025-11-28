@@ -92,6 +92,7 @@ export class TicketHistorialViewDialog implements OnInit {
         console.log('[DIALOG] Usuario logueado:', usuario);
         console.log('[DIALOG] Es Admin:', this.esAdmin());
         console.log('[DIALOG] Puede asignar técnico:', this.puedeAsignarTecnicos());
+        console.log('[DIALOG] Ticket:', this.data.ticket);
     }
 
     // Método ngOnInit para inicializar el formulario y cargar técnicos si es necesario
@@ -116,11 +117,13 @@ export class TicketHistorialViewDialog implements OnInit {
             // cliente o técnico no puede asignar el tiquete. 
             usuarioAsignadoId: [
                 {
-                    value: this.data.ticket.usuarioAsignadoId || null, 
+                    value: this.data.ticket.usuarioAsignado?.id || 1, 
                     disabled: !this.esAdmin() // Deshabilitar si esAdmin es false
                 }
             ]
         });
+
+        console.log("Id de técnico asignado: ", this.estadoForm.get('usuarioAsignadoId')?.value);
 
         // Subscribirse a los cambios en el estado para validar el técnico asignado 
         this.estadoForm.get('nuevoEstado')?.valueChanges.subscribe((estado: EstadoTicket) => {
@@ -263,7 +266,7 @@ export class TicketHistorialViewDialog implements OnInit {
      */
     puedeEnviar(): boolean {
 
-        // Devolver el estado dependiendo del estado del form, al menos una imagen
+        // Devolver el estado dependiendo del estado del form
         // seleccionada y que no se esté enviando ya el formulario
         return (
             this.estadoForm.valid &&
