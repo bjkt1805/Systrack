@@ -8,7 +8,6 @@ import { TicketService } from '../../share/services/api/ticket.service';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { NotificationService } from '../../share/services/app/notification.service';
 import { FileUploadService } from '../../share/services/api/file-upload.service';
-import { AsignacionService } from '../../share/services/api/asignacion.service';
 
 // Modelos
 import { EstadoTicket } from '../../share/models/EnumsModel';
@@ -38,10 +37,6 @@ export class TicketHistorialViewDialog implements OnInit {
     private uploadService = inject(FileUploadService);
     private noti = inject(NotificationService);
     private dialogRef = inject(MatDialogRef<TicketHistorialViewDialog>);
-    private asignacionService = inject(AsignacionService);
-
-    // Inyeccion de MatDialog para abrir un nuevo dialogo de asignación de técnico
-    private dialog = inject(MatDialog);
 
     // Formulario reactivo por medio de FormGroup
     estadoForm!: FormGroup;
@@ -272,7 +267,7 @@ export class TicketHistorialViewDialog implements OnInit {
         // seleccionada y que no se esté enviando ya el formulario
         return (
             this.estadoForm.valid &&
-            this.imagenesSeleccionadas().length > 0 &&
+            // this.imagenesSeleccionadas().length > 0 &&
             !this.enviando()
         )
     }
@@ -283,36 +278,45 @@ export class TicketHistorialViewDialog implements OnInit {
     async onSubmit(): Promise<void> {
         if (!this.puedeEnviar()) {
             this.estadoForm.markAllAsTouched(); // Marcar todos los campos como tocados para mostrar errores
-
-            // Revisar que haya al menos una imagen seleccionada
-            if (this.imagenesSeleccionadas().length == 0) {
-                this.noti.error('Imagen requerida', 'Debe seleccionar al menos una imagen para adjuntar.');
-            }
-
-            // Si hay una imagen, pero otros campos están inválidos, enviar error
-            else {
-                this.noti.error('Formulario inválido', 'Complete todos los campos requeridos');
-            }
-            return; // Salir del método si no se puede enviar
+            this.noti.error('Formulario inválido', 'Complete todos los campos requeridos');
+            return; 
         }
-
         this.enviando.set(true); // Indicar que se está enviando el formulario
+
+            // // Revisar que haya al menos una imagen seleccionada
+            // if (this.imagenesSeleccionadas().length == 0) {
+            //     this.noti.error('Imagen requerida', 'Debe seleccionar al menos una imagen para adjuntar.');
+            // }
+
+            // // Si hay una imagen, pero otros campos están inválidos, enviar error
+            // else {
+            //     this.noti.error('Formulario inválido', 'Complete todos los campos requeridos');
+            // }
+            // return; // Salir del método si no se puede enviar
+        
+
+        // this.enviando.set(true); // Indicar que se está enviando el formulario
 
         try {
 
             // Subir las imágenes seleccionadas 
-            const imagenesSubidas = await this.subirImagenes();
+            // const imagenesSubidas = await this.subirImagenes();
+            let imagenesSubidas: string[] = [];
 
             //Si no hay imágenes subidas, enviar excepción
-            if (!imagenesSubidas || imagenesSubidas.length === 0) {
-                throw new Error('No se pudieron subir las imágenes.');
-            }
+            // if (!imagenesSubidas || imagenesSubidas.length === 0) {
+            //     throw new Error('No se pudieron subir las imágenes.');
+            // }
 
+            // Enviar las imagenes para subir al servidor
+            if (this.imagenesSeleccionadas().length > 0) {
+                imagenesSubidas = await this.subirImagenes();
+            }
             // Preparar el payload 
             const payload = {
                 nuevoEstado: this.estadoForm.value.nuevoEstado,
                 nota: this.estadoForm.value.nota,
-                imagenes: imagenesSubidas, // URLs de las imágenes subidas
+                imagenes: imagenesSubidas, // URLs de las imágenes subidas (opcionales)
                 usuarioAsignadoId: this.estadoForm.value.usuarioAsignadoId,
                 usuarioActualId: this.data.usuarioLogueado?.id, 
                 usuarioActualRol: this.data.usuarioLogueado?.rol

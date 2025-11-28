@@ -618,9 +618,9 @@ export class TicketController {
       }
 
       // Validación de imagenes
-      if (!imagenes || imagenes.length === 0) {
-        return next(AppError.badRequest('Debe incluir al menos una imagen como evidencia'));
-      }
+      // if (!imagenes || imagenes.length === 0) {
+      //   return next(AppError.badRequest('Debe incluir al menos una imagen como evidencia'));
+      // }
 
       // Validación de id de usuario
       if (!usuarioActualId) {
@@ -668,25 +668,51 @@ export class TicketController {
         dataActualizacion.usuarioAsignadoId = usuarioAsignadoId;
       }
 
-      // Actualizar las fechas según el estado 
-      const ahora = new Date();
 
+      const ahora = new Date();
+      let cumplioRespuesta: boolean = false; 
+      let cumplioResolucion: boolean = false; 
+
+      // Actualizar las fechas según el estado 
       switch (nuevoEstado) {
         case 'ASIGNADO':
+          // Este estado no calcula fechas
+          break;
+
+        case 'EN_PROCESO':
+
+          // Se actualiza la fecha de respuesta 
           if (!ticket.respondidoAt) {
             dataActualizacion.respondidoAt = ahora;
-            // Calcular cumplimiento de respuesta
-            dataActualizacion.cumplioRespuesta =
-              ahora <= ticket.fechaLimiteRespuesta;
+
+            // Calcular si se cumplió la respuesta del tiquete
+            if (ticket.fechaLimiteRespuesta) {
+              cumplioRespuesta = ahora <= ticket.fechaLimiteRespuesta;
+              dataActualizacion.cumplioRespuesta = cumplioRespuesta;
+            }
+
+            else {
+              dataActualizacion.cumplioRespuesta = false;
+            }
           }
           break;
 
         case 'RESUELTO':
+
+          // Se actualiza la fecha de resolución
           if (!ticket.resueltoAt) {
             dataActualizacion.resueltoAt = ahora;
-            // Calcular cumplimiento de resolución
-            dataActualizacion.cumplioResolucion =
-              ahora <= ticket.fechaLimiteResolucion;
+
+            // Calcular si se cumplió la resolución del tiquete
+
+            if (ticket.fechaLimiteResolucion) {
+              cumplioResolucion = ahora <= ticket.fechaLimiteResolucion;
+              dataActualizacion.cumplioResolucion = cumplioResolucion;
+            }
+
+            else {
+              dataActualizacion.cumplioResolucion = false;
+            }
           }
           break;
 
@@ -695,11 +721,30 @@ export class TicketController {
             dataActualizacion.cerradoAt = ahora;
             dataActualizacion.cerradoPorId = usuarioActualId;
 
-            // Si no se resolvión antes, marcar ahora 
+            // Si no se resolvión antes, marcar aquí 
             if (!ticket.resueltoAt) {
               dataActualizacion.resueltoAt = ahora;
-              dataActualizacion.cumplioResolucion =
-                ahora <= ticket.fechaLimiteResolucion;
+
+              if (ticket.fechaLimiteResolucion){
+                dataActualizacion.cumplioResolucion = ahora <= ticket.fechaLimiteResolucion;
+              }
+
+              else {
+                dataActualizacion.cumplioResolucion = false;
+              }
+            }
+
+            // Si no se respondió antes, marcar aquí
+            if (!ticket.respondidoAt) {
+              dataActualizacion.respondidoAt = ahora;
+
+              if (ticket.fechaLimiteRespuesta){
+                dataActualizacion.cumplioRespuesta = ahora <= ticket.fechaLimiteRespuesta;
+              }
+
+              else {
+                dataActualizacion.cumplioRespuesta = false;
+              }
             }
           }
           break;

@@ -148,6 +148,10 @@
     letter-spacing: .2px;
 }
 
+.title-content {
+    padding-right: 70px;
+}
+
 /* Grid de menú principal */
 .menu-grid {
     display: grid;

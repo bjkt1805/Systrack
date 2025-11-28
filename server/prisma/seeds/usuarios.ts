@@ -20,7 +20,7 @@ export const usuarios = [
     nombreCompleto: "Warner Salazar",
     telefono: "+506 8603 3576",
     correo: "warner-admin2@systrack.com",
-    contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
+    contrasenaHash: "$2b$10$D9Tg7529WWuYdrsyejfv8.4j5MYBKo.Ntho5Gn2de0P8Eq6kHS8pG",
     rol: Rol.ADMIN,
   },
 

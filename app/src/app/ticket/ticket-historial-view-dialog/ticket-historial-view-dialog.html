@@ -119,10 +119,10 @@
                     <mat-icon class="section-icon">photo_camera</mat-icon>
                     <h3 class="section-title">
                         {{'ACTUALIZAR_ESTADO.EVIDENCIA_VISUAL' | translate}}
-                        <span class="required-badge">
+                        <!-- <span class="required-badge">
                             <mat-icon>warning</mat-icon>
                             {{'ACTUALIZAR_ESTADO.EVIDENCIA_OBLIGATORIO' | translate}}
-                        </span>
+                        </span> -->
                     </h3>
                 </div>
 
@@ -167,8 +167,8 @@
                 } @else {
                 <div class="no-images-message">
                     <mat-icon class="message-icon">image_not_supported</mat-icon>
-                    <p class="message-title">{{'ACTUALIZAR_ESTADO.NO_HAY_IMAGENES_TITULO' | translate}}</p>
-                    <p class="message-hint">{{'ACTUALIZAR_ESTADO.NO_HAY_IMAGENES_MENSAJE' | translate}}</p>
+                    <p class="message-title">{{'ACTUALIZAR_ESTADO.NO_IMAGENES_TITULO' | translate}}</p>
+                    <!-- <p class="message-hint">{{'ACTUALIZAR_ESTADO.NO_HAY_IMAGENES_MENSAJE' | translate}}</p> -->
                 </div>
                 }
             </div>
@@ -190,7 +190,7 @@
             } @else {
             <ng-container>
                 <mat-icon>check_circle</mat-icon>
-                <span>{{'ACTUALIZAR_ESTADO.ACTUALIZAR_ESTADO' | translate}}</span>
+                <span>{{'ACTUALIZAR_ESTADO.ACTUALIZAR' | translate}}</span>
             </ng-container>
 
             }
