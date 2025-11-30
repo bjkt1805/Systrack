@@ -6,17 +6,26 @@ import { BaseAPI } from './base-api';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AsignacionService {
-    private http = inject(HttpClient);
-    private apiURL = environment.apiURL;
-    private endpoint = environment.endpointAsignacion;
+  private http = inject(HttpClient);
+  private apiURL = environment.apiURL;
+  private endpoint = environment.endpointAsignacion;
 
-    // Método para auto asignar un ticket
-    autoAsignarTicket(ticketId: number): Observable<any> {
-        return this.http.post(`${this.apiURL}/${this.endpoint}/auto-asignar/${ticketId}`, {});
-    }
+  // Método para auto asignar un ticket
+  autoAsignarTicket(ticketId: number): Observable<any> {
+    return this.http.post(`${this.apiURL}/${this.endpoint}/auto-asignar/${ticketId}`, {});
+  }
+
+  // Método para asignar manualmente un ticket
+  manualAsignarTicket(ticketId: number, tecnicoId: number, justificacion: string): Observable<any> {
+    const body = {
+      ticketId,
+      tecnicoId,
+      justificacion,
+      metodo: 'MANUAL'
+    };
+    return this.http.post(`${this.apiURL}/${this.endpoint}/${ticketId}/asignar-manual`, body);
+  }
 }
-

@@ -260,7 +260,8 @@
     "PRIORIDAD": "Priority",
     "OPCIONES": "Options",
     "VER_DETALLES": "View Details",
-    "EDITAR": "Edit Ticket"
+    "EDITAR": "Edit Ticket",
+    "ASIGNAR_MANUAL": "Assign Manually"
   },
 
   "TICKET_DETALLE": {

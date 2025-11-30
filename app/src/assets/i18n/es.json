@@ -260,7 +260,8 @@
     "PRIORIDAD": "Prioridad",
     "OPCIONES": "Opciones",
     "VER_DETALLES": "Ver detalles",
-    "EDITAR": "Editar tiquete"
+    "EDITAR": "Editar tiquete",
+    "ASIGNAR_MANUAL": "Asignar Manualmente"
   },
 
   "TICKET_DETALLE": {

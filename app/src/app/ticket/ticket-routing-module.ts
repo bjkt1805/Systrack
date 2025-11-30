@@ -25,9 +25,6 @@ const routes: Routes = [
     path: 'ticket/:id',
     component: TicketDetail,
   },
-
-  // 
-
 ];
 
 @NgModule({

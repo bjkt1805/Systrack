@@ -440,4 +440,192 @@ export class AsignacionController {
 
 
 
+
+
+      asignarManual = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      // Obtener ID del ticket desde parámetros de ruta
+      const ticketId = parseInt(request.params.id);
+
+      // Obtener datos desde el body
+      const { tecnicoId, justificacion, metodo, usuarioActualId } =
+        request.body;
+
+      console.log("[BACKEND] Asignación manual recibida:", {
+        ticketId,
+        tecnicoId,
+        justificacion,
+        metodo,
+        usuarioActualId,
+      });
+
+      //Validaciones basicas
+      if (!ticketId || isNaN(ticketId)) {
+        return next(AppError.badRequest("ID de ticket inválido"));
+      }
+
+      if (!tecnicoId || isNaN(tecnicoId)) {
+        return next(AppError.badRequest("ID de técnico inválido"));
+      }
+
+      if (!justificacion || justificacion.trim().length < 5) {
+        return next(
+          AppError.badRequest(
+            "La justificación debe tener al menos 5 caracteres"
+          )
+        );
+      }
+
+      // Validar que el ticket existe y está pendiente
+      const ticket = await this.prisma.ticket.findUnique({
+        where: { id: ticketId },
+        include: {
+          categoria: {
+            include: { sla: true },
+          },
+        },
+      });
+
+      if (!ticket) {
+        return next(AppError.notFound("Ticket no encontrado"));
+      }
+
+      if (ticket.estado !== "PENDIENTE") {
+        return next(
+          AppError.badRequest(
+            "Solo se pueden asignar tickets en estado PENDIENTE"
+          )
+        );
+      }
+
+      // Validar que el técnico existe y está disponible
+      const tecnico = await this.prisma.usuario.findUnique({
+        where: { id: tecnicoId },
+        select: {
+          id: true,
+          nombreCompleto: true,
+          correo: true,
+          rol: true,
+          estadoTecnico: true,
+          cargaTrabajo: true,
+          especialidades: {
+            select: {
+              id: true,
+              nombre: true,
+            },
+          },
+        },
+      });
+
+      if (!tecnico || tecnico.rol !== "TECNICO") {
+        return next(AppError.notFound("Técnico no encontrado"));
+      }
+
+      if (tecnico.estadoTecnico !== "DISPONIBLE") {
+        return next(
+          AppError.badRequest(
+            `El técnico ${tecnico.nombreCompleto} no está disponible`
+          )
+        );
+      }
+
+      // Hacer la asignacion
+      const resultado = await this.prisma.$transaction(async (prisma) => {
+        // Actualizar estado del ticket a asignado y le pone el tecnico
+        const ticketActualizado = await prisma.ticket.update({
+          where: { id: ticketId },
+          data: {
+            usuarioAsignadoId: tecnicoId,
+            estado: "ASIGNADO",
+          },
+          include: {
+            categoria: {
+              include: { sla: true },
+            },
+            usuarioAsignado: {
+              select: {
+                id: true,
+                nombreCompleto: true,
+                correo: true,
+                especialidades: {
+                  select: {
+                    id: true,
+                    nombre: true,
+                  },
+                },
+              },
+            },
+            solicitante: {
+              select: {
+                id: true,
+                nombreCompleto: true,
+                correo: true,
+              },
+            },
+          },
+        });
+
+        // Crea historial
+        const historial = await prisma.historialTicket.create({
+          data: {
+            ticketId: ticketId,
+            cambiadoPorId: usuarioActualId,
+            deEstado: "PENDIENTE",
+            aEstado: "ASIGNADO",
+            nota: `Asignación manual por ${metodo}. Justificación: ${justificacion.trim()}`,
+          },
+        });
+
+        // Incrementar carga de trabajo del técnico en 1
+        const tecnicoActualizado = await prisma.usuario.update({
+          where: { id: tecnicoId },
+          data: {
+            cargaTrabajo: {
+              increment: 1, // Sumar 1 a la carga de trabajo
+            },
+          },
+        });
+
+        console.log(
+          `[BACKEND] Carga de trabajo actualizada para técnico ${tecnicoId}: ${tecnicoActualizado.cargaTrabajo}`
+        );
+
+        return {
+          ticketActualizado,
+          historial,
+          cargaTrabajo: tecnicoActualizado.cargaTrabajo,
+        };
+      });
+
+      console.log("[BACKEND] Ticket asignado exitosamente:", {
+        ticketId,
+        codigo: ticket.codigo,
+        tecnicoId,
+        tecnicoNombre: tecnico.nombreCompleto,
+        cargaTrabajo: resultado.cargaTrabajo,
+      });
+
+      // Respuesta
+      response.json({
+        success: true,
+        message: `Ticket ${ticket.codigo} asignado exitosamente a ${tecnico.nombreCompleto}`,
+        data: {
+          ticket: resultado.ticketActualizado,
+          historial: resultado.historial,
+          tecnico: {
+            id: tecnico.id,
+            nombreCompleto: tecnico.nombreCompleto,
+            cargaTrabajo: resultado.cargaTrabajo,
+          },
+        },
+      });
+    } catch (error: any) {
+      console.error("[BACKEND] Error en asignación manual:", error);
+      next(error);
+    }
+  };
 }

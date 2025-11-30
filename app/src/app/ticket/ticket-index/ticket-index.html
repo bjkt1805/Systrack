@@ -132,6 +132,12 @@
               class="btn-edit">
               <mat-icon>edit</mat-icon>
             </button>
+            @if (row.estado === 'PENDIENTE' && usuarioLogueado()?.rol === 'ADMIN') {
+              <button mat-icon-button color="primary" (click)="asignarManual(row.id)" matTooltip="{{'TICKETS.ASIGNAR_MANUAL' | translate}}"
+                class="btn-assign">
+                <mat-icon>person_add</mat-icon>
+              </button>
+            }
           </td>
         </ng-container>
 

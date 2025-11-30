@@ -21,6 +21,7 @@ import { ImagenTicketModel } from '../../share/models/ImagenTicketModel';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { AsignacionService } from '../../share/services/api/asignacion.service';
 import { AsignacionAutomaticaDialog } from '../ticket-asignacion-automatica-dialog/ticket-asignacion-automatica-dialog';
+import { AsignacionManualDialog } from '../ticket-asignacion-manual/ticket-asignacion-manual-dialog';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -845,6 +846,72 @@ export class TicketForm {
         this.router.navigate(['/ticket']);
       });
   }
+
+/**
+ * Método para asignar manualmente el ticket creado
+ * Abre el diálogo de selección de técnico
+ */
+private asignarManualmente(ticketId: number, ticketCodigo: string): void {
+  console.log('[FRONTEND] Iniciando la asignación MANUAL:', ticketId);
+  console.log('[FRONTEND] Id del tiquete:', ticketId);
+  console.log('[FRONTEND] Código del tiquete:', ticketCodigo);
+
+  // Abrir el diálogo de asignación MANUAL
+  const dialogRef = this.dialog.open(AsignacionManualDialog, {  
+    width: '1400px',
+    maxWidth: '95vw',
+    maxHeight: '90vh',
+    disableClose: true,
+    data: {
+      ticketId: ticketId,        
+      ticketCodigo: ticketCodigo
+    }
+  });
+
+  console.log('[FRONTEND] Diálogo de asignación MANUAL abierto');
+
+  // Escuchar cuando se cierre el diálogo
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('[ASIGNACION MANUAL] Diálogo cerrado con resultado:', result);
+    
+    // Si la asignación fue exitosa
+    if (result?.success) {
+      console.log('[ASIGNACION MANUAL] Técnico asignado:', result.tecnico);
+      
+      // Mostrar notificación de éxito
+      this.translate.get([
+        'TICKET_NOTIFICACIONES.ASIGNACION_EXITOSA_TITULO',
+        'TICKET_NOTIFICACIONES.ASIGNACION_EXITOSA_MENSAJE'
+      ], { 
+        tecnico: result.tecnico?.nombreCompleto,
+        codigo: ticketCodigo
+      }).subscribe(translations => {
+        this.noti.success(
+          translations['TICKET_NOTIFICACIONES.ASIGNACION_EXITOSA_TITULO'],
+          translations['TICKET_NOTIFICACIONES.ASIGNACION_EXITOSA_MENSAJE'],
+          3000
+        );
+      });
+    } else {
+      // Si se canceló o hubo error
+      console.log('[ASIGNACION MANUAL] Asignación cancelada o con error');
+      
+      this.translate.get([
+        'TICKET_NOTIFICACIONES.ASIGNACION_CANCELADA_TITULO',
+        'TICKET_NOTIFICACIONES.ASIGNACION_CANCELADA_MENSAJE'
+      ]).subscribe(translations => {
+        this.noti.info(
+          translations['TICKET_NOTIFICACIONES.ASIGNACION_CANCELADA_TITULO'],
+          translations['TICKET_NOTIFICACIONES.ASIGNACION_CANCELADA_MENSAJE'],
+          2000
+        );
+      });
+    }
+    
+    // Siempre navegar a la lista de tickets al cerrar
+    this.router.navigate(['/ticket']);
+  });
+}
 
   /**
    * Limpiar las imágenes seleccionadas

@@ -35,6 +35,8 @@ export class TicketRoutes {
         // PUT localhost:3000/ticket/3 - Actualizar un ticket por su ID (incluyendo imágenes)
         router.put('/:id', uploadTicketImages, controller.update);
 
+
+
         return router
     }
 }

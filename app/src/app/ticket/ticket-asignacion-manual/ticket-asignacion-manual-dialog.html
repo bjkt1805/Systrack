@@ -1,0 +1,247 @@
+<div class="asignacion-manual-dialog-container">
+  <!-- ========== ESTADO: CARGANDO ========== -->
+  @if (cargando()) {
+  <div class="dialog-header loading">
+    <div class="loading-icon-wrapper">
+      <mat-spinner diameter="64"></mat-spinner>
+    </div>
+    <h2 class="dialog-title">Cargando Información</h2>
+    <p class="dialog-subtitle">Obteniendo datos del ticket y técnicos disponibles...</p>
+  </div>
+  }
+
+  <!-- ========== FORMULARIO DE ASIGNACIÓN ========== -->
+  @else if (!asignacionExitosa()) {
+  <div class="dialog-header">
+    <mat-icon class="header-icon">assignment_ind</mat-icon>
+    <h2 class="dialog-title">Asignación Manual del Ticket</h2>
+    <p class="dialog-subtitle">Ticket # {{ datos()?.codigo }}</p>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <!-- INFORMACIÓN DEL TICKET -->
+    <mat-card class="info-card ticket-info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon">confirmation_number</mat-icon>
+        <mat-card-title>Información del Ticket</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <!-- Título -->
+          <div class="info-item">
+            <mat-icon class="item-icon">title</mat-icon>
+            <div class="item-content">
+              <span class="label">Título:</span>
+              <span class="value">{{ datos()?.titulo }}</span>
+            </div>
+          </div>
+
+          <!-- Categoría -->
+          <div class="info-item">
+            <mat-icon class="item-icon">category</mat-icon>
+            <div class="item-content">
+              <span class="label">Categoría:</span>
+              <span class="value">{{ datos()?.categoria?.nombre }}</span>
+            </div>
+          </div>
+
+          <!-- Prioridad -->
+          <div class="info-item">
+            <mat-icon class="item-icon">flag</mat-icon>
+            <div class="item-content">
+              <span class="label">Prioridad:</span>
+              <mat-chip [ngClass]="getPrioridadClass(datos()?.prioridad)">
+                {{ datos()?.prioridad }}
+              </mat-chip>
+            </div>
+          </div>
+
+          <!-- SLA (CORREGIDO) -->
+          <div class="info-item">
+            <mat-icon class="item-icon">schedule</mat-icon>
+            <div class="item-content">
+              <span class="label">SLA:</span>
+              <div class="sla-details">
+                <div class="sla-nombre">{{ datos()?.categoria?.sla?.nombre }}</div>
+                <div class="sla-tiempos">
+                  <span class="tiempo-item">
+                    <mat-icon inline="true">timer</mat-icon>
+                    Respuesta: {{ datos()?.categoria?.sla?.maxMinutosRespuesta }} min
+                  </span>
+                  <span class="tiempo-item">
+                    <mat-icon inline="true">hourglass_empty</mat-icon>
+                    Resolución: {{ datos()?.categoria?.sla?.maxMinutosResolucion }} min
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- FORMULARIO DE ASIGNACIÓN -->
+    <form [formGroup]="asignacionForm" class="asignacion-form">
+      <!-- SELECCIÓN DE TÉCNICO -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Seleccionar Técnico *</mat-label>
+        <mat-select
+          formControlName="tecnicoId"
+          (selectionChange)="onTecnicoSeleccionado($event.value)"
+        >
+          <mat-option>-- Seleccione un técnico --</mat-option>
+          @for (tecnico of tecnicosFiltrados(); track tecnico.id) {
+          <mat-option [value]="tecnico.id" [disabled]="!tecnico.estado">
+            <div class="tecnico-option">
+              <div class="tecnico-info">
+                <span class="tecnico-nombre">{{ tecnico.nombreCompleto }}</span>
+                <span class="tecnico-carga" [ngClass]="getCargaClass(tecnico.cargaTrabajo)">
+                  {{ tecnico.cargaTrabajo }}
+                </span>
+              </div>
+              <div class="tecnico-especialidades"></div>
+            </div>
+          </mat-option>
+          }
+        </mat-select>
+        @if (asignacionForm.get('tecnicoId')?.hasError('required') &&
+        asignacionForm.get('tecnicoId')?.touched) {
+        <mat-error>Debe seleccionar un técnico</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- DETALLE DEL TÉCNICO SELECCIONADO -->
+      @if (tecnicoSeleccionado()) {
+      <mat-card class="info-card tecnico-detalle-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="card-icon">person</mat-icon>
+          <mat-card-title>Técnico Seleccionado</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="tecnico-detalle">
+            <div class="detalle-row">
+              <mat-icon>badge</mat-icon>
+              <span>{{ tecnicoSeleccionado()?.nombreCompleto }}</span>
+            </div>
+            <div class="detalle-row">
+              <mat-icon>email</mat-icon>
+              <span>{{ tecnicoSeleccionado()?.correo }}</span>
+            </div>
+            <div class="detalle-row">
+              <mat-icon>work</mat-icon>
+              <span>Carga actual: {{ tecnicoSeleccionado()?.cargaTrabajo }}%</span>
+            </div>
+            <div class="detalle-row">
+              <mat-icon>check_circle</mat-icon>
+              <span>Tickets asignados: {{ tecnicoSeleccionado()?.ticketsAsignados }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      }
+
+      <!-- JUSTIFICACIÓN -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Justificación de la Asignación *</mat-label>
+        <textarea
+          matInput
+          formControlName="justificacion"
+          rows="4"
+          placeholder="Explique por qué asigna este técnico a este ticket..."
+        ></textarea>
+        <mat-hint>Mínimo 5 caracteres</mat-hint>
+        @if (asignacionForm.get('justificacion')?.hasError('required') &&
+        asignacionForm.get('justificacion')?.touched) {
+        <mat-error>La justificación es obligatoria</mat-error>
+        } @if (asignacionForm.get('justificacion')?.hasError('minlength')) {
+        <mat-error>La justificación debe tener al menos 5 caracteres</mat-error>
+        }
+      </mat-form-field>
+    </form>
+
+    <!-- MENSAJE DE ERROR -->
+    @if (errorAsignacion()) {
+    <mat-card class="error-card">
+      <mat-icon class="error-icon">error</mat-icon>
+      <div class="error-content">
+        <strong>Error en la asignación:</strong>
+        <p>{{ errorAsignacion() }}</p>
+      </div>
+    </mat-card>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancelar()" [disabled]="procesando()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onAsignar()"
+      [disabled]="!asignacionForm.valid || procesando()"
+    >
+      @if (procesando()) {
+      <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+      <mat-icon>assignment_ind</mat-icon>
+      } Asignar Ticket
+    </button>
+  </mat-dialog-actions>
+  }
+
+  <!-- ========== ESTADO: ÉXITO ========== -->
+  @else {
+  <div class="dialog-header success">
+    <div class="success-icon-wrapper">
+      <mat-icon class="success-icon">check_circle</mat-icon>
+    </div>
+    <h2 class="dialog-title">¡Asignación Completada!</h2>
+    <p class="dialog-subtitle">Ticket #{{ datos()?.codigo }} asignado exitosamente</p>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <mat-card class="info-card success-card">
+      <mat-card-content>
+        <div class="success-info">
+          <div class="info-row">
+            <mat-icon>person</mat-icon>
+            <span>Técnico: {{ tecnicoSeleccionado()?.nombreCompleto }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon>schedule</mat-icon>
+            <span>Fecha y hora: {{ fechaAsignacion() | date : 'medium' }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon>engineering</mat-icon>
+            <span>Método: Asignación Manual</span>
+          </div>
+        </div>
+
+        <div class="confirmaciones-section">
+          <div class="confirmacion-item">
+            <mat-icon class="confirmacion-icon">check_circle</mat-icon>
+            <span>Asignación registrada en el sistema</span>
+          </div>
+          <div class="confirmacion-item">
+            <mat-icon class="confirmacion-icon">swap_horiz</mat-icon>
+            <span>Estado del ticket cambiado a "Asignado"</span>
+          </div>
+          <div class="confirmacion-item">
+            <mat-icon class="confirmacion-icon">email</mat-icon>
+            <span>Notificación enviada al técnico</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onClose()">
+      <mat-icon>done</mat-icon>
+      Entendido
+    </button>
+  </mat-dialog-actions>
+  }
+</div>

@@ -7,6 +7,8 @@ import { TicketModel } from '../../share/models/TicketModel';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { UsuarioService } from '../../share/services/api/usuario.service';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
+import { AsignacionManualDialog } from '../ticket-asignacion-manual/ticket-asignacion-manual-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-ticket-index',
@@ -32,6 +34,9 @@ export class TicketIndex implements OnInit {
 
   // Inyectar el servicio de autenticación
   private authService = inject(AuthenticationService);
+
+  // Inyectar MatDialog para abrir diálogos
+  private dialog = inject(MatDialog);
 
   /**
  * Signals para manejar la autenticación de usuario 
@@ -170,6 +175,30 @@ export class TicketIndex implements OnInit {
   actualizarTicket(id: number) {
     this.router.navigate(['/ticket/edit', id], {
       relativeTo: this.route,
+    });
+  }
+
+  // Asignar manualmente un ticket a un usuario (solo ADMIN)
+asignarManual(id: number) {
+    const ticket = this.tickets().find(t => t.id === id);
+    
+    if (!ticket) {
+      console.error('Ticket no encontrado');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AsignacionManualDialog, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: true,
+      data: { ticket }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.cargarTickets();
+      }
     });
   }
 }
