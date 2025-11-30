@@ -1,0 +1,5 @@
+2025-11-30 12:00:13.369 error: 	1--Se produjo un error interno del servidor Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 5028 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+2025-11-30 12:00:30.787 error: 	1--Se produjo un error interno del servidor Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 5017 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+2025-11-30 12:05:03.846 error: 	1--Tiquete no encontrado Tiquete no encontrado
+2025-11-30 12:15:07.903 error: 	1--Tiquete no encontrado Tiquete no encontrado
+2025-11-30 12:15:20.804 error: 	1--Tiquete no encontrado Tiquete no encontrado

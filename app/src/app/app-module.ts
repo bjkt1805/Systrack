@@ -13,6 +13,7 @@ import { UsuarioModule } from './usuario/usuario-module';
 import { TecnicoModule } from './tecnico/tecnico-module';
 import { CategoriaModule } from './categoria/categoria-module';
 import { TicketModule } from './ticket/ticket-module';
+import { NotificacionModule} from './notificacion/notificacion-module';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxSonnerToaster } from 'ngx-sonner'
 import { HttpErrorInterceptorService } from './share/interceptor/http-error-interceptor.service';
@@ -38,6 +39,7 @@ import { HttpLoader } from './translation-loader';
     TecnicoModule,
     CategoriaModule,
     TicketModule,
+    NotificacionModule,
     AsignacionModule,
     AppRoutingModule,
 

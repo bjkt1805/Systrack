@@ -32,8 +32,8 @@ export enum TipoNotificacion {
 }
 
 export enum EstadoNotificacion {
-  PENDIENTE = 'PENDIENTE',
-  ATENDIDA = 'ATENDIDA',
+  LEIDA = 'LEIDA',
+  NO_LEIDA = 'ATENDIDA',
 }
 
 export enum EstadoTecnico {

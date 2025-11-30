@@ -97,6 +97,8 @@ export class AsignacionController {
 
         const tecnico = await this.getTecnicoById(tecnicoId);
 
+        const cargaTrabajo = tecnico.cargaTrabajo ?? 0;
+
         return `
             Ticket ${ticketP.codigo} asignado a ${tecnico.nombreCompleto}
 
@@ -112,8 +114,9 @@ export class AsignacionController {
             - Carga actual: ${tecnico.cargaTrabajo} tickets
 
             CÁLCULO:
-            - Puntaje = (Prioridad × 1000) - SLA restante - (Carga × 50)
-            - Puntaje = (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnico.cargaTrabajo} × 50)
+            - Puntaje (EJEMPLO) = (Prioridad × 1000) - SLA restante - (Carga × 50)
+            - Puntaje (FÓRMULA APLICADA)= (${pesoPrioridad} × 1000) - ${slaRestante.toFixed(2)} - (${tecnico.cargaTrabajo} × 50)
+            - Puntaje (FINAL) = ${(pesoPrioridad * 1000) - slaRestante - (cargaTrabajo * 50)}
             `
 
     }

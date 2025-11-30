@@ -297,56 +297,6 @@ export class TicketController {
     }
   };
 
-  // BUSCAR TICKET POR ROL DE USUARIO
-  // search = async (request: Request, response: Response, next: NextFunction) => {
-  //   try {
-  //     // Obtiene los parámetros de búsqueda y usuario desde la query
-  //     const { termino, userId, userRol } = request.query;
-
-  //     // Valida que el término de búsqueda sea un string no vacío
-  //     if (typeof termino !== "string" || termino.trim() === "") {
-  //       return next(
-  //         AppError.badRequest("El criterio de búsqueda es requerido")
-  //       );
-  //     }
-
-  //     // Valida que existan los datos de usuario y rol
-  //     if (!userId || !userRol) {
-  //       return next(AppError.badRequest("Faltan datos de usuario"));
-  //     }
-
-  //     // Construye el filtro base para buscar por título
-  //     let where: any = {
-  //       titulo: { contains: termino as string },
-  //     };
-
-  //     // Filtra los tickets según el rol del usuario
-  //     if (userRol === "ADMINISTRADOR") {
-  //       // Administrador: no se agrega filtro extra, ve todos los tickets
-  //     } else if (userRol === "CLIENTE") {
-  //       // Cliente: solo ve los tickets que él mismo registró
-  //       where.solicitanteId = parseInt(userId as string, 10);
-  //     } else if (userRol === "TECNICO") {
-  //       // Técnico: solo ve los tickets asignados a él
-  //       where.usuarioAsignadoId = parseInt(userId as string, 10);
-  //     }
-
-  //     // Busca los tickets en la base de datos según el filtro construido
-  //     const tickets = await this.prisma.ticket.findMany({ where });
-
-  //     // Si hay resultados, responde con el listado de tickets
-  //     if (tickets.length > 0) {
-  //       response.status(200).json(tickets);
-  //     } else {
-  //       // Si no hay resultados, responde con error de no encontrado
-  //       next(AppError.notFound("No existen tickets para el criterio y rol"));
-  //     }
-  //   } catch (error: any) {
-  //     // Si ocurre un error, lo pasa al manejador de errores
-  //     next(error);
-  //   }
-  // };
-
   /**
    * Generar código único para el ticket
    * @param id ID del ticket recién creado
@@ -638,7 +588,7 @@ export class TicketController {
         return next(AppError.badRequest('Debe asignar un técnico para avanzar el estado'));
       }
 
-      // Preparar datos de actualización de tiquete
+      // PREPARAR LOS DATOS DE ACTUALIZACIÓN DEL TIQUETE
       const dataActualizacion: any = {
         estado: nuevoEstado,
       };
@@ -648,10 +598,9 @@ export class TicketController {
         dataActualizacion.usuarioAsignadoId = usuarioAsignadoId;
       }
 
-
       const ahora = new Date();
-      let cumplioRespuesta: boolean = false; 
-      let cumplioResolucion: boolean = false; 
+      let cumplioRespuesta: boolean = false;
+      let cumplioResolucion: boolean = false;
 
       // Actualizar las fechas según el estado 
       switch (nuevoEstado) {
@@ -696,19 +645,17 @@ export class TicketController {
 
             // Bajar en uno la carga del técnico
             if (ticket.usuarioAsignadoId) {
-              await this.prisma.usuario.update ({
-                where: {id: ticket.usuarioAsignadoId} ,
+              await this.prisma.usuario.update({
+                where: { id: ticket.usuarioAsignadoId },
                 data: {
                   cargaTrabajo: {
                     decrement: 1 // Bajar en uno la carga de trabajo
                   }
                 }
               })
-              console.log("Carga de trabajo dismunuida para el técnico con id: ", ticket.usuarioAsignadoId, );
+              console.log("Carga de trabajo dismunuida para el técnico con id: ", ticket.usuarioAsignadoId,);
             }
           }
-
-
           break;
 
         case 'CERRADO':
@@ -720,7 +667,7 @@ export class TicketController {
             if (!ticket.resueltoAt) {
               dataActualizacion.resueltoAt = ahora;
 
-              if (ticket.fechaLimiteResolucion){
+              if (ticket.fechaLimiteResolucion) {
                 dataActualizacion.cumplioResolucion = ahora <= ticket.fechaLimiteResolucion;
               }
 
@@ -733,7 +680,7 @@ export class TicketController {
             if (!ticket.respondidoAt) {
               dataActualizacion.respondidoAt = ahora;
 
-              if (ticket.fechaLimiteRespuesta){
+              if (ticket.fechaLimiteRespuesta) {
                 dataActualizacion.cumplioRespuesta = ahora <= ticket.fechaLimiteRespuesta;
               }
 
@@ -744,8 +691,8 @@ export class TicketController {
 
             // Bajar en uno la carga del técnico (Admin cierra directamente desde Asignado o EN_PROCESO)
             if (!ticket.resueltoAt && ticket.usuarioAsignadoId) {
-              await this.prisma.usuario.update ({
-                where: {id: ticket.usuarioAsignadoId} ,
+              await this.prisma.usuario.update({
+                where: { id: ticket.usuarioAsignadoId },
                 data: {
                   cargaTrabajo: {
                     decrement: 1 // Bajar en uno la carga de trabajo
@@ -799,7 +746,6 @@ export class TicketController {
             data: imagenesData
           });
         }
-
         return { ticketActualizado, historial };
       });
 
@@ -809,6 +755,90 @@ export class TicketController {
         estadoNuevo: nuevoEstado,
         historialId: transaccion.historial.id
       });
+
+      // Enviar notificación al usuario dependiendo del nuevo estado
+      switch (nuevoEstado) {
+
+        // Si el caso está entra en estado EN_PROCESO, enviar notificación al cliente
+        // y al ténico asignado
+        case 'EN_PROCESO':
+          // Notificación al cliente (solicitante)
+          await this.prisma.notificacion.create({
+
+            // Notificación al solicitante
+            data: {
+              tipo: 'ESTADO_CAMBIADO',
+              emisorId: null,
+              receptorId: ticket.solicitanteId,
+              ticketId: ticketId,
+              estado: 'NO_LEIDA',
+              mensaje: `El estado del ticket ${ticket.codigo} ha sido actualizado a "En proceso".`,
+            }
+          });
+
+          // Notificación al técnico asignado
+          if (ticket.usuarioAsignadoId) {
+            await this.prisma.notificacion.create({
+              data: {
+                tipo: 'ESTADO_CAMBIADO',
+                emisorId: null,
+                receptorId: ticket.usuarioAsignadoId,
+                ticketId: ticketId,
+                estado: 'NO_LEIDA',
+                mensaje: `El estado del ticket ${ticket.codigo} ha sido actualizado a "En proceso".`,
+
+              }
+            });
+          }
+          break;
+
+        // Si el caso está entra en estado RESUELTO, enviar notificación al cliente
+        // y al ténico asignado
+        case 'RESUELTO':
+          // Notificación al cliente (solicitante)
+          await this.prisma.notificacion.create({
+            data: {
+              tipo: 'ESTADO_CAMBIADO',
+              emisorId: null,
+              receptorId: ticket.solicitanteId,
+              ticketId: ticketId,
+              estado: 'NO_LEIDA',
+              mensaje: `El estado del ticket ${ticket.codigo} ha sido actualizado a "Resuelto". Por favor, revise la solución proporcionada.`,
+            }
+          });
+
+          // Notificación al técnico asignado
+          if (ticket.usuarioAsignadoId) {
+            await this.prisma.notificacion.create({
+              data: {
+                tipo: 'ESTADO_CAMBIADO',
+                emisorId: null,
+                receptorId: ticket.usuarioAsignadoId,
+                ticketId: ticketId,
+                estado: 'NO_LEIDA',
+                mensaje: `El estado del ticket ${ticket.codigo} ha sido actualizado a "Resuelto".`,
+              }
+            })
+          };
+          break;
+
+        // Si el caso está entra en estado CERRADO, enviar notificación al cliente
+        case 'CERRADO':
+          // Notificación al cliente (solicitante)
+          await this.prisma.notificacion.create({
+            data: {
+              tipo: 'ESTADO_CAMBIADO',
+              emisorId: null,
+              receptorId: ticket.solicitanteId,
+              ticketId: ticketId,
+              estado: 'NO_LEIDA',
+              mensaje: `El ticket ${ticket.codigo} ha sido cerrado. Gracias por utilizar nuestro servicio.`,
+            }
+          });
+          break;
+      }
+
+      console.log('[BACKEND] Notificaciones enviadas según el nuevo estado');
 
       // Enviar la respuesta de transacción exitosa 
       response.json({
@@ -895,18 +925,18 @@ export class TicketController {
   ): void {
 
     // Validación para Admin
-        if (rol === 'ADMIN') {
-        // Admin solo puede cambiar a ASIGNADO o CERRADO
+    if (rol === 'ADMIN') {
+      // Admin solo puede cambiar a ASIGNADO o CERRADO
 
-        // Si el estado nuevo no es ni ASIGNADO, ni CERRADO, enviar mensaje de error (forbidden)
-        if (!['ASIGNADO', 'CERRADO'].includes(estadoNuevo)) {
-            throw AppError.forbidden(
-                'Como ADMIN solo puedes asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). ' +
-                'Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos.'
-            );
-        }
-        console.log(`[BACKEND] ADMIN tiene permiso para cambiar a ${estadoNuevo}`);
-        return; // Salir de la función para usuario ADMIN
+      // Si el estado nuevo no es ni ASIGNADO, ni CERRADO, enviar mensaje de error (forbidden)
+      if (!['ASIGNADO', 'CERRADO'].includes(estadoNuevo)) {
+        throw AppError.forbidden(
+          'Como ADMIN solo puede asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). ' +
+          'Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos.'
+        );
+      }
+      console.log(`[BACKEND] ADMIN tiene permiso para cambiar a ${estadoNuevo}`);
+      return; // Salir de la función para usuario ADMIN
     }
 
     // Solo el usuario ADMIN puede asignar tiquetes

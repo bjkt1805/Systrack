@@ -1,0 +1,54 @@
+2025-11-30 14:00:05.722 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.notificacion.findMany()` invocation in
+C:\Systrack\server\source\controllers\notificacionController.ts:17:60
+
+  14 const usuarioId = Number(request.params.usuarioId);
+  15 
+  16 // Select * from notificacion where (receptorId = usuarioId) AND (estado = "NO_LEIDA");
+→ 17 const listado = await this.prisma.notificacion.findMany({
+       orderBy: {
+         creadoAt: "desc"
+       },
+       where: {
+         estado: "NO_LEIDA",
+     +   receptorId: {
+     +     equals: Int | IntFieldRefInput,
+     +     in: Int[],
+     +     notIn: Int[],
+     +     lt: Int | IntFieldRefInput,
+     +     lte: Int | IntFieldRefInput,
+     +     gt: Int | IntFieldRefInput,
+     +     gte: Int | IntFieldRefInput,
+     +     not: Int | NestedIntFilter
+     +   }
+       }
+     })
+
+Argument `receptorId` is missing.
+2025-11-30 14:00:08.222 error: 	1--Se produjo un error interno del servidor 
+Invalid `this.prisma.notificacion.findMany()` invocation in
+C:\Systrack\server\source\controllers\notificacionController.ts:17:60
+
+  14 const usuarioId = Number(request.params.usuarioId);
+  15 
+  16 // Select * from notificacion where (receptorId = usuarioId) AND (estado = "NO_LEIDA");
+→ 17 const listado = await this.prisma.notificacion.findMany({
+       orderBy: {
+         creadoAt: "desc"
+       },
+       where: {
+         estado: "NO_LEIDA",
+     +   receptorId: {
+     +     equals: Int | IntFieldRefInput,
+     +     in: Int[],
+     +     notIn: Int[],
+     +     lt: Int | IntFieldRefInput,
+     +     lte: Int | IntFieldRefInput,
+     +     gt: Int | IntFieldRefInput,
+     +     gte: Int | IntFieldRefInput,
+     +     not: Int | NestedIntFilter
+     +   }
+       }
+     })
+
+Argument `receptorId` is missing.

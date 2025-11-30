@@ -9,5 +9,6 @@ export const environment = {
     endPointTicket: 'ticket',
     endPointEtiqueta: 'etiqueta',
     endPointRol: 'rol',
-    endPointReporte: 'reporte'
+    endPointReporte: 'reporte', 
+    endPointNotificacion: 'notificacion',
 };

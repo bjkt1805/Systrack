@@ -6,16 +6,19 @@
 <!-- Se le quitó el fondo degradado al header-->
 <mat-toolbar class="header">
     <!-- Logo -->
-    <button mat-icon-button (click)="irInicio()" class="example-header-image" matTooltip="{{ 'HEADER.INICIO' | translate }}"></button>
+    <button mat-icon-button (click)="irInicio()" class="example-header-image"
+        matTooltip="{{ 'HEADER.INICIO' | translate }}"></button>
 
     <div class="menu-section">
 
-        <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon" matTooltip="{{ 'HEADER.LISTADOS' | translate }}" style="font-size: 16px;">
+        <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon"
+            matTooltip="{{ 'HEADER.LISTADOS' | translate }}" style="font-size: 16px;">
             <!-- <mat-icon>menu</mat-icon> -->
             {{ 'HEADER.LISTADOS' | translate }}
         </button>
 
-        <button mat-icon-button matTooltip="{{ 'HEADER.PROCESOS' | translate }}" [matMenuTriggerFor]="menu3" style="font-size: 16px;">
+        <button mat-icon-button matTooltip="{{ 'HEADER.PROCESOS' | translate }}" [matMenuTriggerFor]="menu3"
+            style="font-size: 16px;">
             <!-- <mat-icon>save_as</mat-icon> -->
             {{ 'HEADER.PROCESOS' | translate }}
         </button>
@@ -27,7 +30,8 @@
             Reportes
         </button>
         } -->
-        <button mat-icon-button matTooltip="{{ 'HEADER.REPORTES' | translate }}" [matMenuTriggerFor]="menu4" style="font-size: 16px;">
+        <button mat-icon-button matTooltip="{{ 'HEADER.REPORTES' | translate }}" [matMenuTriggerFor]="menu4"
+            style="font-size: 16px;">
             <!-- <mat-icon>monitoring</mat-icon> -->
             {{ 'HEADER.REPORTES' | translate }}
         </button>
@@ -61,14 +65,48 @@
         <button mat-menu-item>{{ 'HEADER.REPORTE' | translate }}</button>
     </mat-menu>
 
-    <!-- Spacer
-    <div class="example-spacer"></div> -->
+    <!-- Notificaciones -->
+    <!-- <button mat-icon-button [matBadge]="qtyItems().toString() || '0'" matBadgeColor="accent" [routerLink]="['/orden']"
+        routerLinkActive="active-link">
+        <mat-icon>notifications</mat-icon>
+    </button> -->
 
-
-
-    
     <!-- Usuario (info, login, logout) e idioma -->
     <div class="user-section">
+        <!-- Notificaciones -->
+
+        <mat-menu #menuNotificaciones="matMenu">
+            <button mat-menu-item disabled>
+                <span style="color: white">{{ 'HEADER.NOTIFICACIONES' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            @if (qtyItems() > 0) {
+            <!-- Mostrar solo las últimas tres notificaciones-->
+            @for (notificacion of notificacionesService.notificaciones().slice(0, 3); track notificacion.id) {
+            <button mat-menu-item>
+                <mat-icon style="color: white">notification_important</mat-icon>
+                <span>{{ notificacion.mensaje }}</span>
+            </button>
+            <br>
+            }
+            <mat-divider></mat-divider>
+            <button mat-menu-item [routerLink]="['/notificacion']" style="color: #4caf50;">
+                <mat-icon style="color: #4caf50;">settings</mat-icon>
+                <span>{{ 'HEADER.GESTIONAR_NOTIFICACIONES' | translate }}</span>
+            </button>
+
+            } @else {
+            <button mat-menu-item disabled>
+                <span>{{ 'HEADER.NO_NOTIFICACIONES' | translate }}</span>
+            </button>
+            }
+        </mat-menu>
+        <!-- Botón de notificaciones -->
+        <button mat-icon-button [matBadge]="qtyItems() > 0 ? qtyItems().toString() : null" matBadgeColor="accent"
+            [matMenuTriggerFor]="menuNotificaciones" matTooltip="{{ 'HEADER.NOTIFICACIONES' | translate }}">
+            <mat-icon>notifications</mat-icon>
+        </button>
+
         <!-- Botón de idioma -->
         <button mat-icon-button [matMenuTriggerFor]="menuIdioma" matTooltip="{{ 'HEADER.IDIOMA' | translate }}">
             <mat-icon>language</mat-icon>
@@ -84,13 +122,12 @@
             </button>
         </mat-menu>
         <!-- <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
-            <mat-icon>shopping_cart</mat-icon>
-        </button> -->
-
+                <mat-icon>shopping_cart</mat-icon>
+            </button> -->
         <!-- Mostrar el correo del usuario logueado -->
-         @if (isAuthenticated()) {
+        @if (isAuthenticated()) {
         <span class="small-text user-email" style="font-size: 12px;">{{ currentUser()?.correo }}</span>
-         }
+        }
         <!-- <span class="small-text user-email">Email</span> -->
         <button mat-icon-button [matMenuTriggerFor]="menu5" matTooltip="{{ 'HEADER.USUARIO' | translate }}">
             <mat-icon>person</mat-icon>
@@ -98,7 +135,7 @@
         <mat-menu #menu5="matMenu">
 
             <!-- Si no está autenticado, mostrar login-->
-             @if (!isAuthenticated()) {
+            @if (!isAuthenticated()) {
             <button mat-menu-item (click)="irLogin()">
                 <mat-icon style="color: white">person_add</mat-icon>
                 <span>{{ 'HEADER.LOGIN' | translate }}</span>
@@ -106,7 +143,7 @@
             }
 
             <!-- Si está autenticado, mostrar logout-->
-             @else {
+            @else {
             <button mat-menu-item (click)="logout()">
                 <mat-icon style="color: white">person_remove</mat-icon>
                 <span>{{ 'HEADER.LOGOUT' | translate }}</span>

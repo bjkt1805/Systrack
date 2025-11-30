@@ -1,7 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificacionesService } from '../../share/services/app/notificaciones.service';
 
 @Component({
   selector: 'app-header',
@@ -9,21 +10,23 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header {
+export class Header implements OnInit {
 
   // constructor(private router: Router) { }
 
-  // Método constructor con inyección de dependencias. 
+  // Inyección de dependencias
   // Hay que inyectar el servicio de autenticación para obtener el usuario autenticado
   private router = inject(Router);
   private authService = inject(AuthenticationService);
   private translate = inject(TranslateService);
+  notificacionesService = inject(NotificacionesService);
 
   /**
    * Signals para manejar la autenticación de usuario 
    */
   readonly isAuthenticated = this.authService.authenticated;
   readonly currentUser = this.authService.usuario;
+  readonly qtyItems = this.notificacionesService.qtyItems;
 
   /**
    * Signal computador para obtener 
@@ -43,6 +46,27 @@ export class Header {
   readonly isClient = computed(() => this.rol() === 'CLIENTE');
   readonly isTechnician = computed(() => this.rol() === 'TECNICO');
 
+  // Método constructor para poder traerse desde el backend las notificaciones no leídas
+  // del usuario. Se utiliza effect. 
+  constructor() {
+    effect(() => {
+      const usuarioId = this.currentUser()?.id;
+
+      // Cargar las notificaciones no leídas del usuario solo si se ha cargado 
+      if (usuarioId) {
+        this.notificacionesService.cargarNotificaciones(usuarioId);
+      }
+    });
+  }
+  // Cargar las notificaciones no leídas en el init
+  ngOnInit(): void {
+    const usuarioId = this.currentUser()?.id;
+    if (usuarioId) {
+      this.notificacionesService.cargarNotificaciones(usuarioId);
+      console.log("Llamando al servicio para cargar notificaciones no leídas");
+    }
+  }
+
   // Acceder al id del usuario 
   getCurrentUserId(): number | null | undefined {
     return this.currentUser()?.id;
@@ -60,6 +84,7 @@ export class Header {
 
   // Para desloguearse
   logout = () => {
+    this.notificacionesService.vaciarNotificaciones(); // Vaciar las notificaciones al hacer logout
     this.authService.logout(); // Llamar al método logout del servicio de autenticación
     this.router.navigate(['/usuario/login']); // Redirigir a la página de login después del logout
   }

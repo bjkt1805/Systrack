@@ -30,6 +30,8 @@
     "REPORTE": "Report",
     "IDIOMA1": "Spanish",
     "IDIOMA2": "English",
+    "NOTIFICACIONES": "Notifications",
+    "GESTIONAR_NOTIFICACIONES": "Manage Notifications",
     "LOGIN": "Login",
     "LOGOUT": "Logout"
   },

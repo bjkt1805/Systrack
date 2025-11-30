@@ -94,7 +94,7 @@ export class UsuarioController {
         passport.authenticate(
             "local",
             { session: false }, // No utilizar sesiones, ya que se usará JWT
-            (
+            async (
                 err: Error | null, // Tipo de error
                 user: Express.User | false | null, // Usuario autenticado o false si falla
                 info: { message?: string } // Información adicional sobre la autenticación
@@ -110,6 +110,22 @@ export class UsuarioController {
 
                 // Si la autenticación es exitosa, generar un token JWT para el usuario
                 const token = generateToken(user as Usuario);
+                
+                // Generar una notificación de inicio de sesión
+                const notificacion = await this.prisma.notificacion.create({
+                    data: {
+                        tipo: "INICIO_SESION",
+                        emisorId: null, 
+                        receptorId: (user as Usuario).id,
+                        // ticketId: null,
+                        estado: "NO_LEIDA",
+                        mensaje: `Inicio de sesión exitoso para el usuario ${ (user as Usuario).nombreUsuario }. Último inicio de sesión: ${ new Date().toLocaleString() }`,
+                    }
+                })
+
+                if (notificacion) {
+                    console.log(`[BACKEND] Notificación de inicio de sesión creada para el usuario ID ${(user as Usuario).id}`);
+                }
 
                 // Responder con el token JWT generado
                 return res.json({

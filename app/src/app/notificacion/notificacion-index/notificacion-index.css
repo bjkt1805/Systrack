@@ -1,0 +1,363 @@
+/* ====== Card Principal ====== */
+.notificaciones-card {
+  width: 95%;
+  margin: 24px auto;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--mat-sys-surface) 90%, #000 10%),
+      color-mix(in srgb, var(--mat-sys-surface-container) 92%, #000 8%)
+    );
+  color: var(--mat-sys-on-surface);
+  box-shadow: 0 18px 44px rgba(0,0,0,.22);
+}
+
+/* ====== Header Principal ====== */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 32px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--mat-sys-primary) 8%, transparent),
+    color-mix(in srgb, var(--mat-sys-tertiary) 5%, transparent)
+  );
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  flex-shrink: 0;
+}
+
+.page-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: var(--mat-sys-on-primary);
+}
+
+.title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--mat-sys-on-surface);
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+  font-weight: 500;
+}
+
+/* ====== Estadísticas Header ====== */
+.header-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.stat-item.stat-unread {
+  background: color-mix(in srgb, var(--mat-sys-error) 15%, transparent);
+  border-color: color-mix(in srgb, var(--mat-sys-error) 30%, transparent);
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--mat-sys-primary);
+}
+
+.stat-unread .stat-number {
+  color: var(--mat-sys-error);
+}
+
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+}
+
+/* ====== Filtros ====== */
+.filtros-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+}
+
+mat-button-toggle-group {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+mat-button-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ====== Estado de Carga ====== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent);
+}
+
+/* ====== Acordeón de Notificaciones ====== */
+.notificaciones-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+mat-expansion-panel {
+  border-radius: 12px !important;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+  transition: all 0.3s ease;
+}
+
+mat-expansion-panel.no-leida {
+  background: color-mix(in srgb, var(--mat-sys-primary) 5%, var(--mat-sys-surface));
+  border-left: 4px solid var(--mat-sys-primary);
+}
+
+mat-expansion-panel.leida {
+  background: var(--mat-sys-surface);
+  opacity: 0.85;
+}
+
+mat-expansion-panel:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ====== Header del Acordeón ====== */
+.notificacion-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icono-container {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.icono-container mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+/* Colores según tipo */
+.tipo-creado { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+.tipo-asignado { background: linear-gradient(135deg, #2196f3, #1565c0); }
+.tipo-estado { background: linear-gradient(135deg, #9c27b0, #6a1b9a); }
+.tipo-comentario { background: linear-gradient(135deg, #00bcd4, #00838f); }
+.tipo-vencimiento { background: linear-gradient(135deg, #ff9800, #ef6c00); }
+.tipo-sla { background: linear-gradient(135deg, #f44336, #c62828); }
+.tipo-default { background: linear-gradient(135deg, #607d8b, #455a64); }
+
+.notificacion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.notificacion-tipo {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent);
+  font-weight: 600;
+}
+
+.notificacion-mensaje {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+}
+
+.notificacion-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notificacion-fecha {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 50%, transparent);
+}
+
+/* ====== Badges ====== */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge-unread {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.badge-read {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 20%, transparent);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+}
+
+/* ====== Contenido Expandido ====== */
+.notificacion-detalle {
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detalle-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detalle-row mat-icon {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 50%, transparent);
+  margin-top: 2px;
+}
+
+.detalle-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detalle-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 50%, transparent);
+  font-weight: 600;
+}
+
+.detalle-value {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface);
+}
+
+.detalle-acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+}
+
+/* ====== Estado Vacío ====== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 20%, transparent);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  color: var(--mat-sys-on-surface);
+}
+
+.empty-state p {
+  margin: 0;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-stats {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filtros-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .notificacion-mensaje {
+    max-width: 200px;
+  }
+
+  .detalle-acciones {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,176 @@
+<mat-card class="notificaciones-card mat-elevation-z8">
+
+  <!-- Header Principal -->
+  <div class="main-header">
+    <div class="header-content">
+      <div class="icon-wrapper">
+        <mat-icon class="page-icon">notifications</mat-icon>
+      </div>
+      <div class="title-group">
+        <h1 class="page-title">Centro de Notificaciones</h1>
+        <p class="page-subtitle">Historial y gestión de notificaciones</p>
+      </div>
+    </div>
+
+    <!-- Contador de notificaciones -->
+    <div class="header-stats">
+      <div class="stat-item">
+        <span class="stat-number">{{ totalNotificaciones() }}</span>
+        <span class="stat-label">Total</span>
+      </div>
+      <div class="stat-item stat-unread">
+        <span class="stat-number">{{ totalNoLeidas() }}</span>
+        <span class="stat-label">No leídas</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-card-content>
+
+    <!-- Filtros -->
+    <div class="filtros-container">
+      <mat-button-toggle-group [value]="filtroEstado()" (change)="cambiarFiltro($event.value)">
+        <mat-button-toggle value="TODAS">
+          <mat-icon>all_inbox</mat-icon>
+          Todas
+        </mat-button-toggle>
+        <mat-button-toggle value="NO_LEIDA">
+          <mat-icon>mark_email_unread</mat-icon>
+          No leídas
+        </mat-button-toggle>
+        <mat-button-toggle value="LEIDA">
+          <mat-icon>drafts</mat-icon>
+          Leídas
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <!-- Botón refrescar -->
+      <button mat-icon-button matTooltip="Refrescar" (click)="cargarNotificaciones()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    <!-- Estado de carga -->
+    @if (cargando()) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Cargando notificaciones...</span>
+      </div>
+    }
+
+    <!-- Lista de notificaciones (Acordeón) -->
+    @if (!cargando()) {
+      @if (notificacionesFiltradas().length > 0) {
+        <mat-accordion class="notificaciones-accordion" multi>
+          @for (notificacion of notificacionesFiltradas(); track notificacion.id) {
+            <mat-expansion-panel 
+              [expanded]="isExpanded(notificacion.id)"
+              (opened)="toggleExpansion(notificacion.id)"
+              (closed)="toggleExpansion(notificacion.id)"
+              [class.no-leida]="notificacion.estado === EstadoNotificacion.NO_LEIDA"
+              [class.leida]="notificacion.estado === EstadoNotificacion.LEIDA">
+              
+              <!-- Header del acordeón -->
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="notificacion-header">
+                    <!-- Icono según tipo -->
+                    <div class="icono-container" [ngClass]="getColorClase(notificacion.tipo)">
+                      <mat-icon>{{ getIcono(notificacion.tipo) }}</mat-icon>
+                    </div>
+
+                    <!-- Contenido principal -->
+                    <div class="notificacion-info">
+                      <span class="notificacion-tipo">{{ notificacion.tipo | titlecase }}</span>
+                      <span class="notificacion-mensaje">{{ notificacion.mensaje }}</span>
+                    </div>
+                  </div>
+                </mat-panel-title>
+
+                <mat-panel-description>
+                  <div class="notificacion-meta">
+                    <!-- Indicador de no leída -->
+                    @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) {
+                      <span class="badge badge-unread">Nueva</span>
+                    }
+                    <!-- Fecha -->
+                    <span class="notificacion-fecha">
+                      {{ formatearFecha(notificacion.creadoAt) }}
+                    </span>
+                  </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <!-- Contenido expandido -->
+              <div class="notificacion-detalle">
+                <div class="detalle-row">
+                  <mat-icon>message</mat-icon>
+                  <div class="detalle-content">
+                    <span class="detalle-label">Mensaje</span>
+                    <span class="detalle-value">{{ notificacion.mensaje }}</span>
+                  </div>
+                </div>
+
+                <div class="detalle-row">
+                  <mat-icon>schedule</mat-icon>
+                  <div class="detalle-content">
+                    <span class="detalle-label">Fecha y hora</span>
+                    <span class="detalle-value">
+                      {{ notificacion.creadoAt | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="detalle-row">
+                  <mat-icon>info</mat-icon>
+                  <div class="detalle-content">
+                    <span class="detalle-label">Estado</span>
+                    <span class="detalle-value">
+                      <span class="badge" [ngClass]="notificacion.estado === EstadoNotificacion.NO_LEIDA ? 'badge-unread' : 'badge-read'">
+                        {{ notificacion.estado === EstadoNotificacion.NO_LEIDA ? 'No leída' : 'Leída' }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="detalle-acciones">
+                  @if (notificacion.ticketId) {
+                    <button mat-raised-button color="primary" (click)="irAlTicket(notificacion.ticketId, $event)">
+                      <mat-icon>visibility</mat-icon>
+                      Ver Ticket
+                    </button>
+                  }
+
+                  @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) {
+                    <button mat-stroked-button color="accent" (click)="marcarComoLeida(notificacion, $event)">
+                      <mat-icon>done</mat-icon>
+                      Marcar como leída
+                    </button>
+                  }
+                </div>
+              </div>
+
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      } @else {
+        <!-- Sin notificaciones -->
+        <div class="empty-state">
+          <mat-icon class="empty-icon">notifications_off</mat-icon>
+          <h3>No hay notificaciones</h3>
+          <p>
+            @if (filtroEstado() === 'TODAS') {
+              No tienes notificaciones en este momento.
+            } @else if (filtroEstado() === 'NO_LEIDA') {
+              No tienes notificaciones sin leer.
+            } @else {
+              No tienes notificaciones leídas.
+            }
+          </p>
+        </div>
+      }
+    }
+
+  </mat-card-content>
+</mat-card>
