@@ -365,14 +365,18 @@ convertirATicketKanban(ticket: TicketModel): TicketKanban {
   if (ticket.estado === 'RESUELTO' || ticket.estado === 'CERRADO') {
 
     // Mostrar "Cumplido" o "Vencido" según el cumplimiento validado
-    tiempoRestanteSLA = cumplimientoReal ? 'Cumplido' : 'Vencido';
+    this.translate.get(cumplimientoReal ? 'ASIGNACION.CUMPLIDO' : 'ASIGNACION.VENCIDO').subscribe(translation => {
+      tiempoRestanteSLA = translation;
+    });
   } 
 
   //  SI EL TICKET ESTÁ ACTIVO (PENDIENTE, ASIGNADO, EN PROCESO)
   else {
     // Si el tiempo restante es negativo, el SLA ya se venció
     if (tiempoRestante < 0) {
-      tiempoRestanteSLA = 'Vencido';
+      this.translate.get('ASIGNACION.VENCIDO').subscribe(translation => {
+        tiempoRestanteSLA = translation;
+      });
     } 
     // Si quedan más de 24 horas, mostrar días y horas
     else if (tiempoRestanteDias > 0) {

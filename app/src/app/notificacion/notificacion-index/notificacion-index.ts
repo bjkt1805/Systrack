@@ -72,7 +72,7 @@ export class NotificacionIndex implements OnInit {
 
         // Marcar la signal de carga como true 
         this.cargando.set(true);
-        this.notificacionesService.cargarNotificaciones(usuarioId);
+        this.notificacionesService.cargarNotificaciones(usuarioId, false);
     }
 
   /**

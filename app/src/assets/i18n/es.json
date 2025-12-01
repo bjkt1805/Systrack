@@ -30,7 +30,7 @@
     "REPORTE": "Reporte",
     "IDIOMA1": "Español",
     "IDIOMA2": "Inglés",
-    "NOTIFICACIONES": "Notificaciones",
+    "NOTIFICACIONES": "Notificaciones (Últimas 3)",
     "GESTIONAR_NOTIFICACIONES": "Gestionar Notificaciones",
     "LOGIN": "Inicio de sesión",
     "LOGOUT": "Cerrar sesión"
@@ -153,7 +153,17 @@
     "ERROR_ACTUALIZAR_TITULO": "Error al Actualizar Técnico",
     "ERROR_GENERICO": "Error al procesar el técnico. Inténtelo de nuevo.",
     "ERROR_NOMBRE_USUARIO": "El nombre de usuario ya está en uso.",
-    "ERROR_CORREO": "El correo electrónico ya está registrado."
+    "ERROR_CORREO": "El correo electrónico ya está registrado.",
+    "ESPECIALIDAD_REQUERIDA_TITULO": "Especialidad requerida",
+    "ESPECIALIDAD_REQUERIDA_MENSAJE": "Debe tener al menos una especialidad para crear un técnico",
+    "TIPO_ARCHIVO_INVALIDO_TITULO": "Tipo de archivo inválido",
+    "TIPO_ARCHIVO_INVALIDO_MENSAJE": "Solo se permiten archivos de imagen.",
+    "ARCHIVO_GRANDE_TITULO": "Archivo demasiado grande",
+    "ARCHIVO_GRANDE_MENSAJE": "Tamaño máximo del archivo: 2 MB.",
+    "IMAGEN_ELIMINADA_TITULO": "Imagen eliminada",
+    "IMAGEN_ELIMINADA_MENSAJE": "La imagen será removida al guardar los cambios",
+    "FORMULARIO_INVALIDO_TITULO": "Formulario Inválido",
+    "FORMULARIO_INVALIDO_MENSAJE": "Revise los campos marcados."
   },
 
   "CATEGORIA_INDEX": {
@@ -278,6 +288,7 @@
     "SLA_RESOLUCION": "SLA de Resolución",
     "DIAS_RESOLUCION": "Días de Resolución",
     "CUMPLIMIENTO_SLA": "Cumplimiento de SLA",
+    "CUMPLIMIENTO_RESPUESTA": "Cumplimiento de Respuesta",
     "CUMPLIMIENTO_RESOLUCION": "Cumplimiento de Resolución",
     "PENDIENTE": "Pendiente",
     "CUMPLIDO": "Cumplido",
@@ -291,7 +302,26 @@
     "REGRESAR": "Regresar",
     "NO_ENCONTRADO_TITULO": "Ticket no encontrado",
     "NO_ENCONTRADO_TEXTO": "No se pudo cargar la información de este ticket.",
-    "VOLVER_LISTADO": "Volver al Listado"
+    "VOLVER_LISTADO": "Volver al Listado",
+    "SIN_PERMISOS_TITULO": "Sin permisos",
+    "SIN_PERMISOS_MENSAJE": "No puede cambiar el estado de este ticket en su estado actual"
+  },
+
+  "TICKET_HISTORIAL_VIEW" : {
+    "ERROR" : "Error",
+    "ERROR_CARGAR_TECNICOS": "No se pudieron cargar los técnicos",
+    "LIMITE_EXCEDIDO_TITULO": "Límite Excedido", 
+    "LIMITE_EXCEDIDO_MENSAJE": "No se pueden seleccionar más de 5 imágenes.",
+    "TIPO_INVALIDO_TITULO": "Tipo inválido",
+    "TIPO_INVALIDO_MENSAJE": "El archivo no es una imagen válida.",
+    "TAMANNO_EXCEDIDO_TITULO": "Tamaño Excedido",
+    "TAMANNO_EXCEDIDO_MENSAJE": "El archivo excede el tamaño máximo de 2 MB.",
+    "FORMULARIO_INVALIDO_TITULO": "Formulario Inválido",
+    "FORMULARIO_INVALIDO_MENSAJE": "Revise los campos marcados.",
+    "ÉXITO": "Éxito",
+    "ÉXITO_MENSAJE": "El estado del tiquete se ha actualizado correctamente.",
+    "ERROR_MENSAJE": "No se pudo actualizar el estado del tiquete. Intente nuevamente.",
+    "ERROR_EXCEPCION": "Ocurrió un error al procesar su solicitud. Intente nuevamente."
   },
 
   "TICKET_FORM": {
@@ -408,6 +438,66 @@
     "ASIGNANDO_AUTO": "Asignando..."
   },
 
+   "ASIGNACION_AUTOMATICA_DIALOGO": {
+    "TITULO": "Asignanco Técnico",
+    "MENSAJE": "Por favor espere mientras buscamos el técnico más adecuado...",
+    "ANALIZANDO_REGLAS" : "Analizando reglas de asignación",
+    "CALCULANDO_PRIORIDADES_SLA": "Calculando prioridades y SLA",
+    "BUSCANDO_TECNICOS_DISPONIBLES": "Buscando técnicos disponibles",
+    "TIQUETE_CREADO": "Tiquete creado exitosamente",
+    "TIQUETE": "Tiquete",
+    "ASIGNACION_MANUAL_REQUERIDA": "Asignación Manual Requerida",
+    "MENSAJE_MANUAL": "No se preocupe, su tiquete ha sido registrado correctamente y será asignado a la brevedad por nuestro equipo.",
+    "SU_TIQUETE_ESTA_EN_ESTADO":"Su tiquete está en estado",
+    "PENDIENTE": "Pendiente",
+    "RECIBIRA_NOTIFICACION": "Recibirá una notificación cuando un técnico sea asignado.",
+    "NUESTRO_EQUIPO_REVISA": "Nuestro equipo está revisando su solicitud",
+    "ENTENDIDO": "Entendido",
+    "ASIGNACION_COMPLETADA": "¡Asignación Completada!",
+    "ASIGNADO_EXITOSAMENTE": "El tiquete ha sido asignado exitosamente",
+    "TECNICO_ASIGNADO": "Técnico Asignado",
+    "NOMBRE": "Nombre",
+    "CORREO": "Correo",
+    "ESPECIALIDADES": "Especialidades",
+    "ASIGNACION_REGISTRADA": "Asignación registrada en el sistema",
+    "CAMBIO_ASIGNADO": "Estado del ticket cambiado a \"Asignado\""
+  },
+
+"ASIGNACION_MANUAL_DIALOG" : {
+  "CARGANDO_INFORMACION": "Cargando Información",
+  "OBTENIENDO_DATOS_TICKET_TECNICOS": "Obteniendo datos del ticket y técnicos disponibles...",
+  "ASIGNACIÓN_MANUAL_TIQUETE" : "Asignación Manual del Tiquete",
+  "TIQUETE": "Tiquete",
+  "INFORMACION_TIQUETE": "Información del Ticket",
+  "TÍTULO": "Título",
+  "CATEGORÍA": "Categoría",
+  "PRIORIDAD": "Prioridad",
+  "RESPUESTA": "Respuesta",
+  "RESOLUCION" : "Resolución",
+  "SELECCIONAR_TECNICO" : "Seleccionar técnico",
+  "SELECCIONE_UN_TECNICO": "Seleccione un técnico",
+  "DEBE_SELECCIONAR_TECNICO": "Debe seleccionar un técnico",
+  "TECNICO_SELECCIONADO": "Técnico Seleccionado",
+  "CARGA_ACTUAL": "Carga actual",
+  "TIQUETES ASIGNADOS" : "Tiquetes asignados",
+  "JUSTIFICACION_ASIGNACION" : "Justifiación de la Asignación",
+  "MINIMO_5_CARACTERES": "Mínimo 5 caracteres",
+  "JUSTIFICACION_OBLIGATORIA": "La justificación es obligatoria",
+  "JUSTIFICACION_MINIMO_5_CARACTERES": "La justificación debe tener al menos 5 caracteres",
+  "ERROR_ASIGNACIÓN": "Error en la asignación",
+  "CANCELAR": "Cancelar",
+  "ASIGNAR_TIQUETE": "Asignar Tiquete",
+  "ASIGNACION_COMPLETADA" : "¡Asignación Completada!",
+  "ASIGNADO_EXITOSAMENTE": "asignado exitosamente",
+  "TÉCNICO": "Técnico",
+  "FECHA_HORA": "Fecha y hora",
+  "METODO": "Método: Asignación Manual",
+  "ASIGNACION_REGISTRADA" : "Asignación registrada en el sistema",
+  "CAMBIO_ASIGNADO": "Estado del ticket cambiado a \"Asignado\"",
+  "NOTIFICACION_ENVIADA": "Notificación enviada al técnico",
+  "ENTENDIDO": "Entendido"
+},
+
   "ASIGNACION": {
     "VISTA_ASIGNACIONES": "Vista de Asignaciones",
     "SEMANA": "Semana del 27 de Octubre al 2 de Noviembre, 2025",
@@ -423,7 +513,8 @@
     "VER_DETALLE": "Ver detalle",
     "CAMBIAR_ESTADO": "Cambiar estado",
     "AGREGAR_COMENTARIO": "Agregar comentario",
-    "SIN_TICKETS": "Sin tickets"
+    "SIN_TICKETS": "Sin tickets", 
+    "VENCIDO": "Vencido"
   },
 
   "ASIGNACION_NOTIFICACION": {
@@ -463,7 +554,14 @@
     "LIMPIAR": "Limpiar",
     "DIVIDER": "o",
     "NO_CUENTA": "¿No tienes una cuenta?",
-    "REGISTRATE_AQUI": "Regístrate aquí"
+    "REGISTRATE_AQUI": "Regístrate aquí",
+    "INICIO_SESION_EXITOSO": "Inicio de sesión exitoso",
+    "INICIO_SESION_EXITOSO_MENSAJE": "Bienvenido de nuevo.", 
+    "ERROR_AUTENTICACION": "Error de autenticación", 
+    "ERROR_AUTENTICACION_MENSAJE": "Error inesperado. Intente de nuevo.",
+    "FORMULARIO_INCOMPLETO": "Formulario incompleto",
+    "FORMULARIO_INCOMPLETO_MENSAJE": "Por favor complete todos los campos requeridos."
+
   },
 
   "USUARIO_REGISTRO": {

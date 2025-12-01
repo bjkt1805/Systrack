@@ -51,6 +51,7 @@ export class Header implements OnInit {
   constructor() {
     effect(() => {
       const usuarioId = this.currentUser()?.id;
+      const recarga = this.notificacionesService.recargar(); // Forzar recarga de notificaciones en el header
 
       // Cargar las notificaciones no leídas del usuario solo si se ha cargado 
       if (usuarioId) {
@@ -60,9 +61,11 @@ export class Header implements OnInit {
   }
   // Cargar las notificaciones no leídas en el init
   ngOnInit(): void {
+    this.notificacionesService.vaciarNotificaciones(); // Vaciar las notificaciones antes de cargar nuevas
     const usuarioId = this.currentUser()?.id;
     if (usuarioId) {
       this.notificacionesService.cargarNotificaciones(usuarioId);
+      
       console.log("Llamando al servicio para cargar notificaciones no leídas");
     }
   }
@@ -94,4 +97,8 @@ export class Header implements OnInit {
     this.translate.use(lang);
     localStorage.setItem('selectedLanguage', lang);
   }
+
+  // Método para acortar a 20 caracteres (+...) el 
+  // mensaje de notificación con tipo TICKET_ASIGNADO
+
 }

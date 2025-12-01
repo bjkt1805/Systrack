@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TicketService } from '../../share/services/api/ticket.service';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { AsignacionService } from '../../share/services/api/asignacion.service';
+import { NotificacionesService } from '../../share/services/app/notificaciones.service';
 import { firstValueFrom } from 'rxjs';
 
 interface TecnicoDisponible {
@@ -84,6 +85,9 @@ export class AsignacionManualDialog {
 
   //Inyectar el servicio de técnicos
   private tecnicoService = inject(TecnicoService);
+
+  // Inyectar el servicio de notificaciones
+  private notificacionesService = inject(NotificacionesService);
 
   // Signals
   cargando = signal(true);
@@ -263,6 +267,12 @@ export class AsignacionManualDialog {
           this.asignacionForm.value.justificacion // justificacion
         )
       );
+
+      // Trigger para recargar as notificaciones en el header
+      setTimeout(() => {
+        this.notificacionesService.triggerRecarga();
+        console.log('[FRONTEND] Trigger de recarga de notificaciones enviado');
+      }, 1000); // Esperar 1 segundo
 
       console.log('[ASIGNACION MANUAL] Respuesta:', response);
 

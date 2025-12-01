@@ -30,7 +30,7 @@
     "REPORTE": "Report",
     "IDIOMA1": "Spanish",
     "IDIOMA2": "English",
-    "NOTIFICACIONES": "Notifications",
+    "NOTIFICACIONES": "Notifications (Last 3)",
     "GESTIONAR_NOTIFICACIONES": "Manage Notifications",
     "LOGIN": "Login",
     "LOGOUT": "Logout"
@@ -154,7 +154,17 @@
     "ERROR_ACTUALIZAR_TITULO": "Error updating technician",
     "ERROR_GENERICO": "Error processing the technician. Please try again.",
     "ERROR_NOMBRE_USUARIO": "The username is already in use.",
-    "ERROR_CORREO": "The email address is already registered."
+    "ERROR_CORREO": "The email address is already registered.",
+    "ESPECIALIDAD_REQUERIDA_TITULO": "Specialty required",
+    "ESPECIALIDAD_REQUERIDA_MENSAJE": "You must have at least one specialty to create a technician",
+    "TIPO_ARCHIVO_INVALIDO_TITULO": "Invalid file type",
+    "TIPO_ARCHIVO_INVALIDO_MENSAJE": "Only image files are allowed.",
+    "ARCHIVO_GRANDE_TITULO": "File too large",
+    "ARCHIVO_GRANDE_MENSAJE": "Maximum file size: 2 MB.",
+    "IMAGEN_ELIMINADA_TITULO": "Image deleted",
+    "IMAGEN_ELIMINADA_MENSAJE": "The image will be removed when saving changes",
+    "FORMULARIO_INVALIDO_TITULO": "Invalid Form",
+    "FORMULARIO_INVALIDO_MENSAJE": "Check the marked fields."
   },
 
   "CATEGORIA_INDEX": {
@@ -278,6 +288,7 @@
     "SLA_RESOLUCION": "Resolution SLA",
     "DIAS_RESOLUCION": "Resolution Days",
     "CUMPLIMIENTO_SLA": "SLA Compliance",
+    "CUMPLIMIENTO_RESPUESTA": "Response Compliance",
     "CUMPLIMIENTO_RESOLUCION": "Resolution Compliance",
     "PENDIENTE": "Pending",
     "CUMPLIDO": "Fulfilled",
@@ -291,7 +302,26 @@
     "REGRESAR": "Back",
     "NO_ENCONTRADO_TITULO": "Ticket not found",
     "NO_ENCONTRADO_TEXTO": "Could not load information for this ticket.",
-    "VOLVER_LISTADO": "Back to List"
+    "VOLVER_LISTADO": "Back to List",
+    "SIN_PERMISOS_TITULO": "No Permissions",
+    "SIN_PERMISOS_MENSAJE": "You cannot change the status of this ticket in its current state"
+  },
+
+  "TICKET_HISTORIAL_VIEW": {
+    "ERROR": "Error",
+    "ERROR_CARGAR_TECNICOS": "Could not load technicians",
+    "LIMITE_EXCEDIDO_TITULO": "Limit Exceeded",
+    "LIMITE_EXCEDIDO_MENSAJE": "No more than 5 images can be selected.",
+    "TIPO_INVALIDO_TITULO": "Invalid Type",
+    "TIPO_INVALIDO_MENSAJE": "The file is not a valid image.",
+    "TAMANNO_EXCEDIDO_TITULO": "Size Exceeded",
+    "TAMANNO_EXCEDIDO_MENSAJE": "The file exceeds the maximum size of 2 MB.",
+    "FORMULARIO_INVALIDO_TITULO": "Invalid Form",
+    "FORMULARIO_INVALIDO_MENSAJE": "Please check the highlighted fields.",
+    "ÉXITO": "Success",
+    "ÉXITO_MENSAJE": "The ticket status has been updated successfully.",
+    "ERROR_MENSAJE": "Could not update the ticket status. Please try again.",
+    "ERROR_EXCEPCION": "An error occurred while processing your request. Please try again."
   },
 
   "TICKET_FORM": {
@@ -404,9 +434,69 @@
     "ELIMINAR_IMAGEN": "Delete image",
     "CANCELAR": "Cancel",
     "PROCESANDO": "Processing...",
-    "ACTUALIZAR": "Update Status", 
+    "ACTUALIZAR": "Update Status",
     "ASIGNANDO_AUTO": "Assigning..."
- },
+  },
+
+  "ASIGNACION_AUTOMATICA_DIALOGO": {
+    "TITULO": "Automatic Technician Assignment",
+    "MENSAJE": "Please wait while we find the most suitable technician...",
+    "ANALIZANDO_REGLAS": "Analyzing assignment rules",
+    "CALCULANDO_PRIORIDADES_SLA": "Calculating priorities and SLA",
+    "BUSCANDO_TECNICOS_DISPONIBLES": "Searching for available technicians",
+    "TIQUETE_CREADO": "Ticket created successfully",
+    "TIQUETE": "Ticket",
+    "ASIGNACION_MANUAL_REQUERIDA": "Manual Assignment Required",
+    "MENSAJE_MANUAL": "Don't worry, your ticket has been successfully registered and will be assigned shortly by our team.",
+    "SU_TIQUETE_ESTA_EN_ESTADO": "Your ticket is in status",
+    "PENDIENTE": "Pending",
+    "RECIBIRA_NOTIFICACION": "You will receive a notification when a technician is assigned.",
+    "NUESTRO_EQUIPO_REVISA": "Our team is reviewing your request",
+    "ENTENDIDO": "Understood",
+    "ASIGNACION_COMPLETADA": "Assignment Completed!",
+    "ASIGNADO_EXITOSAMENTE": "The ticket has been successfully assigned",
+    "TECNICO_ASIGNADO": "Assigned Technician",
+    "NOMBRE": "Name",
+    "CORREO": "Email",
+    "ESPECIALIDADES": "Specialties",
+    "ASIGNACION_REGISTRADA": "Assignment registered in the system",
+    "CAMBIO_ASIGNADO": "Ticket status changed to \"Assigned\""
+  },
+
+  "ASIGNACION_MANUAL_DIALOG": {
+    "CARGANDO_INFORMACION": "Loading Information",
+    "OBTENIENDO_DATOS_TICKET_TECNICOS": "Obtaining ticket and available technicians data...",
+    "ASIGNACIÓN_MANUAL_TIQUETE": "Manual Ticket Assignment",
+    "TIQUETE": "Ticket",
+    "INFORMACION_TIQUETE": "Ticket Information",
+    "TÍTULO": "Title",
+    "CATEGORÍA": "Category",
+    "PRIORIDAD": "Priority",
+    "RESPUESTA": "Response",
+    "RESOLUCION": "Resolution",
+    "SELECCIONAR_TECNICO": "Select Technician",
+    "SELECCIONE_UN_TECNICO": "Select a technician",
+    "DEBE_SELECCIONAR_TECNICO": "You must select a technician",
+    "TECNICO_SELECCIONADO": "Selected Technician",
+    "CARGA_ACTUAL": "Current Load",
+    "TIQUETES ASIGNADOS": "Assigned Tickets",
+    "JUSTIFICACION_ASIGNACION": "Assignment Justification",
+    "MINIMO_5_CARACTERES": "Minimum 5 characters",
+    "JUSTIFICACION_OBLIGATORIA": "Justification is mandatory",
+    "JUSTIFICACION_MINIMO_5_CARACTERES": "Justification must be at least 5 characters",
+    "ERROR_ASIGNACIÓN": "Assignment error",
+    "CANCELAR": "Cancel",
+    "ASIGNAR_TIQUETE": "Assign Ticket",
+    "ASIGNACION_COMPLETADA": "Assignment Completed!",
+    "ASIGNADO_EXITOSAMENTE": "successfully assigned",
+    "TÉCNICO": "Technician",
+    "FECHA_HORA": "Date and Time",
+    "METODO": "MMethod: Manual Assignment",
+    "ASIGNACION_REGISTRADA": "Assignment registered in the system",
+    "CAMBIO_ASIGNADO": "Ticket status changed to \"Assigned\"",
+    "NOTIFICACION_ENVIADA": "Notification sent to the technician",
+    "ENTENDIDO": "Understood"
+  },
 
   "ASIGNACION": {
     "VISTA_ASIGNACIONES": "Assignment View",
@@ -423,7 +513,8 @@
     "VER_DETALLE": "View Detail",
     "CAMBIAR_ESTADO": "Change Status",
     "AGREGAR_COMENTARIO": "Add Comment",
-    "SIN_TICKETS": "No tickets"
+    "SIN_TICKETS": "No tickets", 
+    "VENCIDO": "Overdue"
   },
 
   "ASIGNACION_NOTIFICACION": {
@@ -463,10 +554,19 @@
     "LIMPIAR": "Clear",
     "DIVIDER": "or",
     "NO_CUENTA": "Do not have an account?",
-    "REGISTRATE_AQUI": "Register here"
+    "REGISTRATE_AQUI": "Register here", 
+    "INICIO_SESION_EXITOSO": "Login Successful",
+    "INICIO_SESION_EXITOSO_MENSAJE": "Welcome back.",
+    "ERROR_AUTENTICACION": "Authentication Error", 
+    "ERROR_AUTENTICACION_MENSAJE": "Unexpected error. Please try again.",
+    "FORMULARIO_INCOMPLETO": "Incomplete form",
+    "FORMULARIO_INCOMPLETO_MENSAJE": "Please complete all required fields."
+
+    
+
   },
 
-    "USUARIO_REGISTRO": {
+  "USUARIO_REGISTRO": {
     "TITULO": "Create Account",
     "SUBTITULO": "Join SysTrack today",
     "PASO_1": "Basic Information",

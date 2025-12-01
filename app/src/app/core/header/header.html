@@ -85,6 +85,10 @@
             @for (notificacion of notificacionesService.notificaciones().slice(0, 3); track notificacion.id) {
             <button mat-menu-item>
                 <mat-icon style="color: white">notification_important</mat-icon>
+                @if (notificacion.tipo === 'TICKET_ASIGNADO') {
+                    
+
+                }
                 <span>{{ notificacion.mensaje }}</span>
             </button>
             <br>

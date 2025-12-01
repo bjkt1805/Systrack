@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../share/services/app/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { Subject } from 'rxjs/internal/Subject';
 
@@ -31,7 +32,10 @@ export class UsuarioLogin implements OnInit, OnDestroy {
         private router: Router,
 
         // Inyección del servicio de notificaciones
-        private notificacion: NotificationService
+        private noti: NotificationService,
+
+        // Inyección del servicio de traducción
+        private translate: TranslateService
     ) { }
 
     // Inicialización del componente
@@ -63,7 +67,15 @@ export class UsuarioLogin implements OnInit, OnDestroy {
         // marcar todos los campos como tocados para mostrar errores
         if (this.loginForm.invalid) {
             this.loginForm.markAllAsTouched();
-            this.notificacion.warning('Formulario incompleto', 'Por favor, complete todos los campos requeridos.');
+            this.translate.get([
+                'USUARIO_LOGIN.FORMULARIO_INCOMPLETO',
+                'USUARIO_LOGIN.FORMULARIO_INCOMPLETO_MENSAJE'
+            ]).subscribe(translations => {
+                this.noti.warning(
+                    translations['USUARIO_LOGIN.FORMULARIO_INCOMPLETO'],
+                    translations['USUARIO_LOGIN.FORMULARIO_INCOMPLETO_MENSAJE']
+                );
+            });
             return;
         }
 
@@ -80,7 +92,18 @@ export class UsuarioLogin implements OnInit, OnDestroy {
 
                 // Navegar a la página de inicio tras el login exitoso
                 if (response && response.success) {
-                    this.notificacion.success('Inicio de sesión exitoso', 'Bienvenido de nuevo.', 3000, '/inicio');
+                    this.translate.get([
+                        'USUARIO_LOGIN.INICIO_SESION_EXITOSO',
+                        'USUARIO_LOGIN.INICIO_SESION_EXITOSO_MENSAJE'
+                    ]).subscribe(translations => {
+                        this.noti.success(
+                            translations['USUARIO_LOGIN.INICIO_SESION_EXITOSO'],
+                            translations['USUARIO_LOGIN.INICIO_SESION_EXITOSO_MENSAJE'],
+                            3000,
+                            '/inicio'
+                        );
+                    });
+                    
                 }
             },
 
@@ -107,7 +130,16 @@ export class UsuarioLogin implements OnInit, OnDestroy {
                 }
 
                 // Mostrar notificación de error con el mensaje recibido del servidor
-                this.notificacion.error('Error de autenticación', errorMessage);
+                this.translate.get([
+                    'USUARIO_LOGIN.ERROR_AUTENTICACION',
+                    'USUARIO_LOGIN.ERROR_AUTENTICACION_MENSAJE'
+                ]).subscribe(translations => {
+                    this.noti.error(
+                        translations['USUARIO_LOGIN.ERROR_AUTENTICACION'],
+                        translations['USUARIO_LOGIN.ERROR_AUTENTICACION_MENSAJE'],  
+                        3000
+                    );
+                });
 
             }
         });

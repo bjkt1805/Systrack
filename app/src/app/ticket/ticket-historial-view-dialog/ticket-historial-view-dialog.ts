@@ -8,6 +8,8 @@ import { TicketService } from '../../share/services/api/ticket.service';
 import { TecnicoService } from '../../share/services/api/tecnico.service';
 import { NotificationService } from '../../share/services/app/notification.service';
 import { FileUploadService } from '../../share/services/api/file-upload.service';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificacionesService } from '../../share/services/app/notificaciones.service';
 
 // Modelos
 import { EstadoTicket } from '../../share/models/EnumsModel';
@@ -36,7 +38,10 @@ export class TicketHistorialViewDialog implements OnInit {
     private tecnicoService = inject(TecnicoService);
     private uploadService = inject(FileUploadService);
     private noti = inject(NotificationService);
+    private translate = inject (TranslateService);
+    private notificacionesService = inject(NotificacionesService);
     private dialogRef = inject(MatDialogRef<TicketHistorialViewDialog>);
+    
 
     // Formulario reactivo por medio de FormGroup
     estadoForm!: FormGroup;
@@ -167,7 +172,15 @@ export class TicketHistorialViewDialog implements OnInit {
             },
             error: (error) => {
                 console.error('[DIALOG] Error al cargar técnicos:', error);
-                this.noti.error('Error', 'No se pudieron cargar los técnicos'); // Mostrar toast de error
+                this.translate.get([
+                    'TICKET_HISTORIAL_VIEW.ERROR',
+                    'TICKET_HISTORIAL_VIEW.ERROR_CARGAR_TECNICOS'
+                ]).subscribe(translations => {
+                    this.noti.error(
+                        translations['TICKET_HISTORIAL_VIEW.ERROR'],
+                        translations['TICKET_HISTORIAL_VIEW.ERROR_CARGAR_TECNICOS']
+                    );
+                });
                 this.cargandoTecnicos.set(false); // Indicar que la carga ha finalizado
             }
         })
@@ -194,7 +207,15 @@ export class TicketHistorialViewDialog implements OnInit {
 
         // Validar la cantidad máxima de imágenes
         if (imagenesActuales.length + archivos.length > this.maxImagenes) {
-            this.noti.error('Límite excedido', `No se pueden seleccionar más de ${this.maxImagenes} imágenes.`); // Mostrar toast de error
+            this.translate.get([
+                'TICKET_HISTORIAL_VIEW.LIMITE_EXCEDIDO_TITULO',
+                'TICKET_HISTORIAL_VIEW.LIMITE_EXCEDIDO_MENSAJE'
+            ]).subscribe(translations => {
+                this.noti.error(
+                    translations['TICKET_HISTORIAL_VIEW.LIMITE_EXCEDIDO_TITULO'],
+                    translations['TICKET_HISTORIAL_VIEW.LIMITE_EXCEDIDO_MENSAJE']
+                );
+            });
             return;
         }
 
@@ -206,14 +227,30 @@ export class TicketHistorialViewDialog implements OnInit {
 
             // Validar tipo de archivo (debe ser una imagen)
             if (!archivo.type.startsWith('image/')) {
-                this.noti.error('Tipo inválido', `El archivo ${archivo.name} no es una imagen válida.`); // Mostrar toast de error
+                this.translate.get([
+                    'TICKET_HISTORIAL_VIEW.TIPO_INVALIDO_TITULO',
+                    'TICKET_HISTORIAL_VIEW.TIPO_INVALIDO_MENSAJE'
+                ]).subscribe(translations => {
+                    this.noti.error(
+                        translations['TICKET_HISTORIAL_VIEW.TIPO_INVALIDO_TITULO'],
+                        translations['TICKET_HISTORIAL_VIEW.TIPO_INVALIDO_MENSAJE']
+                    );
+                });
                 return;
             }
 
             // Validar tamaño del archivo
             const tamanoMB = archivo.size / (1024 * 1024);
             if (tamanoMB > this.maxTamanoImagenMB) {
-                this.noti.error('Tamaño excedido', `El archivo ${archivo.name} excede el tamaño máximo de ${this.maxTamanoImagenMB} MB.`); // Mostrar toast de error
+                this.translate.get([
+                    'TICKET_HISTORIAL_VIEW.TAMANNO_EXCEDIDO_TITULO',
+                    'TICKET_HISTORIAL_VIEW.TAMANNO_EXCEDIDO_MENSAJE'
+                ]).subscribe(translations => {
+                    this.noti.error(
+                        translations['TICKET_HISTORIAL_VIEW.TAMANNO_EXCEDIDO_TITULO'],
+                        translations['TICKET_HISTORIAL_VIEW.TAMANNO_EXCEDIDO_MENSAJE']
+                    );
+                });
                 return;
             }
 
@@ -281,7 +318,15 @@ export class TicketHistorialViewDialog implements OnInit {
     async onSubmit(): Promise<void> {
         if (!this.puedeEnviar()) {
             this.estadoForm.markAllAsTouched(); // Marcar todos los campos como tocados para mostrar errores
-            this.noti.error('Formulario inválido', 'Complete todos los campos requeridos');
+            this.translate.get([
+                'TICKET_HISTORIAL_VIEW.FORMULARIO_INVALIDO_TITULO',
+                'TICKET_HISTORIAL_VIEW.FORMULARIO_INVALIDO_MENSAJE'
+            ]).subscribe(translations => {
+                this.noti.error(
+                    translations['TICKET_HISTORIAL_VIEW.FORMULARIO_INVALIDO_TITULO'],
+                    translations['TICKET_HISTORIAL_VIEW.FORMULARIO_INVALIDO_MENSAJE']
+                );
+            });
             return; 
         }
         this.enviando.set(true); // Indicar que se está enviando el formulario
@@ -342,7 +387,22 @@ export class TicketHistorialViewDialog implements OnInit {
             this.ticketService.updateEstado(this.data.ticket.id, payload).subscribe({
                 next: (response) => {
                     console.log('[DIALOG] Estado del tiquete actualizado:', response);
-                    this.noti.success('Éxito', 'El estado del tiquete se ha actualizado correctamente.', 3000);
+                    this.translate.get([
+                        'TICKET_HISTORIAL_VIEW.ÉXITO',
+                        'TICKET_HISTORIAL_VIEW.ÉXITO_MENSAJE'
+                    ]).subscribe(translations => {
+                        this.noti.success(
+                            translations['TICKET_HISTORIAL_VIEW.ÉXITO'],
+                            translations['TICKET_HISTORIAL_VIEW.ÉXITO_MENSAJE'],
+                            3000
+                        );
+                    });
+
+                    // Trigger para recargar as notificaciones en el header
+                    setTimeout(() => {
+                        this.notificacionesService.triggerRecarga();
+                        console.log('[FRONTEND] Trigger de recarga de notificaciones enviado');
+                    }, 1000); // Esperar 1 segundo
 
                     // Cerrar el diálogo
                     this.dialogRef.close(true);
@@ -351,13 +411,32 @@ export class TicketHistorialViewDialog implements OnInit {
                 // Manejo de errores 
                 error: (error) => {
                     console.error('[DIALOG] Error al actualizar el estado del tiquete:', error);
-                    this.noti.error('Error', 'No se pudo actualizar el estado del tiquete. Intente nuevamente.');
+                    this.translate.get([
+                        'TICKET_HISTORIAL_VIEW.ERROR',
+                        'TICKET_HISTORIAL_VIEW.ERROR_MENSAJE'
+                    ]).subscribe(translations => {
+                        this.noti.error(
+                            translations['TICKET_HISTORIAL_VIEW.ERROR'],
+                            translations['TICKET_HISTORIAL_VIEW.ERROR_MENSAJE']
+                        );
+                    });
+
                     this.enviando.set(false); // Permitir reintento de envío
                 }
             });
         } catch (error) {
             console.error('[DIALOG] Excepción al enviar el formulario:', error);
-            this.noti.error('Error', 'Ocurrió un error al procesar su solicitud. Intente nuevamente.');
+            
+            this.translate.get([
+                'TICKET_HISTORIAL_VIEW.ERROR',
+                'TICKET_HISTORIAL_VIEW.ERROR_EXCEPCION'
+            ]).subscribe(translations => {
+                this.noti.error(
+                    translations['TICKET_HISTORIAL_VIEW.ERROR'],
+                    translations['TICKET_HISTORIAL_VIEW.ERROR_EXCEPCION']
+                );
+            });
+
             this.enviando.set(false); // Permitir reintento de envío
         }
 
@@ -415,33 +494,6 @@ export class TicketHistorialViewDialog implements OnInit {
         return this.estadoIcons[estado] || 'help_outline'; // Valor por defecto si no se encuentra
     }
 
-   /**
-    * Abrir el dialog de asignación manual de técnico
-    */
-//    abrirAsignacionManualDialog(): void {
-//     //Método para abrir el diálogo de asignación manual de técnico
-//     const dialogRef = this.dialog.open(AsignacionManualDialog, {
-//         width: '600px', // Ancho del diálogo
-//         maxHeight: '80vh', // Altura máxima del diálogo
-//         disableClose: true, // No permitir cerrar haciendo clic fuera (valor "false" deja cerrarlo)
-//         // Pasar datos al diálogo
-//         data: {
-//             tecnicos: this.tecnicos(),
-//             ticketId: this.data.ticket.id
-//         }
-//     });
-
-//     // Subscribirse al cierre del diálogo
-//     dialogRef.afterClosed().subscribe(result => {
-//         if (result === true) {
-//             // Debuguear que el técnico fue asignado manualmente
-//             console.log('[DIALOG] Técnico asignado manualmente al tiquete.', result);
-
-//             // Actualizar el formulario de cambio de estado con el nuevo técnico asignado
-//             this.estadoForm.patchValue({usuarioAsignadoId: result.usuarioAsignadoId});
-//         }
-//     });
-//    }
 
 
 }

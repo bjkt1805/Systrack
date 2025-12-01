@@ -22,6 +22,16 @@ export class NotificacionesService {
     private notificacionesNoLeidas = signal<NotificacionModel[]>(this.loadNotisFromStorage());
 
     /**
+     * Signal para recargar notificaciones en el header
+     */
+    private recargarNotis = signal<number>(0);
+
+    /**
+     * Signal computado para que el header se subscriba al cambio
+     */
+    readonly recargar = computed(() => this.recargarNotis());
+
+    /**
      * Observable reactivo: lista completa de las notificaciones
      */
 
@@ -29,6 +39,13 @@ export class NotificacionesService {
 
     // Cantidad total de notificaciones
     readonly qtyItems = computed(() => this.notificacionesNoLeidas().length);
+
+    /**
+     * Método para forzar la recarga de notificaciones en el header
+     */
+    triggerRecarga(): void {
+        this.recargarNotis.set(this.recargarNotis() + 1); // Incrementar el valor para forzar la recarga 
+    }
 
     /**
      * Método constructor de la clase
@@ -50,7 +67,13 @@ export class NotificacionesService {
     private loadNotisFromStorage(): NotificacionModel[] {
         try{
             const data = localStorage.getItem('notificacionesNoLeidas');
-            return data ? JSON.parse(data) : [];
+
+            if (!data) {
+                return [];
+            }
+
+            return JSON.parse(data) as NotificacionModel[];
+
         }
         catch {
             return [];
@@ -58,16 +81,47 @@ export class NotificacionesService {
     }
 
     /**
+     * Método para formatear las notificaciones
+     */
+    private formatearNotificaciones(data: NotificacionModel[]): NotificacionModel[] {
+        
+        // Recorrer los elementos del array de data para cortar el mensaje 
+        // si el tipo de notificacion es TICKET_ASIGNADO
+        const notificacionesFormateadas = data.map(noti => {
+            if (noti.tipo === 'TICKET_ASIGNADO' && noti.mensaje && noti.mensaje.length > 55) {
+                return {
+                    ...noti,
+                    mensaje: noti.mensaje.substring(0, 55) + '...'
+                };
+            }
+            return noti;
+        });
+        
+        return notificacionesFormateadas;
+    }
+
+    /**
      * Obtener las notificaciones desde la base de datos 
      */
-    cargarNotificaciones(usuarioId: number) : void {
+    cargarNotificaciones(usuarioId: number, formatear:boolean = true) : void {
         console.log("Cargando notificaciones para usuarioId:", usuarioId);
         this.getNotificacionesNoLeidas(usuarioId).subscribe({
             next: (notificaciones) => {
                 console.log("Notificaciones cargadas:", notificaciones);
                 console.log("Cantidad de notificaciones: ", notificaciones.length);
+
+
+                // Formatear las notificaciones dependiendo de dónde provienen
+                let notificacionesFormateadas = null; 
+
+                if (formatear) {
+                    notificacionesFormateadas = this.formatearNotificaciones(notificaciones);
+                }
+                else {
+                    notificacionesFormateadas = notificaciones;
+                }
                 //Actualizar la signal con las notificaciones obtenidas
-                this.notificacionesNoLeidas.set(notificaciones);
+                this.notificacionesNoLeidas.set(notificacionesFormateadas);
             },
             error: (error) => {
                 console.error('Error al cargar notificaciones:', error);

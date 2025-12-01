@@ -5,6 +5,7 @@ import { TicketService } from '../../share/services/api/ticket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TicketImageViewDialog } from '../ticket-image-view-dialog/ticket-image-view-dialog';
 import { NotificationService } from '../../share/services/app/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // importar dialogo de TicketEstado
 import { TicketHistorialViewDialog } from '../ticket-historial-view-dialog/ticket-historial-view-dialog';
@@ -39,6 +40,9 @@ export class TicketDetail {
 
   // Inyectar servicio de notificaciones
   private noti = inject(NotificationService);
+
+  // Inyectar servicio de traducción
+  private translate = inject(TranslateService);
 
   /**
  * Signals para manejar la autenticación de usuario 
@@ -241,10 +245,14 @@ export class TicketDetail {
 
     // Validar que haya estados disponibles 
     if (estadosPermitidos.length === 0) {
-      this.noti.warning(
-        'Sin permisos',
-        'No puede cambiar el estado de este ticket en su estado actual'
-      );
+      const titleKey = 'TICKET_DETAIL.SIN_PERMISOS_TITULO';
+      const messageKey = 'TICKET_DETAIL.SIN_PERMISOS_MENSAJE';
+      this.translate.get([titleKey, messageKey]).subscribe(translations => {
+        this.noti.warning(
+          translations[titleKey],
+          translations[messageKey]
+        );
+      });
       return;
     }
 
@@ -299,7 +307,11 @@ export class TicketDetail {
     // Si no hay fecha, retornar cadena vacía
     if (!fechaAFormatear || isNaN(fechaAFormatear.getTime())) return '';
 
-    // Formatear la fecha a DD/MM/AAAA
+
+    // Obtener el idioma actual desde el servicio de traducción
+    const idiomaActual = this.translate.currentLang || 'es';
+
+    // Obtener día, mes y año
     const dia = String(fechaAFormatear.getDate()).padStart(2, '0');
     const mes = String(fechaAFormatear.getMonth() + 1).padStart(2, '0');
     const anio = fechaAFormatear.getFullYear();
@@ -312,7 +324,13 @@ export class TicketDetail {
     horas = horas ? horas : 12; // la hora '0' debe ser '12'
     const horasFormateadas = String(horas).padStart(2, '0');
 
-    // Retornar la fecha y hora formateada
+    // Formatear según el idioma
+    if (idiomaActual === 'en') {
+      // Formato inglés: MM/DD/YYYY hh:mm AM/PM
+      return `${mes}/${dia}/${anio} ${horasFormateadas}:${minutos} ${ampm}`;
+    }
+
+    // Formato español (por defecto): DD/MM/AAAA hh:mm AM/PM
     return `${dia}/${mes}/${anio} ${horasFormateadas}:${minutos} ${ampm}`;
   }
 

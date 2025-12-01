@@ -39,7 +39,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
     private rolService: RolService,
 
     // Inyección del servicio de notificaciones
-    private notificacion: NotificationService,
+    private noti: NotificationService,
     private usuarioService: UsuarioService,
     private translate: TranslateService
   ) {}
@@ -96,7 +96,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
     //Validación del formulario (si no es correcto no hacer nada)
     if (this.registerForm.invalid) {
       this.translate.get(['USUARIO_NOTIFICACIONES.FORMULARIO_INVALIDO', 'USUARIO_NOTIFICACIONES.REVISE_CAMPOS']).subscribe(translations => {
-        this.notificacion.error(
+        this.noti.error(
           translations['USUARIO_NOTIFICACIONES.FORMULARIO_INVALIDO'], 
           translations['USUARIO_NOTIFICACIONES.REVISE_CAMPOS'], 
           5000
@@ -135,7 +135,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
 
           // Mostrar el toast de éxito y devolver a /usuario/login después de 3 segundos
           this.translate.get(['USUARIO_NOTIFICACIONES.USUARIO_REGISTRADO', 'USUARIO_NOTIFICACIONES.REGISTRO_EXITOSO']).subscribe(translations => {
-            this.notificacion.success(
+            this.noti.success(
               translations['USUARIO_NOTIFICACIONES.USUARIO_REGISTRADO'], 
               translations['USUARIO_NOTIFICACIONES.REGISTRO_EXITOSO'], 
               3000, 
@@ -177,7 +177,7 @@ export class UsuarioRegister implements OnInit, OnDestroy {
           
           // Mostrar el toast de error con el mensaje correspondiente
           this.translate.get(['USUARIO_NOTIFICACIONES.ERROR_TITULO', errorMessageKey]).subscribe(translations => {
-            this.notificacion.error(
+            this.noti.error(
               translations['USUARIO_NOTIFICACIONES.ERROR_TITULO'], 
               translations[errorMessageKey], 
               5000

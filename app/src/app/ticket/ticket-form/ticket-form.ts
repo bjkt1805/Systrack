@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map, delay, finalize } from 'rxjs';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map, delay, finalize, Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../share/services/app/notification.service';
@@ -20,9 +20,11 @@ import { UsuarioService } from '../../share/services/api/usuario.service';
 import { ImagenTicketModel } from '../../share/models/ImagenTicketModel';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { AsignacionService } from '../../share/services/api/asignacion.service';
+import { NotificacionesService } from '../../share/services/app/notificaciones.service'; 
 import { AsignacionAutomaticaDialog } from '../ticket-asignacion-automatica-dialog/ticket-asignacion-automatica-dialog';
 import { AsignacionManualDialog } from '../ticket-asignacion-manual/ticket-asignacion-manual-dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { NotificacionModel } from '../../share/models/NotificacionModel';
 
 @Component({
   selector: 'app-ticket-form',
@@ -46,6 +48,9 @@ export class TicketForm {
 
   // Inyectar el servicio de asignacion
   private asignacionService = inject(AsignacionService);
+
+  // Inyectar el servicio de notificaciones (localstorage)
+  private notificacionesService = inject(NotificacionesService);
 
   // Inyectar el dialogo de asignacion automatica
   private dialog = inject(MatDialog);
@@ -358,7 +363,14 @@ export class TicketForm {
    * Formatear una fecha (hora de Costa Rica)para mostrarla en el formulario
    */
   private formatDateTime(date: Date): string {
-    return date.toLocaleString('es-CR', {
+
+  // Obtener el idioma actual del servicio de traducción
+  const idiomaActual = this.translate.currentLang || 'es';
+
+  // Definir el locale según el idioma
+  const locale = idiomaActual === 'en' ? 'en-US' : 'es-CR';
+  
+    return date.toLocaleString(locale, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -508,7 +520,7 @@ export class TicketForm {
       categoriaId: data.categoriaId,
       solicitanteId: data.solicitanteId,
       estado: data.estado,
-      fechaCreacion: data.creadoAt,
+      fechaCreacion: this.formatDateTime(new Date(data.creadoAt)),
       solicitanteNombre: data.solicitante?.nombreCompleto || '',
       solicitanteCorreo: data.solicitante?.correo || '',
       categoriaNombre: data.categoria?.nombre || '',
@@ -721,8 +733,36 @@ export class TicketForm {
 
       // Si es creación, iniciar proceso de asignación automática
       if (this.isCreate) {
+
+        // Obtener la última notificación creada (el tiquete creado) y almacenarla en el local storage
+        // this.notificacionesService.obtenerUltimaNotificacion(this.getCurrentUserId()!).subscribe({
+        //   next: (ultimaNotificacion: NotificacionModel) => {
+        //     const nuevaNotificacion: NotificacionModel = {
+        //       id: ultimaNotificacion.id, // Usar timestamp como id único
+        //       tipo: ultimaNotificacion.tipo,
+        //       mensaje: ultimaNotificacion.mensaje,
+        //       estado: ultimaNotificacion.estado,
+        //       ticketId: ultimaNotificacion.ticketId,
+        //       receptorId: ultimaNotificacion.receptorId,
+        //       creadoAt: ultimaNotificacion.creadoAt,
+        //       updatedAt: ultimaNotificacion.updatedAt,
+        //       receptor: ultimaNotificacion.receptor,
+        //     };
+        //     // Agregar la notificación al local storage
+        //     this.notificacionesService.addNotificacion(nuevaNotificacion);
+        //   },
+        //   error: (error: Error) => {
+        //     console.error('[FRONTEND] Error obteniendo la última notificación:', error);
+        //   }
+        // }) 
         console.log('[FRONTEND] Iniciando proceso de asignación automática para el tiquete');
         this.asignarAutomaticamente(tiquete.id, tiquete.codigo);
+
+        // Trigger para recargar as notificaciones en el header
+        setTimeout(() => {
+          this.notificacionesService.triggerRecarga();
+          console.log('[FRONTEND] Trigger de recarga de notificaciones enviado');
+        }, 1000); // Esperar 1 segundo
       }
 
       // Si es editar, navegar a la lista de tiquetes 

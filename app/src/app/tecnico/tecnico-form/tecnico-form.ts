@@ -266,14 +266,20 @@ export class TecnicoForm implements OnInit, OnDestroy {
   removeEspecialidad(index: number) {
     // VALIDACIÓN: En modo edición, permitir eliminar hasta quedar sin especialidades
     // En modo creación, mantener al menos una
-    if (this.isCreate && this.especialidades.length <= 1) {
-      this.noti.warning(
-        'Especialidad requerida',
-        'Debe tener al menos una especialidad para crear un técnico',
-        3000
-      );
-      return;
-    }
+
+    const titleKey = "TECNICO_NOTIFICACION.ESPECIALIDAD_REQUERIDA_TITULO";
+    const messageKey = "TECNICO_NOTIFICACION.ESPECIALIDAD_REQUERIDA_MENSAJE";
+
+    this.translate.get([titleKey, messageKey]).subscribe(translations => {
+      if (this.isCreate && this.especialidades.length <= 1) {
+        this.noti.warning(
+          translations[titleKey],
+          translations[messageKey],
+          3000
+        );
+        return;
+      }
+    });
 
     // // CONFIRMACIÓN: En modo edición, preguntar antes de eliminar si queda solo una
     // if (!this.isCreate && this.especialidades.length === 1) {
@@ -305,17 +311,27 @@ export class TecnicoForm implements OnInit, OnDestroy {
     // constante para el input de archivo
     const input = event.target as HTMLInputElement;
 
+    const titleKey1= 'TECNICO_NOTIFICACION.TIPO_ARCHIVO_INVALIDO_TITULO';
+    const messageKey1 = 'TECNICO_NOTIFICACION.TIPO_ARCHIVO_INVALIDO_MENSAJE';
+    const titleKey2 = 'TECNICO_NOTIFICACION.ARCHIVO_GRANDE_TITULO';
+    const messageKey2 = 'TECNICO_NOTIFICACION.ARCHIVO_GRANDE_MENSAJE';
+
     // Si existe un archivo seleccionado, leerlo y generar vista previa
     if (input.files?.[0]) {
       // Validar primero el tipo de archivo
-      if (!input.files?.[0].type.startsWith('image/')) {
-        this.noti.error('Tipo de archivo inválido', 'Solo se permiten archivos de imagen.', 3000);
-        return;
-      }
+      this.translate.get([titleKey1, messageKey1, titleKey2, messageKey2]).subscribe(translations => {
+        if (!input.files?.[0].type.startsWith('image/')) {
+          this.noti.error(translations[titleKey1], translations[messageKey1], 3000);
+          this.tecnicoForm.invalid;
+          return;
+        }
+      });
 
       // Validar el tamaño del archivo (2 MB máximo)
       if (input.files?.[0].size > 2 * 1024 * 1024) {
-        this.noti.error('Archivo demasiado grande', 'Tamaño máximo del archivo: 2 MB.', 3000);
+        this.translate.get([titleKey1, messageKey1, titleKey2, messageKey2]).subscribe(translations => {
+          this.noti.error(translations[titleKey2], translations[messageKey2], 3000);
+        });
         return;
       }
 
@@ -368,7 +384,11 @@ export class TecnicoForm implements OnInit, OnDestroy {
       console.log('Imagen marcada para eliminación en modo edición');
 
       // Opcional: Mostrar confirmación
-      this.noti.info('Imagen eliminada', 'La imagen será removida al guardar los cambios', 3000);
+      const titleKey = "TECNICO_NOTIFICACION.IMAGEN_ELIMINADA_TITULO";
+      const messageKey = "TECNICO_NOTIFICACION.IMAGEN_ELIMINADA_MENSAJE";
+      this.translate.get([titleKey, messageKey]).subscribe(translations => {
+        this.noti.info(translations[titleKey], translations[messageKey], 3000);
+      });
     }
   }
 
@@ -431,7 +451,11 @@ export class TecnicoForm implements OnInit, OnDestroy {
 
     // Si el formulario es inválido, mostrar notificación de error y salir
     if (this.tecnicoForm.invalid) {
-      this.noti.error('Formulario Inválido', 'Revise los campos marcados.', 5000);
+      const titleKey = 'TECNICO_NOTIFICACION.FORMULARIO_INVALIDO_TITULO';
+      const messageKey = 'TECNICO_NOTIFICACION.FORMULARIO_INVALIDO_MENSAJE';
+      this.translate.get([titleKey, messageKey]).subscribe(translations => {
+        this.noti.error(translations[titleKey], translations[messageKey], 5000);
+      });
       return;
     }
 
