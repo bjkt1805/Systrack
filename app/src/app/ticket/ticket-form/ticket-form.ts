@@ -817,10 +817,7 @@ export class TicketForm {
           }, 3000); // Fin del setTimeout de 3 segundos
         },
 
-
-
-
-            // Si no se pudo asignar automáticamente, mostrar advertencia
+           // Si no se pudo asignar automáticamente, mostrar advertencia
             // this.translate.get([
             //   'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_TITULO',
             //   'TICKET_NOTIFICACIONES.ASIGNACION_MANUAL_MENSAJE'
