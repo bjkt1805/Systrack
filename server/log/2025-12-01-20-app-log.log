@@ -1,0 +1,9 @@
+2025-12-01 20:11:32.339 error: 	warner--Se produjo un error interno del servidor Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 5010 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+2025-12-01 20:11:53.446 error: 	warner--Se produjo un error interno del servidor Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 5013 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+2025-12-01 20:14:55.380 error: 	warner--Se produjo un error interno del servidor Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 10000 ms, however 10007 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+2025-12-01 20:21:07.573 error: 	warner--Se produjo un error interno del servidor 
+Invalid `prisma.notificacion.createMany()` invocation:
+
+
+Error occurred during query execution:
+ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(Server(MysqlError { code: 1205, message: "Lock wait timeout exceeded; try restarting transaction", state: "HY000" })), transient: false })

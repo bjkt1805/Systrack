@@ -589,7 +589,17 @@ export class AsignacionController {
           `[BACKEND] Carga de trabajo actualizada para técnico ${tecnicoId}: ${tecnicoActualizado.cargaTrabajo}`
         );
 
-      // Crear notificaciones
+        return {
+          ticketActualizado,
+          historial,
+          cargaTrabajo: tecnicoActualizado.cargaTrabajo,
+        };
+      }, {
+        timeout: 10000, // 10 segundos
+        maxWait: 5000, // 5 segundos máximo esperando para adquirir la transacción
+      });
+
+      // Crear notificaciones fuera de la transacción para que no de timeout
       await this.prisma.notificacion.createMany({
         data: [
           // Notificación para el técnico
@@ -611,7 +621,7 @@ export class AsignacionController {
             receptorId: 1, // administrador
             ticketId: ticketId,
             estado: 'NO_LEIDA',
-            mensaje: `Se ha asignado automáticamente el tiquete ${ticket.codigo} al técnico ${tecnico.nombreCompleto}. Justificación: el administrador asignó el tiquete manualmente`,
+            mensaje: `Se ha asignado manualmente el tiquete ${ticket.codigo} al técnico ${tecnico.nombreCompleto}. Justificación: el administrador asignó el tiquete manualmente`,
             leidoAt: null,
             atendidoAt: null
           },
@@ -621,7 +631,7 @@ export class AsignacionController {
             receptorId: 2, // administrador
             ticketId: ticketId,
             estado: 'NO_LEIDA',
-            mensaje: `Se ha asignado automáticamente el tiquete ${ticket.codigo} al técnico ${tecnico.nombreCompleto}. Justificación: el administrador asignó el tiquete manualmente`,
+            mensaje: `Se ha asignado manualmente el tiquete ${ticket.codigo} al técnico ${tecnico.nombreCompleto}. Justificación: el administrador asignó el tiquete manualmente`,
             leidoAt: null,
             atendidoAt: null
           },
@@ -638,13 +648,6 @@ export class AsignacionController {
             atendidoAt: null
           }
         ]
-      });
-
-        return {
-          ticketActualizado,
-          historial,
-          cargaTrabajo: tecnicoActualizado.cargaTrabajo,
-        };
       });
 
       console.log("[BACKEND] Ticket asignado exitosamente:", {
