@@ -89,10 +89,10 @@
 
                 <mat-panel-description>
                   <div class="notificacion-meta">
-                    <!-- Indicador de no leída -->
-                    <!-- @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) { -->
+                    <!-- Indicador de no leída (SOLO si NO está leída) -->
+                    @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) {
                       <span class="badge badge-unread">Nueva</span>
-                    <!-- } -->
+                    }
                     <!-- Fecha -->
                     <span class="notificacion-fecha">
                       {{ formatearFecha(notificacion.creadoAt) }}
@@ -142,7 +142,8 @@
                     </button>
                   }
 
-                   <!--@if (notificacion.estado === EstadoNotificacion.NO_LEIDA) { -->
+                  <!-- Mostrar botón SOLO si NO está leída -->
+                  <!-- @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) { -->
                     <button mat-stroked-button color="accent" (click)="marcarComoLeida(notificacion, $event)">
                       <mat-icon>done</mat-icon>
                       Marcar como leída

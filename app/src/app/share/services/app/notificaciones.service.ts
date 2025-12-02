@@ -30,15 +30,24 @@ export class NotificacionesService {
    */
   readonly recargar = computed(() => this.recargarNotis());
 
+
   /**
-   * Observable reactivo: lista completa de las notificaciones
+   * Signal para TODAS las notificaciones (para el historial completo)
    */
+  private todasLasNotificaciones = signal<NotificacionModel[]>([]);
 
-  readonly notificaciones = computed(() => this.notificacionesNoLeidas());
+/**
+ * Observable reactivo: lista completa de las notificaciones
+ */
+readonly notificaciones = computed(() => this.notificacionesNoLeidas());
 
-  // Cantidad total de notificaciones
-  readonly qtyItems = computed(() => this.notificacionesNoLeidas().length);
+/**
+ * Observable reactivo: TODAS las notificaciones (leídas y no leídas)
+ */
+readonly todasNotificaciones = computed(() => this.todasLasNotificaciones());
 
+// Cantidad total de notificaciones
+readonly qtyItems = computed(() => this.notificacionesNoLeidas().length);
   
   /**
    * Método para forzar la recarga de notificaciones en el header
@@ -95,7 +104,7 @@ export class NotificacionesService {
   }
 
   /**
-   * Obtener las notificaciones desde la base de datos
+   * Obtener las notificaciones desde la base de datos, las no leídas
    */
   cargarNotificaciones(usuarioId: number, formatear: boolean = true): void {
     console.log('Cargando notificaciones para usuarioId:', usuarioId);
@@ -117,6 +126,22 @@ export class NotificacionesService {
       },
       error: (error) => {
         console.error('Error al cargar notificaciones:', error);
+      },
+    });
+  }
+
+  /**
+   * Cargar TODAS las notificaciones (leídas + no leídas) para el historial
+   */
+  cargarTodasNotificaciones(usuarioId: number): void {
+    console.log('Cargando TODAS las notificaciones para usuarioId:', usuarioId);
+    this.getTodasNotificacionesPorUsuario(usuarioId).subscribe({
+      next: (notificaciones) => {
+        console.log('TODAS las notificaciones cargadas:', notificaciones.length);
+        this.todasLasNotificaciones.set(notificaciones);
+      },
+      error: (error) => {
+        console.error('Error al cargar TODAS las notificaciones:', error);
       },
     });
   }
@@ -185,6 +210,14 @@ export class NotificacionesService {
     return this.http.get<NotificacionModel[]>(`${this.apiUrl}/${this.endpoint}/${usuarioId}`);
   }
 
+  /**
+   * HTTP: Obtener TODAS las notificaciones del usuario
+   */
+  getTodasNotificacionesPorUsuario(usuarioId: number): Observable<NotificacionModel[]> {
+    return this.http.get<NotificacionModel[]>(`${this.apiUrl}/${this.endpoint}/usuario/${usuarioId}`);
+  }
+
+  
   /**
    * Actualizar una notificación como leída en el backend
    */

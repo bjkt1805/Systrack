@@ -38,7 +38,7 @@ export class NotificacionIndex implements OnInit {
 
     // Signal computada para filtrar las notificaciones
     notificacionesFiltradas = computed (() => {
-        const todas = this.notificacionesService.notificaciones();
+        const todas = this.notificacionesService.todasNotificaciones();
         const filtro = this.filtroEstado();
 
         // Si el filtro son todas, devolver todas 
@@ -50,8 +50,10 @@ export class NotificacionIndex implements OnInit {
     })
 
     // Signals computadas para los contadores de notificaciones
-    totalNotificaciones = computed(() => this.notificacionesService.notificaciones().length);
-    totalNoLeidas = computed (() => this.notificacionesService.qtyItems());
+    totalNotificaciones = computed(() => this.notificacionesService.todasNotificaciones().length);
+    totalNoLeidas = computed(() => 
+        this.notificacionesService.todasNotificaciones().filter(n => n.estado === EstadoNotificacion.NO_LEIDA).length
+    );
 
     // OnInit del componente 
     ngOnInit(): void {
@@ -72,7 +74,15 @@ export class NotificacionIndex implements OnInit {
 
         // Marcar la signal de carga como true 
         this.cargando.set(true);
-        this.notificacionesService.cargarNotificaciones(usuarioId, false);
+        
+        console.log('Cargando TODAS las notificaciones para usuario:', usuarioId);
+        this.notificacionesService.cargarTodasNotificaciones(usuarioId);
+        
+        // Desactivar loading después de un delay porque sino se queda cargando
+        setTimeout(() => {
+          this.cargando.set(false);
+          console.log('Carga completada');
+        }, 1000);
     }
 
   /**
