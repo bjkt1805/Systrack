@@ -932,25 +932,14 @@ export class TicketController {
     rol: string, // obtener el rol del usuario
     esCreador: boolean // revisar si el usuario es el creador del tiquete
   ): void {
-    // Validación para Admin
-    if (rol === 'ADMIN') {
-      // Admin solo puede cambiar a ASIGNADO o CERRADO
 
-      // Si el estado nuevo no es ni ASIGNADO, ni CERRADO, enviar mensaje de error (forbidden)
-      if (!['ASIGNADO', 'CERRADO'].includes(estadoNuevo)) {
-        throw AppError.forbidden(
-          'Como ADMIN solo puede asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). ' +
-          'Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos.'
-        );
-      }
-      console.log(`[BACKEND] ADMIN tiene permiso para cambiar a ${estadoNuevo}`);
     if (rol === "ADMIN") {
       // Admin solo puede cambiar a ASIGNADO o CERRADO
 
       // Si el estado nuevo no es ni ASIGNADO, ni CERRADO, enviar mensaje de error (forbidden)
       if (!["ASIGNADO", "CERRADO"].includes(estadoNuevo)) {
         throw AppError.forbidden(
-          "Como ADMIN solo puedes asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). " +
+          "Como ADMIN solo puede asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). " +
             "Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos."
         );
       }
@@ -986,7 +975,7 @@ export class TicketController {
       }
     }
   }
-  }
+  
   // MÉTODOS PARA CÁLCULO DE SEMANA
   private obtenerInicioSemana(fecha: Date): Date {
     // TRABAJAR en UTC para evitar conversiones de zona horaria
