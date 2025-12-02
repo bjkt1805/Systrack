@@ -101,23 +101,22 @@ export class NotificacionIndex implements OnInit {
    * Marcar una notificación como leída
    */
   marcarComoLeida(notificacion: NotificacionModel, event: Event): void {
+
+  console.log('[COMPONENTE] ========== INICIO ==========');
+  console.log('[COMPONENTE] Notificación:', notificacion);
+  console.log('[COMPONENTE] Estado actual:', notificacion.estado);
+  console.log('[COMPONENTE] EstadoNotificacion.LEIDA:', EstadoNotificacion.LEIDA);
+  console.log('[COMPONENTE] ¿Son iguales?', notificacion.estado === EstadoNotificacion.LEIDA);
+  
+
     event.stopPropagation(); // Evitar que se expanda el acordeón
 
-    if (notificacion.estado === 'LEIDA') {
+    if (notificacion.estado === EstadoNotificacion.LEIDA) {//Que sea el enum
       return; // Ya está leída
     }
 
     // Llamar al servicio para actualizar en el backend
-    this.notificacionesService.actualizarNotificacion(notificacion.id).subscribe({
-      next: () => {
-        // Actualizar localmente (remover de no leídas)
-        this.notificacionesService.marcarComoLeida(notificacion.id);
-        console.log('[NOTIFICACIONES] Marcada como leída:', notificacion.id);
-      },
-      error: (error : Error) => {
-        console.error('[NOTIFICACIONES] Error al marcar como leída:', error);
-      }
-    });
+    this.notificacionesService.marcarComoLeida(notificacion.id);
   }
 
   /**

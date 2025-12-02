@@ -100,5 +100,4 @@ export class Header implements OnInit {
 
   // Método para acortar a 20 caracteres (+...) el 
   // mensaje de notificación con tipo TICKET_ASIGNADO
-
 }

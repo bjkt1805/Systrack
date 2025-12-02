@@ -11,6 +11,9 @@ export class NotificacionRoutes {
         //GET localhost:3000/notificacion/{usuarioId}
         router.get('/:id', controller.get);
 
+        //POST localhost:3000/notificacion/marcar-como-leida/{notificacionId}
+        router.put('/marcar-leida/:id', controller.actualizarNotificacion);
+
         return router
     }
 }

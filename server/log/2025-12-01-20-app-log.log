@@ -7,3 +7,14 @@ Invalid `prisma.notificacion.createMany()` invocation:
 
 Error occurred during query execution:
 ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(Server(MysqlError { code: 1205, message: "Lock wait timeout exceeded; try restarting transaction", state: "HY000" })), transient: false })
+2025-12-01 20:46:48.344 error: 	warsb--Se produjo un error interno del servidor 
+Invalid `prisma.usuario.findUnique()` invocation in
+C:\Users\warsb\OneDrive\Escritorio\Systrack\Systrack\server\source\config\passport.ts:30:43
+
+  27 try {
+  28 
+  29   // Buscar el usuario en la base de datos por correo
+→ 30   const user = await prisma.usuario.findUnique(
+Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.

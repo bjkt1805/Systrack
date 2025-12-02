@@ -5,6 +5,16 @@ import { AppError } from "../errors/custom.error";
 export class NotificacionController {
     prisma = new PrismaClient();
 
+    // Obtener todas las notificaciones
+    getAll = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const listado = await this.prisma.notificacion.findMany();
+            response.json(listado);
+        } catch (error) {
+            next(error);
+        }
+    };
+
     // OBTENER TODAS LAS NOTIFICACIONES NO LÉIDAS 
     // PARA EL USUARIO 
     get = async (request: Request, response: Response, next: NextFunction) => {
@@ -39,7 +49,7 @@ export class NotificacionController {
             // Actualizar el estado de la notificación a "LEIDA"
             const notificacionActualizada = await this.prisma.notificacion.update({
                 where: { id: notificacionId },
-                data: { estado: "LEIDA" }
+                data: { estado: "LEIDA", leidoAt: new Date() }// Cambiar estado y fecha de lectura
             });
             response.json(notificacionActualizada);
         } catch (error) {
