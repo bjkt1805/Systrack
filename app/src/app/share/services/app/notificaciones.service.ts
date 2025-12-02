@@ -185,6 +185,15 @@ readonly qtyItems = computed(() => this.notificacionesNoLeidas().length);
             : item
         )
       );
+
+      // También actualizar en TODAS las notificaciones
+    this.todasLasNotificaciones.update((current) =>
+        current.map((item) =>
+          item.id === notificacionId
+            ? { ...item, estado: 'LEIDA' as EstadoNotificacion, leidoAt: response.leidoAt }
+            : item
+        )
+      );
       
       console.log('Notificación eliminada localmente');
     },
