@@ -33,7 +33,7 @@ export enum TipoNotificacion {
 
 export enum EstadoNotificacion {
   LEIDA = 'LEIDA',
-  NO_LEIDA = 'ATENDIDA',
+  NO_LEIDA = 'NO_LEIDA',
 }
 
 export enum EstadoTecnico {

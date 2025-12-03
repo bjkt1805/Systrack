@@ -127,6 +127,12 @@ export class NotificacionIndex implements OnInit {
 
     // Llamar al servicio para actualizar en el backend
     this.notificacionesService.marcarComoLeida(notificacion.id);
+
+    // Trigger para recargar as notificaciones en el header
+    setTimeout(() => {
+      this.notificacionesService.triggerRecarga();
+      console.log('[FRONTEND] Trigger de recarga de notificaciones enviado');
+    }, 1000); // Esperar 1 segundo
   }
 
   /**

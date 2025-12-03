@@ -104,6 +104,10 @@ export class TecnicoController {
           rol: Rol.TECNICO,
           estadoTecnico: EstadoTecnico.DISPONIBLE,
           activo: true
+        }, 
+
+        include: {
+          especialidades: true
         }
       })
 

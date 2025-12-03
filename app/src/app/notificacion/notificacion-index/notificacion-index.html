@@ -7,8 +7,8 @@
         <mat-icon class="page-icon">notifications</mat-icon>
       </div>
       <div class="title-group">
-        <h1 class="page-title">Centro de Notificaciones</h1>
-        <p class="page-subtitle">Historial y gestión de notificaciones</p>
+        <h1 class="page-title">{{ 'NOTIFICACIONES_INDEX.TITULO' | translate }}</h1>
+        <p class="page-subtitle">{{'NOTIFICACIONES_INDEX.SUBTITULO' | translate }}</p>
       </div>
     </div>
 
@@ -16,11 +16,11 @@
     <div class="header-stats">
       <div class="stat-item">
         <span class="stat-number">{{ totalNotificaciones() }}</span>
-        <span class="stat-label">Total</span>
+        <span class="stat-label">{{'NOTIFICACIONES_INDEX.TOTAL' | translate }}</span>
       </div>
       <div class="stat-item stat-unread">
         <span class="stat-number">{{ totalNoLeidas() }}</span>
-        <span class="stat-label">No leídas</span>
+        <span class="stat-label">{{'NOTIFICACIONES_INDEX.NO_LEIDAS' | translate }}</span>
       </div>
     </div>
   </div>
@@ -32,20 +32,20 @@
       <mat-button-toggle-group [value]="filtroEstado()" (change)="cambiarFiltro($event.value)">
         <mat-button-toggle value="TODAS">
           <mat-icon>all_inbox</mat-icon>
-          Todas
+          {{'NOTIFICACIONES_INDEX.TODAS' | translate }}
         </mat-button-toggle>
         <mat-button-toggle value="NO_LEIDA">
           <mat-icon>mark_email_unread</mat-icon>
-          No leídas
+          {{'NOTIFICACIONES_INDEX.NO_LEIDAS' | translate }}
         </mat-button-toggle>
         <mat-button-toggle value="LEIDA">
           <mat-icon>drafts</mat-icon>
-          Leídas
+          {{'NOTIFICACIONES_INDEX.LEIDAS' | translate }}
         </mat-button-toggle>
       </mat-button-toggle-group>
 
       <!-- Botón refrescar -->
-      <button mat-icon-button matTooltip="Refrescar" (click)="cargarNotificaciones()">
+      <button mat-icon-button matTooltip="{{'NOTIFICACIONES_INDEX.REFRESCAR' | translate }}" (click)="cargarNotificaciones()">
         <mat-icon>refresh</mat-icon>
       </button>
     </div>
@@ -54,7 +54,7 @@
     @if (cargando()) {
       <div class="loading-container">
         <mat-spinner diameter="40"></mat-spinner>
-        <span>Cargando notificaciones...</span>
+        <span>{{'NOTIFICACIONES_INDEX.CARGANDO_NOTIFICACIONES' | translate }}</span>
       </div>
     }
 
@@ -91,7 +91,7 @@
                   <div class="notificacion-meta">
                     <!-- Indicador de no leída (SOLO si NO está leída) -->
                     @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) {
-                      <span class="badge badge-unread">Nueva</span>
+                      <span class="badge badge-unread">{{'NOTIFICACIONES_INDEX.NUEVA' | translate }}</span>
                     }
                     <!-- Fecha -->
                     <span class="notificacion-fecha">
@@ -106,7 +106,7 @@
                 <div class="detalle-row">
                   <mat-icon>message</mat-icon>
                   <div class="detalle-content">
-                    <span class="detalle-label">Mensaje</span>
+                    <span class="detalle-label">{{'NOTIFICACIONES_INDEX.MENSAJE' | translate }}</span>
                     <span class="detalle-value">{{ notificacion.mensaje }}</span>
                   </div>
                 </div>
@@ -114,41 +114,31 @@
                 <div class="detalle-row">
                   <mat-icon>schedule</mat-icon>
                   <div class="detalle-content">
-                    <span class="detalle-label">Fecha y hora</span>
+                    <span class="detalle-label">{{'NOTIFICACIONES_INDEX.FECHA_HORA' | translate }}</span>
                     <span class="detalle-value">
                       {{ notificacion.creadoAt | date:'dd/MM/yyyy HH:mm' }}
                     </span>
                   </div>
                 </div>
 
-                <div class="detalle-row">
-                  <mat-icon>info</mat-icon>
-                  <div class="detalle-content">
-                    <span class="detalle-label">Estado</span>
-                    <span class="detalle-value">
-                      <span class="badge" [ngClass]="notificacion.estado === EstadoNotificacion.NO_LEIDA ? 'badge-unread' : 'badge-read'">
-                        {{ notificacion.estado === EstadoNotificacion.NO_LEIDA ? 'No leída' : 'Leída' }}
-                      </span>
-                    </span>
-                  </div>
-                </div>
+
 
                 <!-- Acciones -->
                 <div class="detalle-acciones">
                   @if (notificacion.ticketId) {
                     <button mat-raised-button color="primary" (click)="irAlTicket(notificacion.ticketId, $event)">
                       <mat-icon>visibility</mat-icon>
-                      Ver Ticket
+                      {{'NOTIFICACIONES_INDEX.VER_TICKET' | translate }}
                     </button>
                   }
 
                   <!-- Mostrar botón SOLO si NO está leída -->
-                  <!-- @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) { -->
+                  @if (notificacion.estado === EstadoNotificacion.NO_LEIDA) {
                     <button mat-stroked-button color="accent" (click)="marcarComoLeida(notificacion, $event)">
                       <mat-icon>done</mat-icon>
-                      Marcar como leída
+                      {{'NOTIFICACIONES_INDEX.MARCAR_COMO_LEIDA' | translate }}
                     </button>
-                  <!-- } -->
+                  }
                 </div>
               </div>
 
@@ -159,14 +149,14 @@
         <!-- Sin notificaciones -->
         <div class="empty-state">
           <mat-icon class="empty-icon">notifications_off</mat-icon>
-          <h3>No hay notificaciones</h3>
+          <h3>{{'NOTIFICACIONES_INDEX.NO_HAY_NOTIFICACIONES' | translate }}</h3>
           <p>
             @if (filtroEstado() === 'TODAS') {
-              No tienes notificaciones en este momento.
+              {{'NOTIFICACIONES_INDEX.NO_TIENES_NOTIFICACIONES' | translate }}
             } @else if (filtroEstado() === 'NO_LEIDA') {
-              No tienes notificaciones sin leer.
+              {{'NOTIFICACIONES_INDEX.NO_TIENES_NOTIFICACIONES_SIN_LEER' | translate }}
             } @else {
-              No tienes notificaciones leídas.
+              {{'NOTIFICACIONES_INDEX.NO_TIENES_NOTIFICACIONES_LEIDAS' | translate }}
             }
           </p>
         </div>

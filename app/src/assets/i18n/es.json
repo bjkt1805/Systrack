@@ -33,7 +33,8 @@
     "NOTIFICACIONES": "Notificaciones (Últimas 3)",
     "GESTIONAR_NOTIFICACIONES": "Gestionar Notificaciones",
     "LOGIN": "Inicio de sesión",
-    "LOGOUT": "Cerrar sesión"
+    "LOGOUT": "Cerrar sesión", 
+    "NO_NOTIFICACIONES": "Sin notificaciones"
   },
   "FOOTER": {
     "DIRECCION": "Dirección",
@@ -622,5 +623,28 @@
     "ERROR_REGISTRO_GENERICO": "Error al registrar usuario. Inténtelo de nuevo.",
     "ERROR_NOMBRE_USUARIO_EXISTE": "El nombre de usuario ya está en uso.",
     "ERROR_CORREO_EXISTE": "El correo electrónico ya está registrado."
+  }, 
+
+  "NOTIFICACIONES_INDEX": {
+    "TITULO": "Centro de Notificaciones",
+    "SUBTITULO": "Historial y gestión de notificaciones",
+    "TOTAL": "Total",
+    "NO_LEIDAS": "No leídas",
+    "TODAS": "Todas",
+    "LEIDAS": "Leídas",
+    "CARGANDO_NOTIFICACIONES": "Cargando notificaciones...",
+    "NUEVA": "Nueva",
+    "MENSAJE": "Mensaje",
+    "FECHA_Y_HORA": "Fecha y Hora",
+    "ESTADO": "Estado",
+    "VER_TICKET": "Ver Tiquete",
+    "MARCAR_COMO_LEIDA": "Marcar como leída",
+    "MARCAR_TODAS_LEIDAS": "Marcar todas como leídas",
+    "NO_HAY_NOTIFICACIONES": "No hay notificaciones",
+    "NO_TIENES_NOTIFICACIONES": "No tienes notificaciones en este momento.",
+    "NO_TIENES_NOTIFICACIONES_SIN_LEER": "No tienes notificaciones sin leer.",
+    "NO_TIENES_NOTIFICACIONES_LEIDAS": "No tienes notificaciones leídas.",
+    "COMIENZA": "Comienza a recibir notificaciones sobre actividades importantes del sistema",
+    "REFRESCAR": "Refrescar"
   }
 }

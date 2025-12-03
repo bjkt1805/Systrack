@@ -205,6 +205,8 @@ export class AsignacionManualDialog {
   filtrarTecnicos() {
     let filtrados = [...this.tecnicos()];
 
+    console.log("Técnicos filtrados a utilizar: ", filtrados);
+
     console.log('=== FILTRADO DE TÉCNICOS ===');
     console.log('Categoría del ticket:', this.datos()?.categoria?.nombre);
     console.log('Especialidades de la categoría:', this.datos()?.categoria?.especialidades);
@@ -212,18 +214,21 @@ export class AsignacionManualDialog {
 
     // Solo técnicos que tengan al menos UNA especialidad de la categoría
     const especialidadesCategoria = this.datos()?.categoria?.especialidades || [];
+    console.log("Especialidades del tiquete", especialidadesCategoria);
 
     if (especialidadesCategoria.length > 0) {
       // Extraer solo los nombres de las especialidades de la categoría
-      const nombresEspecialidades = especialidadesCategoria.map((e) => e.nombre);
+      const nombresEspecialidades = especialidadesCategoria.map((e) => e.nombre.trim());
 
       console.log('Nombres de especialidades requeridas:', nombresEspecialidades);
 
       filtrados = filtrados.filter((tecnico) => {
         // Verificar si el técnico tiene al menos una de las especialidades requeridas
         const tieneEspecialidad =
-          Array.isArray(tecnico.especialidades) &&
-          tecnico.especialidades.some((espTecnico) => nombresEspecialidades.includes(espTecnico));
+              Array.isArray(tecnico.especialidades) &&
+              tecnico.especialidades.length > 0 &&
+              nombresEspecialidades.length > 0 &&
+              tecnico.especialidades.some((espTecnico) => nombresEspecialidades.includes(espTecnico.trim()));
 
         console.log(`Técnico ${tecnico.nombreCompleto}:`, {
           especialidades: tecnico.especialidades,

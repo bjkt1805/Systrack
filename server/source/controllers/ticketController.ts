@@ -265,6 +265,7 @@ export class TicketController {
               nombre: true,
               descripcion: true,
               sla: true,
+              especialidades: true,
             },
           },
           usuarioAsignado: true,
