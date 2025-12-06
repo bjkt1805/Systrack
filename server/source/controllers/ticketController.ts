@@ -112,6 +112,22 @@ export class TicketController {
               },
             },
           },
+          usuarioAsignadoId: true,
+          usuarioAsignado: {
+            select: {
+              id: true,
+              nombreUsuario: true,
+              nombreCompleto: true,
+            },
+          },
+          solicitanteId: true,
+          solicitante: {
+            select: {
+              id: true,
+              nombreUsuario: true,
+              nombreCompleto: true,
+            },
+          },
           resueltoAt: true,
           cerradoAt: true,
           cumplioRespuesta: true,
@@ -889,8 +905,8 @@ export class TicketController {
       if (!transicionesPermitidas.some((permitido) => permitido)) {
         throw AppError.forbidden(
           `Como ADMIN solo se puede: ` +
-            `1) Asignar tickets (PENDIENTE → ASIGNADO), ` +
-            `2) Cerrar tickets (desde cualquier estado)`
+          `1) Asignar tickets (PENDIENTE → ASIGNADO), ` +
+          `2) Cerrar tickets (desde cualquier estado)`
         );
       }
 
@@ -919,7 +935,7 @@ export class TicketController {
       // Si no lo está, enviar un error
       throw AppError.badRequest(
         `No se puede cambiar de ${estadoActual} a ${estadoNuevo}. ` +
-          `Estados permitidos: ${estadosPermitidos.join(", ")}`
+        `Estados permitidos: ${estadosPermitidos.join(", ")}`
       );
     }
   }
@@ -941,7 +957,7 @@ export class TicketController {
       if (!["ASIGNADO", "CERRADO"].includes(estadoNuevo)) {
         throw AppError.forbidden(
           "Como ADMIN solo puede asignar técnicos (ASIGNADO) o cerrar tickets (CERRADO). " +
-            "Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos."
+          "Los estados EN_PROCESO y RESUELTO son exclusivos de técnicos."
         );
       }
       console.log(
@@ -976,7 +992,7 @@ export class TicketController {
       }
     }
   }
-  
+
   // MÉTODOS PARA CÁLCULO DE SEMANA
   private obtenerInicioSemana(fecha: Date): Date {
     // TRABAJAR en UTC para evitar conversiones de zona horaria

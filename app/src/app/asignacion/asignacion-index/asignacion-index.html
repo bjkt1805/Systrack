@@ -1,18 +1,122 @@
 <div class="asignacion-container">
 
+    <!-- Verificar permisos -->
+    @if (!puedeVerTablero()) {
+    <div class="sin-permiso">
+        <mat-icon>block</mat-icon>
+        <h2>{{ 'ASIGNACION.SIN_PERMISO' | translate }}</h2>
+        <p>{{ 'ASIGNACION.SIN_PERMISO_DESCRIPCION' | translate }}</p>
+    </div>
+    } @else {
     <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <h1 class="title">
+            <div class="header-title">
                 <mat-icon>dashboard</mat-icon>
-                {{'ASIGNACION.VISTA_ASIGNACIONES' | translate}}
-            </h1>
-            <p class="subtitle">{{'ASIGNACION.SEMANA' | translate}}</p>
-            <!-- Botón de recarga -->
-            <button mat-icon-button matTooltip="{{'ASIGNACION.RECARGAR_TICKETS' | translate}}" class="btn-refresh" (click)="recargarTickets()"
-                [disabled]="cargando()">
-                <mat-icon>refresh</mat-icon>
-            </button>
+                <div>
+                    <h1 class="title">{{ 'ASIGNACION.VISTA_ASIGNACIONES' | translate }}</h1>
+                    <p class="subtitle">
+                        @if (esAdmin()) {
+                        {{ 'ASIGNACION.VISTA_ADMIN' | translate }}
+                        } @else {
+                        {{ 'ASIGNACION.VISTA_TECNICO' | translate }}
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-value">{{ estadisticasTickets().total }}</span>
+                    <span class="stat-label">{{ 'ASIGNACION.TOTAL' | translate }}</span>
+                </div>
+                <div class="stat-item urgente">
+                    <span class="stat-value">{{ estadisticasTickets().urgentes }}</span>
+                    <span class="stat-label">{{ 'ASIGNACION.URGENTES' | translate }}</span>
+                </div>
+                <div class="stat-item vencido">
+                    <span class="stat-value">{{ estadisticasTickets().vencidos }}</span>
+                    <span class="stat-label">{{ 'ASIGNACION.VENCIDOS' | translate }}</span>
+                </div>
+                <div class="stat-item en-proceso">
+                    <span class="stat-value">{{ estadisticasTickets().enProceso }}</span>
+                    <span class="stat-label">{{ 'ASIGNACION.EN_PROCESO' | translate }}</span>
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="controles-container">
+
+                <!-- Selector de modo de organización -->
+                <mat-button-toggle-group [value]="modoOrganizacion()" (change)="cambiarModoOrganizacion($event.value)">
+                    <mat-button-toggle value="dia" matTooltip="{{ 'ASIGNACION.MODO_DIA' | translate }}">
+                        <mat-icon>view_week</mat-icon>
+                        {{ 'ASIGNACION.POR_DIA' | translate }}
+                    </mat-button-toggle>
+                    <mat-button-toggle value="tecnico" matTooltip="{{ 'ASIGNACION.MODO_TECNICO' | translate }}">
+                        <mat-icon>person</mat-icon>
+                        {{ 'ASIGNACION.POR_TECNICO' | translate }}
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <!-- Navegación de semana -->
+                <div class="semana-navegacion">
+                    <button mat-icon-button (click)="semanaAnterior()"
+                        matTooltip="{{ 'ASIGNACION.SEMANA_ANTERIOR' | translate }}">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+
+                    <input type="date" [value]="fechaSemanaObjetivo()"
+                        (change)="cambiarSemana($any($event.target).value)" class="fecha-input">
+
+                    <button mat-icon-button (click)="semanaSiguiente()"
+                        matTooltip="{{ 'ASIGNACION.SEMANA_SIGUIENTE' | translate }}">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+
+                    <button mat-stroked-button (click)="semanaActual()" color="primary">
+                        {{ 'ASIGNACION.HOY' | translate }}
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filtros">
+                    <!-- Filtro por estado -->
+                    <mat-form-field appearance="outline" class="filtro-field">
+                        <mat-label>{{ 'ASIGNACION.FILTRO_ESTADO' | translate }}</mat-label>
+                        <mat-select [value]="filtroEstado()" (selectionChange)="cambiarFiltroEstado($event.value)">
+                            <mat-option value="TODOS">{{ 'ASIGNACION.TODOS' | translate }}</mat-option>
+                            <mat-option value="PENDIENTE">{{ 'ASIGNACION.PENDIENTE' | translate }}</mat-option>
+                            <mat-option value="ASIGNADO">{{ 'ASIGNACION.ASIGNADO' | translate }}</mat-option>
+                            <mat-option value="EN_PROCESO">{{ 'ASIGNACION.EN_PROCESO' | translate }}</mat-option>
+                            <mat-option value="RESUELTO">{{ 'ASIGNACION.RESUELTO' | translate }}</mat-option>
+                            <mat-option value="CERRADO">{{ 'ASIGNACION.CERRADO' | translate }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Filtro por prioridad -->
+                    <mat-form-field appearance="outline" class="filtro-field">
+                        <mat-label>{{ 'ASIGNACION.FILTRO_PRIORIDAD' | translate }}</mat-label>
+                        <mat-select [value]="filtroPrioridad()"
+                            (selectionChange)="cambiarFiltroPrioridad($event.value)">
+                            <mat-option value="TODAS">{{ 'ASIGNACION.TODAS' | translate }}</mat-option>
+                            <mat-option value="URGENTE">{{ 'ASIGNACION.URGENTE' | translate }}</mat-option>
+                            <mat-option value="ALTA">{{ 'ASIGNACION.ALTA' | translate }}</mat-option>
+                            <mat-option value="MEDIA">{{ 'ASIGNACION.MEDIA' | translate }}</mat-option>
+                            <mat-option value="BAJA">{{ 'ASIGNACION.BAJA' | translate }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Botón de recarga -->
+                <button mat-icon-button (click)="recargarTickets()" [disabled]="cargando()"
+                    matTooltip="{{ 'ASIGNACION.RECARGAR_TICKETS' | translate }}" class="btn-refresh">
+                    <mat-icon [class.spinning]="cargando()">refresh</mat-icon>
+                </button>
+            </div>
+
+            <!-- <p class="subtitle">{{'ASIGNACION.SEMANA' | translate}}</p> -->
 
         </div>
 
@@ -41,111 +145,158 @@
 
     <!-- Tablero Kanban -->
     @if (!cargando() && !error()) {
+
+    <!-- MODO: POR DÍA -->
+    @if (modoOrganizacion() === 'dia') {
     <div class="kanban-board">
         @for (columna of columnas; track columna.dia) {
         <div class="kanban-columna">
-
             <!-- Header de columna -->
             <div class="columna-header" [style.border-top-color]="columna.color">
                 <div class="columna-info">
-                    <h3 style="font-size: 15px">{{ columna.titulo }} - {{ columna.fecha }}</h3>
-
-                    <!-- Mostrar el total/count de los tiquetes por estado -->
-                    <span matTooltip="{{'ASIGNACION.CANTIDAD_TIQUETES' | translate}}" class="badge-count">{{'ASIGNACION.CANTIDAD_TIQUETES' | translate}}: {{
-                        getTotalPorDia(columna.dia) }}
-                    </span>
+                    <h3>{{ columna.titulo }} - {{ columna.fecha }}</h3>
+                    <span class="badge-count">{{ getTotalPorDia(columna.dia) }}</span>
                 </div>
             </div>
 
             <!-- Tarjetas de tickets -->
             <div class="columna-content">
                 @for (ticket of ticketsPorDia()[columna.dia]; track ticket.id) {
-                <div class="ticket-card" [class]="'urgencia-' + ticket.colorUrgencia">
-
-                    <!-- Header de tarjeta -->
-                    <div class="card-header">
-                        <span class="ticket-codigo">{{ ticket.codigo }}</span>
-                    </div>
-
-                    <!-- Título -->
-                    <h4 class="ticket-titulo">{{ ticket.titulo }}</h4>
-
-                    <!-- Categoría, Prioridad y Estado -->
-                    <div class="ticket-meta">
-                        <span style="font-size: 10px; width: 100px;" class="chip chip-categoria">
-                            <mat-icon style="padding-right: 10%">{{ ticket.iconoCategoria }}</mat-icon>
-                            {{ ticket.categoria }}
-                        </span>
-                        <span class="chip chip-prioridad" [class]="'prioridad-' + ticket.prioridad.toLowerCase()">{{ ticket.prioridad }}
-                        </span>
-                    </div>
-
-                    <!-- Tiempo restante SLA -->
-                    <div class="sla-info">
-                        <div class="sla-header">
-                            <mat-icon style="padding-right: 10px">schedule</mat-icon>
-                            <span><b>{{'ASIGNACION.SLA_RESOLUCION' | translate}}: </b><br>{{ ticket.tiempoRestanteSLA }}</span>
-                        </div>
-                        <div class="sla-progress">
-                            <div class="progress-bar" [style.width.%]="ticket.porcentajeSLA"
-                                [class]="'urgencia-' + ticket.colorUrgencia">
-                            </div>
-                        </div>
-                    </div>  
-
-                    <!-- Indicadores de cumplimiento SLA -->
-                        <div class="sla-cumplimiento">
-                            @if (ticket.cumplioRespuesta !== null) {
-                                <mat-icon [class]="ticket.cumplioRespuesta ? 'cumplido' : 'incumplido'" 
-                                          matTooltip="{{'ASIGNACION.SLA_RESPUESTA' | translate}}: {{ (ticket.cumplioRespuesta ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate)) }}">
-                                    {{ ticket.cumplioRespuesta ? 'check_circle' : 'cancel' }}
-                                </mat-icon>
-                            }
-                            @if (ticket.cumplioResolucion !== null) {
-                                <mat-icon [class]="ticket.cumplioResolucion ? 'cumplido' : 'incumplido'"
-                                          matTooltip="{{'ASIGNACION.SLA_RESOLUCION' | translate}}: {{ (ticket.cumplioResolucion ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate)) }}">
-                                    {{ ticket.cumplioResolucion ? 'check_circle' : 'cancel' }}
-                                </mat-icon>
-                            }
-                        </div>
-
-                    <!-- Estado -->
-                    <div>
-                        <div>
-                            <mat-chip class="chip-tertiary">{{ ticket.estado }}</mat-chip>
-                        </div>
-                    </div>
-
-                    <!-- Acciones rápidas -->
-                    <div class="card-acciones">
-                        <button mat-icon-button matTooltip="{{'ASIGNACION.VER_DETALLE' | translate}}" (click)="verDetalle(ticket.id)"
-                            color="primary">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                        <button mat-icon-button matTooltip="{{'ASIGNACION.CAMBIAR_ESTADO' | translate}}">
-                            <mat-icon>swap_horiz</mat-icon>
-                        </button>
-                        <button mat-icon-button matTooltip="{{'ASIGNACION.AGREGAR_COMENTARIO' | translate}}">
-                            <mat-icon>comment</mat-icon>
-                        </button>
-                    </div>
-
-                </div>
+                <ng-container *ngTemplateOutlet="ticketCard; context: { $implicit: ticket }"></ng-container>
                 }
 
                 <!-- Mensaje si no hay tickets -->
                 @if (getTotalPorDia(columna.dia) === 0) {
                 <div class="empty-state">
                     <mat-icon>inbox</mat-icon>
-                    <p>{{'ASIGNACION.SIN_TICKETS' | translate}}</p>
+                    <p>{{ 'ASIGNACION.SIN_TICKETS' | translate }}</p>
                 </div>
                 }
             </div>
-
         </div>
         }
     </div>
-    <br>
     }
 
+    <!-- MODO: POR TÉCNICO -->
+    @if (modoOrganizacion() === 'tecnico') {
+    <div class="kanban-board tecnico-view">
+        @for (tecnicoKey of getTecnicoKeys(); track tecnicoKey) {
+        <div class="kanban-columna">
+            <!-- Header de columna -->
+            <div class="columna-header" [style.border-top-color]="tecnicoKey === 'sin_asignar' ? '#9e9e9e' : '#2196f3'">
+                <div class="columna-info">
+                    @if (tecnicoKey === 'sin_asignar') {
+                    <h3>
+                        <mat-icon>person_off</mat-icon>
+                        {{ 'ASIGNACION.SIN_ASIGNAR' | translate }}
+                    </h3>
+                    } @else {
+                    <h3>
+                        <mat-icon>person</mat-icon>
+                        {{ ticketsPorTecnico()[tecnicoKey].tecnico?.nombre }}
+                    </h3>
+                    }
+                    <span class="badge-count">{{ getTotalPorTecnico(tecnicoKey) }}</span>
+                </div>
+            </div>
+
+            <!-- Tarjetas de tickets -->
+            <div class="columna-content">
+                @for (ticket of ticketsPorTecnico()[tecnicoKey].tickets; track ticket.id) {
+                <ng-container *ngTemplateOutlet="ticketCard; context: { $implicit: ticket }"></ng-container>
+                }
+
+                @if (getTotalPorTecnico(tecnicoKey) === 0) {
+                <div class="empty-state">
+                    <mat-icon>inbox</mat-icon>
+                    <p>{{ 'ASIGNACION.SIN_TICKETS' | translate }}</p>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    }
+    <br>
+    }
+    }
 </div>
+
+<!-- Plantilla para tarjeta de ticket -->
+<ng-template #ticketCard let-ticket>
+    <div class="ticket-card" [class]="'urgencia-' + ticket.colorUrgencia">
+        <!-- Header de tarjeta -->
+        <div class="card-header">
+            <span class="ticket-codigo">{{ ticket.codigo }}</span>
+            <span class="chip chip-estado" [class]="'estado-' + ticket.estado.toLowerCase()">
+                {{ ticket.estado }}
+            </span>
+        </div>
+
+        <!-- Título -->
+        <h4 class="ticket-titulo">{{ ticket.titulo }}</h4>
+
+        <!-- Categoría y Prioridad -->
+        <div class="ticket-meta">
+            <span class="chip chip-categoria">
+                <mat-icon>{{ ticket.iconoCategoria }}</mat-icon>
+                {{ ticket.categoria }}
+            </span>
+            <span class="chip chip-prioridad" [class]="'prioridad-' + ticket.prioridad.toLowerCase()">
+                {{ ticket.prioridad }}
+            </span>
+        </div>
+
+        <!-- Técnico asignado -->
+        @if (ticket.tecnicoAsignado) {
+            <div class="tecnico-info" matTooltip="{{ 'ASIGNACION.TECNICO_ASIGNADO' | translate }}">
+                <mat-icon >
+                    person
+                </mat-icon>
+                <span>{{ ticket.tecnicoAsignado.nombre }}</span>
+            </div>
+        }
+
+        <!-- Tiempo restante SLA -->
+        <div class="sla-info">
+            <div class="sla-header">
+                <mat-icon>schedule</mat-icon>
+                <span>
+                    <strong>{{ 'ASIGNACION.SLA_RESOLUCION' | translate }}:</strong>
+                    {{ ticket.tiempoRestanteSLA }}
+                </span>
+            </div>
+            <div class="sla-progress">
+                <div class="progress-bar" 
+                    [style.width.%]="ticket.porcentajeSLA"
+                    [class]="'urgencia-' + ticket.colorUrgencia">
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicadores de cumplimiento SLA -->
+        <div class="sla-cumplimiento">
+            @if (ticket.cumplioRespuesta !== null) {
+                <mat-icon [class]="ticket.cumplioRespuesta ? 'cumplido' : 'incumplido'"
+                    matTooltip="{{ 'ASIGNACION.SLA_RESPUESTA' | translate }}: {{ ticket.cumplioRespuesta ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate) }}">
+                    {{ ticket.cumplioRespuesta ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+            }
+            @if (ticket.cumplioResolucion !== null) {
+                <mat-icon [class]="ticket.cumplioResolucion ? 'cumplido' : 'incumplido'"
+                    matTooltip="{{ 'ASIGNACION.SLA_RESOLUCION' | translate }}: {{ ticket.cumplioResolucion ? ('ASIGNACION.CUMPLIDO' | translate) : ('ASIGNACION.INCUMPLIDO' | translate) }}">
+                    {{ ticket.cumplioResolucion ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+            }
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="card-acciones">
+            <button mat-icon-button (click)="verDetalle(ticket.id)" color="primary"
+                matTooltip="{{ 'ASIGNACION.VER_DETALLE' | translate }}">
+                <mat-icon>visibility</mat-icon>
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -7,6 +7,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from "@angular/material/chips";
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 
 
@@ -21,6 +24,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatChipsModule,
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatSelectModule,
     TranslateModule
 ]
 })
