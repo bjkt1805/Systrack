@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { EspecialidadController } from '../controllers/especialidadController'
+import { authenticateJWT, authorizeRoles } from '../middleware/authMiddleware'
+import { Rol } from '../../generated/prisma'
 
 export class EspecialidadRoutes {
 
@@ -9,7 +11,7 @@ export class EspecialidadRoutes {
         const controller = new EspecialidadController()
 
         //GET localhost:3000/especialidad/
-        router.get('/', controller.get)
+        router.get('/', authenticateJWT, authorizeRoles(Rol.ADMIN), controller.get)
 
         return router
     }

@@ -1,0 +1,406 @@
+/* ====== Card Principal ====== */
+.usuarios-card {
+    width: 95%;
+    margin: 24px auto;
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+        linear-gradient(145deg,
+            color-mix(in srgb, var(--mat-sys-surface) 90%, #000 10%),
+            color-mix(in srgb, var(--mat-sys-surface-container) 92%, #000 8%));
+    color: var(--mat-sys-on-surface);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .22);
+}
+
+/* ====== Header Principal ====== */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 32px;
+    background: linear-gradient(135deg,
+            color-mix(in srgb, var(--mat-sys-primary) 8%, transparent),
+            color-mix(in srgb, var(--mat-sys-tertiary) 5%, transparent));
+    border-radius: 16px 16px 0 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+    margin: 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-secondary));
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+    flex-shrink: 0;
+}
+
+.page-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: var(--mat-sys-on-primary);
+}
+
+.title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--mat-sys-on-surface);
+}
+
+.page-subtitle {
+    margin: 0;
+    font-size: 15px;
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
+    font-weight: 500;
+}
+
+/* ====== Acciones del Header ====== */
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+.btn-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    padding: 0 24px;
+    height: 44px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-primary) 25%, transparent);
+    transition: all .3s ease;
+    white-space: nowrap;
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--mat-sys-primary) 35%, transparent);
+}
+
+.btn-create mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+/* ====== Estados de Carga y Error ====== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 12px;
+    color: var(--mat-sys-error);
+}
+
+.error-container mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+/* ====== Tabla ====== */
+.tabla-container {
+    width: 100%;
+    display: block;
+    overflow: auto;
+    border-radius: 14px;
+    margin-top: 16px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: color-mix(in srgb, var(--mat-sys-surface) 96%, white 4%);
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 25%, transparent);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* Cabecera sticky */
+.tabla-header,
+th.mat-header-cell,
+.mat-mdc-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background:
+        linear-gradient(180deg,
+            color-mix(in srgb, var(--mat-sys-surface-variant) 92%, #000 8%),
+            color-mix(in srgb, var(--mat-sys-surface) 92%, #000 8%));
+    color: var(--mat-sys-on-surface);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 800;
+}
+
+/* Celdas */
+th.mat-header-cell,
+td.mat-cell,
+td.mat-mdc-cell,
+th.mat-mdc-header-cell {
+    padding: 14px 16px;
+    vertical-align: middle;
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 92%, #000 8%);
+}
+
+/* Columnas específicas */
+.col-username {
+    min-width: 150px;
+}
+
+.col-name {
+    min-width: 180px;
+    max-width: 250px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.col-email {
+    min-width: 200px;
+    max-width: 280px;
+}
+
+/* Info de usuario con avatar */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--mat-sys-primary);
+}
+
+/* Celda de email */
+.email-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.email-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Zebra + hover */
+tr.mat-row:nth-child(even),
+.mat-mdc-row:nth-child(even) {
+    background: color-mix(in srgb, var(--mat-sys-surface) 88%, #000 12%);
+}
+
+tr.mat-row:hover,
+.mat-mdc-row:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+/* ====== Badges ====== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .2px;
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* Badges de Rol */
+.badge--admin {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+}
+
+.badge--tecnico {
+    background: linear-gradient(135deg, #0891b2, #0e7490);
+}
+
+.badge--cliente {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.badge--default {
+    background: #6b7280;
+}
+
+/* Badges de Estado */
+.badge--activo {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.badge--inactivo {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.estado-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+/* ====== Acciones ====== */
+.acciones-cell {
+    display: flex;
+    justify-content: left;
+    gap: 8px;
+}
+
+.btn-detail {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    transition: all .2s ease;
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.btn-detail:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--mat-sys-primary) 25%, transparent);
+}
+
+.btn-detail mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--mat-sys-primary);
+}
+
+/* ====== Sin Datos ====== */
+.no-data-cell {
+    text-align: center;
+    padding: 40px 20px !important;
+}
+
+.no-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.no-data-container mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+/* ====== Paginador ====== */
+mat-paginator {
+    margin-top: 8px;
+    border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 25%, transparent);
+    color: var(--mat-sys-on-surface);
+    --mat-paginator-container-background: transparent;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-create {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .col-email {
+        display: none;
+    }
+
+    .usuarios-card {
+        width: 100%;
+        margin: 16px auto;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .col-name {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .icon-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+
+    .page-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ====== Accesibilidad ====== */
+@media (prefers-reduced-motion: reduce) {
+    .usuarios-card {
+        box-shadow: none;
+    }
+
+    tr.mat-row:hover,
+    .mat-mdc-row:hover {
+        background: inherit;
+    }
+
+    .btn-create:hover,
+    .btn-detail:hover {
+        transform: none;
+    }
+}

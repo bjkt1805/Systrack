@@ -11,6 +11,32 @@ export class UsuarioController {
 
     prisma = new PrismaClient();
 
+    // OBTENER TODOS LOS USUARIOS
+    // TAMBIÉN SE INCLUYE PAGINACIÓN
+    get = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            //Select * from usuario where (nombre like '%consulta%' OR descripcion like '%consulta%') = order by descripcion asc limit 20 offset 0;
+            const listado = await this.prisma.usuario.findMany({
+                // ordenar por id de forma ascendente
+                orderBy: { id: "asc" },
+
+                // select para traer campos específicos
+                select: {
+                    id: true,
+                    nombreUsuario: true,
+                    nombreCompleto: true,
+                    telefono: true,
+                    correo: true,
+                    rol: true,
+                    activo: true,
+                },
+            });
+            response.json(listado);
+        } catch (error) {
+            next(error);
+        }
+    };
+
     /**
      * Crear usuario nuevo con contraseña encriptada (bcrypt.hash())
      * @param req 
@@ -80,6 +106,98 @@ export class UsuarioController {
             next(error);
         }
     };
+
+    /**
+     * Método para resetear la contraseña de un usuario
+     * @param request 
+     * @param response 
+     * @param next 
+     * @returns 
+     */
+    resetPassword = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+
+            const {nombreUsuario} = request.params;
+            const {nuevaContrasenna} = request.body;
+
+            // Buscar el usuario por su nombre de usuario
+            const usuario = await this.prisma.usuario.findFirst({
+                where: { 
+                    nombreUsuario: {
+                        equals: nombreUsuario.toLowerCase(),
+                    }
+                }
+            });
+
+            // Si no se encuentra el usuario, responder con error 404
+            if (!usuario) {
+                return response
+                    .status(404)
+                    .json({ message: "Usuario no encontrado" });
+            }
+
+            // Generar un hash de la nueva contraseña utilizando bcrypt
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(nuevaContrasenna, salt);
+
+            // Actualizar la contraseña del usuario en la base de datos
+            await this.prisma.usuario.update({
+                where: { id: usuario.id },
+                data: { contrasenaHash: hash },
+            });
+
+            return response
+                .status(200)
+                .json({ message: "Contraseña restablecida correctamente" });
+
+        }
+        catch (error: any) {
+            console.error("Error al cambiar contraseña", error.message);
+            next(error);
+
+        }
+    }
+
+
+
+    /**
+     * Método para actualizar el usuario
+     */
+    update = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const body = request.body;
+
+            const usuarioId = parseInt(request.params.id);
+
+            // Obtener el usuario anterior 
+            const usuarioExistente = await this.prisma.usuario.findUnique({
+                where: { id: usuarioId }
+            });
+
+            if (!usuarioExistente) {
+                response
+                    .status(404)
+                    .json({ message: "El técnico no existe" });
+                return;
+            }
+
+            // Actualizar el usuario 
+            const updateUsuario = await this.prisma.usuario.update({
+                where: { id: usuarioId },
+                data: {
+                    nombreUsuario: body.nombreUsuario,
+                    nombreCompleto: body.nombreCompleto,
+                    correo: body.correo,
+                    telefono: body.telefono,
+                    activo: body.activo,
+                }
+            });
+
+            response.json(updateUsuario);
+        }
+        catch (error: any) { }
+
+    }
 
 
     /**

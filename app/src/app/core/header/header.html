@@ -8,20 +8,20 @@
     <!-- Logo -->
     <button mat-icon-button (click)="irInicio()" class="example-header-image"
         matTooltip="{{ 'HEADER.INICIO' | translate }}"></button>
-
+    @if (isAuthenticated()) {
     <div class="menu-section">
-
+    
         <button [matMenuTriggerFor]="menu1" mat-icon-button class="example-icon"
             matTooltip="{{ 'HEADER.LISTADOS' | translate }}" style="font-size: 16px;">
             <!-- <mat-icon>menu</mat-icon> -->
             {{ 'HEADER.LISTADOS' | translate }}
         </button>
-
-        <button mat-icon-button matTooltip="{{ 'HEADER.PROCESOS' | translate }}" [matMenuTriggerFor]="menu3"
-            style="font-size: 16px;">
-            <!-- <mat-icon>save_as</mat-icon> -->
-            {{ 'HEADER.PROCESOS' | translate }}
+    
+        @if (isAdmin() || isTechnician()) {
+        <button mat-icon-button matTooltip="{{ 'HEADER.ASIGNACIONES' | translate }}" [routerLink]="['/asignacion']" style="font-size: 16px;">
+            {{ 'HEADER.ASIGNACIONES' | translate }}
         </button>
+        }
 
         <!-- Reportes es solo visible para el usuario con rol Admin PARA CUANDO SIRVA AUTENTICACION-->
         <!-- @if (isAdmin()) {
@@ -30,46 +30,45 @@
             Reportes
         </button>
         } -->
-        <button mat-icon-button matTooltip="{{ 'HEADER.REPORTES' | translate }}" [matMenuTriggerFor]="menu4"
+        <!-- <button mat-icon-button matTooltip="{{ 'HEADER.REPORTES' | translate }}" [matMenuTriggerFor]="menu4"
             style="font-size: 16px;">
-            <!-- <mat-icon>monitoring</mat-icon> -->
+            <mat-icon>monitoring</mat-icon>
             {{ 'HEADER.REPORTES' | translate }}
-        </button>
+        </button> -->
     </div>
+    }
 
 
-    <!-- Menús desplegables -->
+
+    <!-- MENÚS DESPLEGABLES -->
 
     <!-- Menú desplegable de Listados-->
     <mat-menu #menu1="matMenu">
+        @if (isAdmin()) {
         <button mat-menu-item [routerLink]="['/tecnico']">{{ 'HEADER.TECNICOS' | translate }}</button>
         <button mat-menu-item [routerLink]="['/categoria']">{{ 'HEADER.CATEGORIAS' | translate }}</button>
         <button mat-menu-item [routerLink]="['/ticket']">{{ 'HEADER.TICKETS' | translate }}</button>
-        <button mat-menu-item [routerLink]="['/asignacion']">{{ 'HEADER.ASIGNACIONES' | translate }}</button>
+        <button mat-menu-item [routerLink]="['/usuario']">Usuarios</button>
 
+        }
+        @else {
+        <button mat-menu-item [routerLink]="['/ticket']">{{ 'HEADER.TICKETS' | translate }}</button>
+        }
+
+    
     </mat-menu>
 
-    <!-- Menú desplegable de Mantenimientos-->
-    <mat-menu #menu2="matMenu">
-        <button mat-menu-item>{{ 'HEADER.PROCESOS' | translate }}</button>
-    </mat-menu>
-
-    <!-- Menú desplegable de Procesos-->
+    <!-- Menú desplegable de Procesos
     <mat-menu #menu3="matMenu">
         <button mat-menu-item>{{ 'HEADER.TRAZABILIDAD' | translate }}</button>
         <button mat-menu-item>{{ 'HEADER.GESTION' | translate }}</button>
-    </mat-menu>
+    </mat-menu> -->
 
     <!-- Menú desplegable de Reportes-->
-    <mat-menu #menu4="matMenu">
+    <!-- <mat-menu #menu4="matMenu">
         <button mat-menu-item>{{ 'HEADER.REPORTE' | translate }}</button>
-    </mat-menu>
+    </mat-menu> -->
 
-    <!-- Notificaciones -->
-    <!-- <button mat-icon-button [matBadge]="qtyItems().toString() || '0'" matBadgeColor="accent" [routerLink]="['/orden']"
-        routerLinkActive="active-link">
-        <mat-icon>notifications</mat-icon>
-    </button> -->
 
     <!-- Usuario (info, login, logout) e idioma -->
     <div class="user-section">
@@ -86,7 +85,7 @@
             <button mat-menu-item>
                 <mat-icon style="color: white">notification_important</mat-icon>
                 @if (notificacion.tipo === 'TICKET_ASIGNADO') {
-                    
+
 
                 }
                 <span>{{ notificacion.mensaje }}</span>
@@ -125,14 +124,11 @@
                 <span>{{ 'HEADER.IDIOMA2' | translate }}</span>
             </button>
         </mat-menu>
-        <!-- <button mat-icon-button matBadge="3" matBadgeColor="accent" class="small-text">
-                <mat-icon>shopping_cart</mat-icon>
-            </button> -->
+
         <!-- Mostrar el correo del usuario logueado -->
         @if (isAuthenticated()) {
         <span class="small-text user-email" style="font-size: 12px;">{{ currentUser()?.correo }}</span>
         }
-        <!-- <span class="small-text user-email">Email</span> -->
         <button mat-icon-button [matMenuTriggerFor]="menu5" matTooltip="{{ 'HEADER.USUARIO' | translate }}">
             <mat-icon>person</mat-icon>
         </button>
@@ -146,8 +142,13 @@
             </button>
             }
 
-            <!-- Si está autenticado, mostrar logout-->
+            <!-- Si está autenticado, mostrar logout y edición de perfil-->
             @else {
+            <button mat-menu-item (click)="irEditarPerfil()">
+                <mat-icon style="color: white">edit</mat-icon>
+                <span>{{ 'HEADER.EDITAR_PERFIL' | translate }}</span>
+            </button>
+            
             <button mat-menu-item (click)="logout()">
                 <mat-icon style="color: white">person_remove</mat-icon>
                 <span>{{ 'HEADER.LOGOUT' | translate }}</span>

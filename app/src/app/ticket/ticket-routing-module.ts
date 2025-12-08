@@ -12,18 +12,20 @@ const routes: Routes = [
   { path: 'ticket', component: TicketIndex },
 
   // Ruta para la vista de administración de tickets (ESTO SE PUEDE USAR PARA EL COMPONENTE DE REPORTES)
-  { path: 'ticket-admin', component: TicketAdmin, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  // { path: 'ticket-admin', component: TicketAdmin, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
 
   // Ruta para el componente de creación de ticket
-  { path: 'ticket/create', component: TicketForm },
+  { path: 'ticket/create', component: TicketForm, canActivate: [authGuard], data: { roles: ['CLIENTE'] } },
 
   // Ruta para el componente de edición de ticket
-  { path: 'ticket/edit/:id', component: TicketForm },
+  { path: 'ticket/edit/:id', component: TicketForm, canActivate: [authGuard], data: { roles: ['CLIENTE'] } },
 
   // Ruta para la vista de detalle de un ticket
   {
     path: 'ticket/:id',
     component: TicketDetail,
+    canActivate: [authGuard],
+    data: { roles: ['CLIENTE', 'ADMIN', 'TECNICO'] }
   },
 ];
 

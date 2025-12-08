@@ -92,6 +92,11 @@ export class Header implements OnInit {
     this.router.navigate(['/usuario/login']); // Redirigir a la página de login después del logout
   }
 
+  // Para ir a la vista de edición de perfil
+  irEditarPerfil(): void {
+    this.router.navigate(['/usuario/edit', this.getCurrentUserId()]);
+  }
+
   // Para cambiar el idioma
   cambiarIdioma(lang: 'en' | 'es'): void {
     this.translate.use(lang);

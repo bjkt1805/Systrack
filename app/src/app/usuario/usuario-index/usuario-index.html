@@ -1,0 +1,147 @@
+<mat-card class="usuarios-card mat-elevation-z8">
+
+    <!-- Header de la vista -->
+    <div class="main-header">
+        <div class="header-content">
+            <div class="icon-wrapper">
+                <mat-icon class="page-icon">group</mat-icon>
+            </div>
+            <div class="title-group">
+                <h1 class="page-title">Lista de Usuarios</h1>
+                <p class="page-subtitle">Aquí puede observar la lista de usuarios</p>
+            </div>
+        </div>
+
+        <!-- Botón para agregar usuario (solo ADMIN)
+        @if (currentUser()?.rol === 'ADMIN') {
+            <div class="header-actions">
+                <button mat-raised-button color="primary" class="btn-create" (click)="crearUsuario()">
+                    <mat-icon>person_add</mat-icon>
+                    {{ 'USUARIOS.CREAR' | translate }}
+                </button>
+            </div>
+        } -->
+    </div>
+
+    <!-- Contenido del card -->
+    <mat-card-content>
+
+        <!-- Indicador de carga -->
+        @if (cargando()) {
+            <div class="loading-container">
+                <mat-spinner diameter="40"></mat-spinner>
+                <span>Cargando</span>
+            </div>
+        }
+
+        <!-- Mensaje de error -->
+        @if (error()) {
+            <div class="error-container">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ error() }}</span>
+                <button mat-button color="primary" (click)="cargarUsuarios()">
+                    <mat-icon>refresh</mat-icon>
+                        Reintentar
+                </button>
+            </div>
+        }
+
+        <!-- Tabla de usuarios -->
+        @if (!cargando() && !error()) {
+            <div class="tabla-container">
+                <table mat-table [dataSource]="dataSource" class="tabla" matSort aria-label="Listado de Usuarios">
+
+                    <!-- Nombre de Usuario -->
+                    <ng-container matColumnDef="nombreUsuario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de usuario</th>
+                        <td mat-cell *matCellDef="let row" class="col-username">
+                            <div class="user-info">
+                                <mat-icon class="user-avatar">account_circle</mat-icon>
+                                <span>{{ row.nombreUsuario }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Nombre Completo -->
+                    <ng-container matColumnDef="nombreCompleto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre completo</th>
+                        <td mat-cell *matCellDef="let row" class="col-name">{{ row.nombreCompleto }}</td>
+                    </ng-container>
+
+                    <!-- Correo -->
+                    <ng-container matColumnDef="correo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
+                        <td mat-cell *matCellDef="let row" class="col-email">
+                            <div class="email-cell">
+                                <mat-icon class="email-icon">email</mat-icon>
+                                <span>{{ row.correo }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Rol (badge) -->
+                    <ng-container matColumnDef="rol">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="badge" [ngClass]="getRolBadgeClass(row.rol)">
+                                {{ row.rol }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Estado (badge) -->
+                    <ng-container matColumnDef="estado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="badge" [ngClass]="getEstadoBadgeClass(row.activo)">
+                                <mat-icon class="estado-icon">{{ row.activo ? 'check_circle' : 'cancel' }}</mat-icon>
+                                {{ getEstadoTexto(row.activo) }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Acciones -->
+                    <!-- <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                        <td mat-cell *matCellDef="let row" class="acciones-cell">
+                            <button mat-mini-fab 
+                                matTooltip="Ver detalle"
+                                aria-label="Ver detalle" 
+                                (click)="verDetalle(row.id)"
+                                class="btn-detail">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container> -->
+
+                    <!-- Filas -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="tabla-header"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns" class="tabla-row"></tr>
+
+                    <!-- Fila cuando no hay datos -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+                            <div class="no-data-container">
+                                <mat-icon>search_off</mat-icon>
+                                <span>No se encontraron resultados</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <!-- Paginador -->
+            <!-- <mat-paginator #paginator 
+                [length]="usuarios().length" 
+                [pageIndex]="0" 
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10, 20, 50]" 
+                (page)="onPageChange($event)" 
+                showFirstLastButtons>
+            </mat-paginator> -->
+        }
+
+    </mat-card-content>
+
+</mat-card>

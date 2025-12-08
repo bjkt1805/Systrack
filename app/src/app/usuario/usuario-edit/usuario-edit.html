@@ -1,0 +1,195 @@
+<div class="edit-container">
+
+    <div class="edit-card">
+        <!-- Header -->
+        <div class="edit-header">
+            <div class="logo-container">
+                <mat-icon class="logo-icon">edit</mat-icon>
+            </div>
+            <h1 class="edit-title">Editar Usuario</h1>
+            <p class="edit-subtitle">Editar los detalles del usuario</p>
+        </div>
+        
+        <!-- Loader mientras carga datos -->
+        @if (loading()) {
+            <div class="loading-container">
+                <mat-spinner diameter="50"></mat-spinner>
+                <p> Cargando...</p>
+            </div>
+        }
+
+        <!-- Formulario -->
+        @if (!loading()) {
+
+            <form [formGroup]="editForm" (ngSubmit)="submitForm()" class="edit-form">
+
+                <!-- Sección: Datos Básicos -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <mat-icon>person</mat-icon>
+                        Datos básicos
+                    </h3>
+
+                    <!-- Nombre de Usuario -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre de Usuario</mat-label>
+                        <input matInput formControlName="nombreUsuario" 
+                            placeholder="Ingrese su nombre de usuario" 
+                            autocomplete="username" 
+                            minlength="5" 
+                            maxlength="20">
+                        <mat-icon matPrefix>account_circle</mat-icon>
+                        <!-- <mat-hint>Ingrese un nombre de usuario único</mat-hint> -->
+                        <mat-error>
+                            @if (editForm.get('nombreUsuario')?.hasError('required')) {
+                                Ingrese un nombre de usuario.
+                            }
+                            @if (editForm.get('nombreUsuario')?.hasError('minlength')) {
+                                El nombre de usuario debe tener al menos 5 caracteres.
+                            }
+                            @if (editForm.get('nombreUsuario')?.hasError('maxlength')) {
+                                El nombre de usuario no puede exceder los 20 caracteres.
+                            }
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- Nombre Completo -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre Completo</mat-label>
+                        <input matInput formControlName="nombreCompleto" 
+                            placeholder="Ingrese su nombre completo" 
+                            autocomplete="name" 
+                            minlength="3" 
+                            maxlength="50">
+                        <mat-icon matPrefix>badge</mat-icon>
+                        <mat-error>
+                            @if (editForm.get('nombreCompleto')?.hasError('required')) {
+                                Ingrese su nombre completo.
+                            }
+                            @if (editForm.get('nombreCompleto')?.hasError('minlength')) {
+                                El nombre completo debe tener al menos 3 caracteres.
+                            }
+                            @if (editForm.get('nombreCompleto')?.hasError('maxlength')) {
+                                El nombre completo no puede exceder los 50 caracteres.
+                            }
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Sección: Información de Contacto -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <mat-icon>contact_mail</mat-icon>
+                        Información de Contacto
+                    </h3>
+
+                    <!-- Correo Electrónico -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Correo Electrónico</mat-label>
+                        <input matInput type="email" formControlName="correo" 
+                            placeholder="Ingrese su correo electrónico"
+                            autocomplete="email">
+                        <mat-icon matPrefix>email</mat-icon>
+                        <mat-error>
+                            @if (editForm.get('correo')?.hasError('required')) {
+                                Ingrese su correo electrónico.
+                            }
+                            @if (editForm.get('correo')?.hasError('pattern')) {
+                                El formato del correo electrónico es inválido.
+                            }
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Teléfono -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>{{ 'USUARIO_REGISTRO.TELEFONO' | translate }}</mat-label>
+                        <input matInput type="tel" formControlName="telefono" 
+                            placeholder="88888888" 
+                            autocomplete="tel" 
+                            minlength="8" 
+                            maxlength="8">
+                        <mat-icon matPrefix>phone</mat-icon>
+                        <mat-error>
+                            @if (editForm.get('telefono')?.errors?.['required']) {
+                                Ingrese su teléfono.
+                            }
+                            @if (editForm.get('telefono')?.errors?.['pattern']) {
+                                El formato del teléfono es inválido.
+                            }
+                            @if (editForm.get('telefono')?.errors?.['minlength'] || editForm.get('telefono')?.errors?.['maxlength']) {
+                                El teléfono debe tener exactamente 8 dígitos.
+                            }
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Sección: Estado de la cuenta -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <mat-icon>settings</mat-icon>
+                        Estado de la Cuenta
+                    </h3>
+
+                    <div class="toggle-container">
+                        <mat-slide-toggle formControlName="activo" color="primary">
+                            Cuenta Activa
+                        </mat-slide-toggle>
+                        <p class="toggle-hint">
+                            El estado de la cuenta indica si el usuario puede acceder al sistema.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Sección: Seguridad (solo enlace) -->
+                <div class="form-section security-section">
+                    <h3 class="section-title">
+                        <mat-icon>security</mat-icon>
+                        Seguridad
+                    </h3>
+                    
+                    <div class="password-notice">
+                        <mat-icon>info</mat-icon>
+                        <p>La contraseña no se puede cambiar desde esta sección.</p>
+                    </div>
+
+                </div>
+
+                <!-- Botones -->
+                <div class="button-container">
+                    <button mat-raised-button type="submit" 
+                        class="btn-submit full-width"
+                        color="primary"
+                        [disabled]="editForm.invalid || loading()">
+                        <mat-icon style="color: white">save</mat-icon>
+                        @if (loading()) {
+                            <mat-spinner diameter="20" class="spinner-inline"></mat-spinner>
+                        }
+                        <span style="color: white">
+                            {{ loading() ? "Guardando..." : "Guardar Cambios" }}
+                        </span>
+                    </button>
+
+                    <button mat-stroked-button type="button" class="btn-reset full-width" 
+                        (click)="onReset()"
+                        [disabled]="loading()">
+                        <mat-icon>refresh</mat-icon>
+                        <span>Restaurar</span>
+                    </button>
+                </div>
+
+                <!-- Botón cancelar -->
+                <div class="cancel-link">
+                    <button mat-button color="warn" type="button" 
+                        (click)="onCancel()" 
+                        [disabled]="loading()">
+                        <mat-icon>arrow_back</mat-icon>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        }
+
+    </div>
+
+</div>

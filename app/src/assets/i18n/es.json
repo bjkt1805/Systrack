@@ -33,7 +33,8 @@
     "NOTIFICACIONES": "Notificaciones (Últimas 3)",
     "GESTIONAR_NOTIFICACIONES": "Gestionar Notificaciones",
     "LOGIN": "Inicio de sesión",
-    "LOGOUT": "Cerrar sesión", 
+    "LOGOUT": "Cerrar sesión",
+    "EDITAR_PERFIL": "Editar Perfil",
     "NO_NOTIFICACIONES": "Sin notificaciones"
   },
   "FOOTER": {

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { EtiquetaController } from '../controllers/etiquetaController';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 export class EtiquetaRoutes {
     static get routes(): Router {
@@ -14,10 +15,10 @@ export class EtiquetaRoutes {
         // router.delete('/:id', etiquetaController.delete);
 
         // Obtener todas las etiquetas
-        router.get('/', controller.get);
+        router.get('/', authenticateJWT,controller.get);
         
         // Obtener categorías por etiqueta
-        router.get('/:id/categorias', controller.getCategoriasByEtiquetaId);
+        router.get('/:id/categorias', authenticateJWT, controller.getCategoriasByEtiquetaId);
         return router
     }
 }

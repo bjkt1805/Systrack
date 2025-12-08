@@ -150,6 +150,12 @@ export class UsuarioLogin implements OnInit, OnDestroy {
         this.router.navigate(['/usuario/register']);
     }
 
+    // Navegar a la página de restablecimiento de contraseña
+    goToResetPassword(): void {
+        this.router.navigate(['/usuario/reset-password']);
+        console.log('Navegando a la página de restablecimiento de contraseña', this.router);
+    }
+
     /**
     * Ciclo de vida OnDestroy: limpia suscripciones
     */

@@ -16,8 +16,8 @@
             <!-- Campo Email -->
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>{{'USUARIO_LOGIN.CORREO_LABEL' | translate}}</mat-label>
-                <input matInput type="email" formControlName="email" placeholder="{{'USUARIO_LOGIN.CORREO_PLACEHOLDER' | translate}}"
-                    autocomplete="email">
+                <input matInput type="email" formControlName="email"
+                    placeholder="{{'USUARIO_LOGIN.CORREO_PLACEHOLDER' | translate}}" autocomplete="email">
                 <mat-icon matPrefix>email</mat-icon>
                 <mat-error>
                     @if (loginForm.get('email')?.errors?.['required']){
@@ -36,7 +36,8 @@
                     placeholder="••••••••" autocomplete="current-password" minlength="6" maxlength="20">
                 <mat-icon matPrefix>lock</mat-icon>
                 <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
-                    [attr.aria-label]="'USUARIO_LOGIN.CONTRASENNA_ARIA_LABEL' | translate" [attr.aria-pressed]="hidePassword">
+                    [attr.aria-label]="'USUARIO_LOGIN.CONTRASENNA_ARIA_LABEL' | translate"
+                    [attr.aria-pressed]="hidePassword">
                     <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 <mat-error>
@@ -52,6 +53,14 @@
                 </mat-error>
             </mat-form-field>
 
+            <!-- Link para restablecer contraseña -->
+            <div class="forgot-password-link">
+                <button mat-button color="primary" type="button" (click)="goToResetPassword()" [disabled]="loading">
+                    <mat-icon>lock_reset</mat-icon>
+                    Olvidé mi contraseña
+                </button>
+            </div>
+
             <!-- Contenedor de botones -->
             <div class="button-container">
 
@@ -60,7 +69,8 @@
                     [disabled]="loginForm.invalid || loading">
                     <mat-icon style="color: white;">login</mat-icon>
                     <!-- <mat-spinner diameter="20" class="spinner-inline"></mat-spinner> -->
-                    <span style="color: white;">{{ loading ? ('USUARIO_LOGIN.INICIANDO_SESION' | translate) : ('USUARIO_LOGIN.INICIAR_SESION' | translate) }}</span>
+                    <span style="color: white;">{{ loading ? ('USUARIO_LOGIN.INICIANDO_SESION' | translate) :
+                        ('USUARIO_LOGIN.INICIAR_SESION' | translate) }}</span>
                 </button>
 
                 <!-- Botón para limpiar y resetear el formulario -->

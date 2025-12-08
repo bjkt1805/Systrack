@@ -1,0 +1,263 @@
+/* Reutilizar los estilos de usuario-register con algunas modificaciones */
+
+.edit-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    background: var(--mat-sys-surface);
+}
+
+.edit-card {
+    width: 100%;
+    max-width: 500px;
+    background: var(--mat-sys-surface-container);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.edit-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--mat-sys-primary) 0%, var(--mat-sys-tertiary) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.edit-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 8px 0;
+}
+
+.edit-subtitle {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+}
+
+/* Loading */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
+
+.loading-container p {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 16px;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 8px;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active .step-circle {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+}
+
+.step-label {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+    text-transform: uppercase;
+}
+
+.progress-line {
+    width: 60px;
+    height: 3px;
+    background: var(--mat-sys-surface-variant);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease;
+}
+
+.progress-line.active {
+    background: var(--mat-sys-primary);
+}
+
+/* Form */
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-section {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mat-sys-primary);
+}
+
+.section-title mat-icon {
+    color: var(--mat-sys-primary);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Toggle container */
+.toggle-container {
+    padding: 16px;
+    background: var(--mat-sys-surface);
+    border-radius: 8px;
+}
+
+.toggle-hint {
+    margin: 8px 0 0 0;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Security section */
+.security-section {
+    background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 8px;
+}
+
+.password-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: var(--mat-sys-surface);
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.password-notice mat-icon {
+    color: var(--mat-sys-primary);
+    flex-shrink: 0;
+}
+
+.password-notice p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    line-height: 1.5;
+}
+
+.btn-change-password {
+    width: 100%;
+}
+
+/* Buttons */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-submit {
+    background-color: var(--mat-sys-primary) !important; 
+    color: var(--mat-sys-on-primary);
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-reset {
+    height: 44px;
+}
+
+.spinner-inline {
+    margin-right: 8px;
+}
+
+/* Link cancelar */
+.cancel-link {
+    text-align: center;
+    margin-top: 16px;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .edit-container {
+        padding: 20px 16px;
+    }
+
+    .edit-card {
+        padding: 24px 20px;
+    }
+
+    .edit-title {
+        font-size: 24px;
+    }
+
+    .progress-line {
+        width: 40px;
+    }
+
+    .step-label {
+        font-size: 10px;
+    }
+}
