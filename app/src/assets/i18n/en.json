@@ -74,7 +74,12 @@
     "REGRESAR": "Back",
     "NO_ENCONTRADO_TITULO": "Technician not found",
     "NO_ENCONTRADO_TEXTO": "Could not load information for this technician.",
-    "VOLVER_LISTADO": "Back to List"
+    "VOLVER_LISTADO": "Back to List",
+    "VALORACION_SERVICIO": "Service Rating",
+    "CARGANDO_VALORACIONES": "Loading ratings...",
+    "SIN_VALORACIONES": "This technician has no service ratings yet.",
+    "VALORACION": "rating",
+    "VALORACIONES": "ratings"
   },
 
   "TECNICO_FORM": {
@@ -306,7 +311,22 @@
     "NO_ENCONTRADO_TEXTO": "Could not load information for this ticket.",
     "VOLVER_LISTADO": "Back to List",
     "SIN_PERMISOS_TITULO": "No Permissions",
-    "SIN_PERMISOS_MENSAJE": "You cannot change the status of this ticket in its current state"
+    "SIN_PERMISOS_MENSAJE": "You cannot change the status of this ticket in its current state",
+    "VALORACION_SERVICIO": "Service Rating",
+    "AGREGAR_VALORACION": "Add Rating",
+    "VALORACION_TITULO": "Rate Service",
+    "VALORACION_SUBTITULO": "Help us improve by rating the service received",
+    "PUNTAJE": "Rating (1-5 stars)",
+    "COMENTARIO_OPCIONAL": "Comment (optional)",
+    "COMENTARIO_PLACEHOLDER": "Share your experience with the service received...",
+    "ENVIAR_VALORACION": "Submit Rating",
+    "CANCELAR": "Cancel",
+    "VALORACION_ENVIADA": "Rating submitted successfully",
+    "ERROR_ENVIAR_VALORACION": "Error submitting rating",
+    "TICKET_YA_VALORADO": "This ticket has already been rated",
+    "SOLO_CLIENTE_PUEDE_VALORAR": "Only the client can rate the ticket",
+    "TICKET_DEBE_ESTAR_CERRADO": "The ticket must be closed to be rated",
+    "SELECCIONE_CALIFICACION": "Please select a rating"
   },
 
   "TICKET_HISTORIAL_VIEW": {
@@ -503,7 +523,7 @@
   "ASIGNACION": {
     "VISTA_ASIGNACIONES": "Assignment View",
     "VISTA_ADMIN": "Administrator view",
-        
+
     "VISTA_TECNICO": "Technician view",
     "TOTAL": "Total Assigned Tickets",
     "URGENTES": "Urgent Tickets",
@@ -524,10 +544,10 @@
     "CERRADO": "Closed",
     "FILTRO_PRIORIDAD": "Filter by Priority",
     "TODAS": "All",
-    "URGENTE" : "Urgent",
+    "URGENTE": "Urgent",
     "ALTA": "High",
-    "MEDIA" : "Medium",
-    "BAJA" : "Low",
+    "MEDIA": "Medium",
+    "BAJA": "Low",
     "SEMANA": "Week from October 27 to November 2, 2025",
     "AL": "to",
     "RECARGAR_TICKETS": "Reload tickets",
@@ -542,15 +562,15 @@
     "VER_DETALLE": "View Detail",
     "CAMBIAR_ESTADO": "Change Status",
     "AGREGAR_COMENTARIO": "Add Comment",
-    "SIN_TICKETS": "No tickets", 
+    "SIN_TICKETS": "No tickets",
     "VENCIDO": "Overdue",
-    "LUNES":"Monday",
-    "MARTES":"Tuesday",
-    "MIERCOLES":"Wednesday",
-    "JUEVES":"Thursday",
-    "VIERNES":"Friday",
-    "SABADO":"Saturday",
-    "DOMINGO":"Sunday"
+    "LUNES": "Monday",
+    "MARTES": "Tuesday",
+    "MIERCOLES": "Wednesday",
+    "JUEVES": "Thursday",
+    "VIERNES": "Friday",
+    "SABADO": "Saturday",
+    "DOMINGO": "Sunday"
   },
 
   "ASIGNACION_NOTIFICACION": {
@@ -590,16 +610,13 @@
     "LIMPIAR": "Clear",
     "DIVIDER": "or",
     "NO_CUENTA": "Do not have an account?",
-    "REGISTRATE_AQUI": "Register here", 
+    "REGISTRATE_AQUI": "Register here",
     "INICIO_SESION_EXITOSO": "Login Successful",
     "INICIO_SESION_EXITOSO_MENSAJE": "Welcome back.",
-    "ERROR_AUTENTICACION": "Authentication Error", 
+    "ERROR_AUTENTICACION": "Authentication Error",
     "ERROR_AUTENTICACION_MENSAJE": "Unexpected error. Please try again.",
     "FORMULARIO_INCOMPLETO": "Incomplete form",
     "FORMULARIO_INCOMPLETO_MENSAJE": "Please complete all required fields."
-
-    
-
   },
 
   "USUARIO_REGISTRO": {
@@ -660,9 +677,9 @@
     "ERROR_REGISTRO_GENERICO": "Error registering user. Please try again.",
     "ERROR_NOMBRE_USUARIO_EXISTE": "The username is already in use.",
     "ERROR_CORREO_EXISTE": "The email address is already registered."
-  }, 
+  },
 
-    "NOTIFICACIONES_INDEX": {
+  "NOTIFICACIONES_INDEX": {
     "TITULO": "Notifications Center",
     "SUBTITULO": "Notification history and management",
     "TOTAL": "Total",

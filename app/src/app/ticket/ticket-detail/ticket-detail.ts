@@ -11,22 +11,23 @@ import { TranslateService } from '@ngx-translate/core';
 import { TicketHistorialViewDialog } from '../ticket-historial-view-dialog/ticket-historial-view-dialog';
 import { AuthenticationService } from '../../share/services/app/authentication.service';
 import { EstadoTicket } from '../../share/models/EnumsModel';
+import { ValoracionService } from '../../share/services/api/valoracion.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: false,
   templateUrl: './ticket-detail.html',
-  styleUrl: './ticket-detail.css'
+  styleUrl: './ticket-detail.css',
 })
 export class TicketDetail {
-
   // Signal para almacenar los datos del ticket
   datos = signal<TicketModel | null>(null);
 
   // Inyectar servicio para llamar al detalle del ticket
   private ticketService = inject(TicketService);
 
-  // Para obtener el parámetro de la ruta 
+  // Para obtener el parámetro de la ruta
   private route = inject(ActivatedRoute);
 
   // Para redireccionar
@@ -44,41 +45,49 @@ export class TicketDetail {
   // Inyectar servicio de traducción
   private translate = inject(TranslateService);
 
+  // Inyectar el servicio de valoración
+  private valoracionService = inject(ValoracionService);
+  private fb = inject(FormBuilder);
+
+  // Form para valoración
+  valoracionForm!: FormGroup;
+  enviandoValoracion = signal(false);
+
   /**
- * Signals para manejar la autenticación de usuario 
- */
+   * Signals para manejar la autenticación de usuario
+   */
   readonly isAuthenticated = this.authService.authenticated;
 
   readonly currentUser = this.authService.usuario;
 
-
   // Mapa para manejar el flujo de estados del estado
   // Por ejemplo, pasar de Pendiente a Asignado
-  // Luego pasar de Asignado a En_Proceso, etc. 
-  // Record ayuda a mapear un objeto mediante llave (EstadoTicket) y tipo de 
+  // Luego pasar de Asignado a En_Proceso, etc.
+  // Record ayuda a mapear un objeto mediante llave (EstadoTicket) y tipo de
   // valor asociado a esas llaves (EstadoTicket[])
   private readonly FLUJO_ESTADOS: Record<EstadoTicket, EstadoTicket[]> = {
     [EstadoTicket.PENDIENTE]: [EstadoTicket.ASIGNADO],
     [EstadoTicket.ASIGNADO]: [EstadoTicket.EN_PROCESO],
     [EstadoTicket.EN_PROCESO]: [EstadoTicket.RESUELTO],
     [EstadoTicket.RESUELTO]: [EstadoTicket.CERRADO],
-    [EstadoTicket.CERRADO]: []
+    [EstadoTicket.CERRADO]: [],
   };
 
-  // Mapa/record para los íconos de estado del tiquete 
+  // Mapa/record para los íconos de estado del tiquete
   private readonly ESTADOS_ICONS: Record<string, string> = {
-    'PENDIENTE': 'pending',
-    'ASIGNADO': 'person_add',
-    'EN_PROCESO': 'autorenew',
-    'RESUELTO': 'check_circle',
-    'CERRADO': 'lock'
-  }
+    PENDIENTE: 'pending',
+    ASIGNADO: 'person_add',
+    EN_PROCESO: 'autorenew',
+    RESUELTO: 'check_circle',
+    CERRADO: 'lock',
+  };
 
   constructor() {
+    console.log('¿Usuario autenticado?', this.isAuthenticated());
+    console.log('Usuario actual:', this.currentUser());
 
-    console.log("¿Usuario autenticado?", this.isAuthenticated());
-    console.log("Usuario actual:", this.currentUser());
-
+    // Inicializar formulario de valoración
+    this.initValoracionForm();
 
     // Para obtener el id/parámetro de la ruta
     // Parsear el id a número
@@ -90,7 +99,6 @@ export class TicketDetail {
     }
   }
 
-
   // Obtener ticket y actualizar la Signal
   obtenerTicket(id: number) {
     this.ticketService.getById(id).subscribe((data: TicketModel) => {
@@ -101,21 +109,20 @@ export class TicketDetail {
 
   // Obtener el ícono según el estado del tiquete
   getEstadoIcon(estado: string | undefined): string {
-    return this.ESTADOS_ICONS[estado || ''] || 'help'; // retornar 
+    return this.ESTADOS_ICONS[estado || ''] || 'help'; // retornar
   }
 
   /**
-   * Signal computada para verificar si el usuario puede actualizar el estado del ticket 
+   * Signal computada para verificar si el usuario puede actualizar el estado del ticket
    */
   puedeActualizarEstado = computed(() => {
-
     // Obtener la información del tiquete (signal datos)
     const ticket = this.datos();
 
-    // Obtener el usuario autenticado 
+    // Obtener el usuario autenticado
     const usuario = this.currentUser();
 
-    // Si no hay tiquete ni usuario devolver false 
+    // Si no hay tiquete ni usuario devolver false
     if (!ticket || !usuario) return false;
 
     // Si el estado del tiquete es CERRADO, devolver false (no se puede actualizar)
@@ -127,7 +134,7 @@ export class TicketDetail {
       return true;
     }
 
-    // Lógica para usuario con rol TECNICO 
+    // Lógica para usuario con rol TECNICO
     if (usuario.rol === 'TECNICO') {
       // Técnico puede cambiar si hay siguientes estados disponibles
       const siguientesEstados = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
@@ -137,8 +144,7 @@ export class TicketDetail {
     // Lógica para usuario con rol CLIENTE
     if (usuario.rol === 'CLIENTE') {
       // El cliente solo puede CERRAR su propio ticket si está RESUELTO
-      return ticket.estado === EstadoTicket.RESUELTO && 
-             ticket.solicitante.id === usuario.id;
+      return ticket.estado === EstadoTicket.RESUELTO && ticket.solicitante.id === usuario.id;
     }
 
     // Devolver false por defecto
@@ -150,11 +156,11 @@ export class TicketDetail {
    */
   // private tienePermisoParaEstado(estadoNuevo: EstadoTicket, ticket: TicketModel, usuario: any): boolean {
 
-  //   // Obtener el id de usuario y el rol a partir del usuario 
+  //   // Obtener el id de usuario y el rol a partir del usuario
   //   const { id: usuarioId, rol } = usuario;
 
   //   // SOLO LOS TÉCNICOS PUEDEN CAMBIAR EL TIQUETE A EN_PROCESO O RESUELTO
-  //   // A partir del record FLUJO_ESTADOS se revisa si EstadoTicket 
+  //   // A partir del record FLUJO_ESTADOS se revisa si EstadoTicket
   //   // es "EN_PROCESO" o "RESUELTO"
   //   if ([EstadoTicket.EN_PROCESO, EstadoTicket.RESUELTO].includes(estadoNuevo)) {
 
@@ -165,15 +171,15 @@ export class TicketDetail {
   //   // SOLO EL CLIENTE QUE CREÓ EL TIQUETE O EL ADMIN PUEDEN CERRARLO
   //   if (estadoNuevo === EstadoTicket.CERRADO) {
 
-  //     //retornar true si el id de usuario es el del solicitanteId del tiquete 
-  //     // o si el rol es ADMIN 
+  //     //retornar true si el id de usuario es el del solicitanteId del tiquete
+  //     // o si el rol es ADMIN
   //     return ticket.solicitanteId === usuarioId || rol === 'ADMIN'
   //   }
 
   //   // ADMIN PUEDE CAMBIAR EL ESTADO DEL TIQUETE A ASIGNADO
   //   if (estadoNuevo === EstadoTicket.ASIGNADO) {
 
-  //     // retornar true si el rol del usuario es ADMIN 
+  //     // retornar true si el rol del usuario es ADMIN
   //     return rol === 'ADMIN';
   //   }
 
@@ -186,14 +192,13 @@ export class TicketDetail {
    * Método para abrir el diálogo de cambio de estado del ticket
    */
   abrirDialogoCambioEstado(): void {
-
     // Obtener el tiquete
     const ticket = this.datos();
 
     // Obtener el usuario autenticado
     const usuario = this.currentUser();
 
-    // Si no hay tiquete o usuario, salir del 
+    // Si no hay tiquete o usuario, salir del
     // método
     if (!ticket || !usuario) return;
 
@@ -201,8 +206,7 @@ export class TicketDetail {
     let estadosPermitidos: EstadoTicket[] = [];
 
     // Lógica para usuario con rol ADMIN
-    if (usuario.rol === 'ADMIN'){
-
+    if (usuario.rol === 'ADMIN') {
       // Si el estado del tiquete es PENDIENTE, puede asignarlo
       if (ticket.estado === EstadoTicket.PENDIENTE) {
         estadosPermitidos.push(EstadoTicket.ASIGNADO); // Agregar el estado ASIGNADO al array de estadosPermitidos
@@ -218,7 +222,6 @@ export class TicketDetail {
 
     // Lógica para usuario con rol TECNICO
     else if (usuario.rol === 'TECNICO') {
-
       // Utilizar una variable tipo Record/Mapa para mapear los estados disponibles para el usuario Técnico
 
       const FLUJO_TECNICO: Record<EstadoTicket, EstadoTicket[]> = {
@@ -226,7 +229,7 @@ export class TicketDetail {
         [EstadoTicket.ASIGNADO]: [EstadoTicket.EN_PROCESO],
         [EstadoTicket.EN_PROCESO]: [EstadoTicket.RESUELTO],
         [EstadoTicket.RESUELTO]: [],
-        [EstadoTicket.CERRADO]: []
+        [EstadoTicket.CERRADO]: [],
       };
 
       // Asignar al arreglo estadosPermitidos el Record de FLUJO_TECNICO
@@ -243,20 +246,17 @@ export class TicketDetail {
       console.log('[CLIENTE] Estados disponibles:', estadosPermitidos);
     }
 
-    // Validar que haya estados disponibles 
+    // Validar que haya estados disponibles
     if (estadosPermitidos.length === 0) {
       const titleKey = 'TICKET_DETAIL.SIN_PERMISOS_TITULO';
       const messageKey = 'TICKET_DETAIL.SIN_PERMISOS_MENSAJE';
-      this.translate.get([titleKey, messageKey]).subscribe(translations => {
-        this.noti.warning(
-          translations[titleKey],
-          translations[messageKey]
-        );
+      this.translate.get([titleKey, messageKey]).subscribe((translations) => {
+        this.noti.warning(translations[titleKey], translations[messageKey]);
       });
       return;
     }
 
-    // // Obtener los siguientes estados disponibles 
+    // // Obtener los siguientes estados disponibles
     // const siguientesEstadosTicket = this.FLUJO_ESTADOS[ticket.estado as EstadoTicket] || [];
 
     // // Filtrar los estados a los que el usuario tiene permiso para cambiar
@@ -277,15 +277,15 @@ export class TicketDetail {
       data: {
         ticket: ticket,
         estadosDisponibles: estadosPermitidos,
-        usuarioLogueado: usuario
-      }
+        usuarioLogueado: usuario,
+      },
     });
 
     // Suscribirse al cierre del diálogo para recargar el ticket si se actualizó el estado
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       // Si el resultado es verdadero, significa que se actualizó el estado
       if (result === true) {
-        console.log("[DIALOG DETALLE TIQUETE] - Estado actualizado, recargando ticket ...");
+        console.log('[DIALOG DETALLE TIQUETE] - Estado actualizado, recargando ticket ...');
         this.obtenerTicket(ticket.id); // Recargar el tiquete
       }
     });
@@ -293,20 +293,18 @@ export class TicketDetail {
 
   /**
    * Función para formatear una fecha en formato DD/MM/AAAA hh:mm AM/PM
-   * que recibe la fecha como parámetro 
-   * @param fecha 
-   * @returns 
+   * que recibe la fecha como parámetro
+   * @param fecha
+   * @returns
    */
 
   // Fecha en formato DD/MM/AAAA hh:mm AM/PM
   fechaFormateada(fecha: Date | null | undefined): string {
-
     // Crear un objeto Date a partir del parámetro fecha
     const fechaAFormatear = new Date(fecha || '');
 
     // Si no hay fecha, retornar cadena vacía
     if (!fechaAFormatear || isNaN(fechaAFormatear.getTime())) return '';
-
 
     // Obtener el idioma actual desde el servicio de traducción
     const idiomaActual = this.translate.currentLang || 'es';
@@ -361,10 +359,9 @@ export class TicketDetail {
   // Signal computado de cerradoAt
   cerradoAt = computed(() => this.toDate(this.datos()?.cerradoAt));
 
-
   // ====================================
-  // SIGNALS COMPUTADOS PARA CALCULAR 
-  // LOS SIGUIENTES CAMPOS DERIVADOS: 
+  // SIGNALS COMPUTADOS PARA CALCULAR
+  // LOS SIGUIENTES CAMPOS DERIVADOS:
   // - DIAS DE RESOLUCION (SOLO SI EL TICKET ESTÁ RESUELTO O CERRADO)
   // - DIAS HASTA LA RESOLUCIÓN (SI EL TICKET NO ESTÁ RESUELTO)
   // - CUMPLIMIENTO DE RESPUESTA
@@ -373,7 +370,6 @@ export class TicketDetail {
 
   // Signal compuetado para mostrar tiempo de resolución en días (horas y minutos si es menor a 1 día)
   tiempoResolucion = computed(() => {
-
     // Obtener la fecha de resolución (priorizando resueltoAt, ya que está relacionado con el SLA de resolución)
     const resuelto = this.resueltoAt();
 
@@ -383,7 +379,7 @@ export class TicketDetail {
     // Obtener la fecha de creación del ticket
     const creado = this.creadoAt();
 
-    // Configurar la fecha de resolución con la fecha de resolución del ticket 
+    // Configurar la fecha de resolución con la fecha de resolución del ticket
     const fechaResolucion = resuelto;
 
     // Si no hay fecha de resolución, retornar null
@@ -399,7 +395,6 @@ export class TicketDetail {
 
     // Si los dias obtenidos es mayor 0 (1 o más) mostrar solo dias
     if (diffDias > 0) {
-
       // Ejemplo de salida: "3 días"
       return `${diffDias} d`;
     }
@@ -414,14 +409,11 @@ export class TicketDetail {
       return `0 d (0 hrs ${diffMinutos} min)`;
     }
 
-    return 0; 
-
+    return 0;
   });
-
 
   // Cumplimiento de respuesta (signal computed fuertemente tipado )
   cumplioRespuesta = computed<null | boolean>(() => {
-
     // Obtener el valor de cumplioRespuesta desde la base de datos
     const cumplioRespuesta = this.datos()?.cumplioRespuesta;
 
@@ -449,7 +441,6 @@ export class TicketDetail {
 
   // Cumplimiento de resolución (signal computed fuertemente tipado )
   cumplioResolucion = computed<null | boolean>(() => {
-
     // Obtener el valor de cumplioResolucion desde la base de datos
     const cumplioResolucion = this.datos()?.cumplioResolucion;
 
@@ -493,10 +484,9 @@ export class TicketDetail {
     return 'http://localhost:3000/images/';
   }
 
-  // Método para obtener las imágenes asociadas al historial del ticket 
+  // Método para obtener las imágenes asociadas al historial del ticket
   // Tipado fuerte para la imagen
   openImage(img: { url?: string } | null | undefined) {
-
     // Si no hay url de imagen, salir del método (no abrir el dialog)
     if (!img?.url) return;
 
@@ -504,8 +494,121 @@ export class TicketDetail {
     const src = `http://localhost:3000/images/${img.url}`;
     this.ticketDialog.open(TicketImageViewDialog, {
       data: { src },
-      panelClass: 'img-dialog-panel'
+      panelClass: 'img-dialog-panel',
     });
   }
 
+  // Signal computada para verificar si el usuario puede valorar
+  puedeValorar = computed(() => {
+    const ticket = this.datos(); // Obtener la información del tiquete (signal datos)
+    const usuario = this.currentUser(); // Obtener el usuario autenticado
+
+    if (!ticket || !usuario) return false; // Si no hay tiquete ni usuario devolver false
+
+    // Solo el cliente que creó el ticket puede valorar
+    if (usuario.rol !== 'CLIENTE') return false;
+    if (ticket.solicitante.id !== usuario.id) return false;
+
+    // El ticket debe estar cerrado
+    if (ticket.estado !== EstadoTicket.CERRADO) return false;
+
+    // No debe tener valoración previa
+    if (ticket.valoracion) return false;
+
+    return true;
+  });
+
+  //Inicializar el formulario de valoración
+  private initValoracionForm(): void {
+    this.valoracionForm = this.fb.group({
+      puntaje: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
+      comentario: ['', [Validators.maxLength(500)]],
+    });
+  }
+
+  // Enviar la valoración
+  enviarValoracion(): void {
+    if (this.valoracionForm.invalid || this.valoracionForm.get('puntaje')?.value === 0) { // Validar que se haya seleccionado una calificación
+      this.translate
+        .get(['TICKET_DETALLE.ERROR_ENVIAR_VALORACION', 'TICKET_DETALLE.SELECCIONE_CALIFICACION'])
+        .subscribe((translations) => {
+          this.noti.error(
+            translations['TICKET_DETALLE.ERROR_ENVIAR_VALORACION'],
+            translations['TICKET_DETALLE.SELECCIONE_CALIFICACION'],
+            3000
+          );
+        });
+      return;
+    }
+
+    const ticket = this.datos(); // Obtener la información del tiquete (signal datos)
+    if (!ticket) return; // Si no hay tiquete salir del método
+
+    this.enviandoValoracion.set(true); // Indicar que se está enviando la valoración
+
+    // Construir el objeto de valoración
+    const valoracionData = {
+      ticketId: ticket.id,
+      puntaje: this.valoracionForm.get('puntaje')?.value,
+      comentario: this.valoracionForm.get('comentario')?.value || null,
+      creadoPorId: this.currentUser()?.id,
+    };
+
+    // Llamar al servicio para crear la valoración
+    this.valoracionService.create(valoracionData).subscribe({
+      next: (valoracion) => {
+        console.log('[FRONTEND] Valoración creada:', valoracion);
+
+        this.translate
+          .get(['TICKET_DETALLE.VALORACION_ENVIADA', 'TICKET_DETALLE.VALORACION_ENVIADA'])
+          .subscribe((translations) => {
+            this.noti.success(
+              translations['TICKET_DETALLE.VALORACION_ENVIADA'],
+              `Calificación: ${valoracion.puntaje}/5 estrellas`,
+              3000
+            );
+          });
+
+        // Recargar el ticket para mostrar la valoración
+        this.obtenerTicket(ticket.id);
+        this.enviandoValoracion.set(false);
+      },
+      error: (error) => {
+        console.error('[FRONTEND] Error creando valoración:', error);
+        this.enviandoValoracion.set(false);
+
+        let mensajeError = 'Error al enviar la valoración';
+
+        if (error.error?.message) {
+          if (error.error.message.includes('cerrados')) {
+            mensajeError = 'TICKET_DETALLE.TICKET_DEBE_ESTAR_CERRADO';
+          } else if (error.error.message.includes('solicitante')) {
+            mensajeError = 'TICKET_DETALLE.SOLO_CLIENTE_PUEDE_VALORAR';
+          } else if (error.error.message.includes('ya tiene')) {
+            mensajeError = 'TICKET_DETALLE.TICKET_YA_VALORADO';
+          }
+        }
+
+        this.translate
+          .get(['TICKET_DETALLE.ERROR_ENVIAR_VALORACION', mensajeError])
+          .subscribe((translations) => {
+            this.noti.error(
+              translations['TICKET_DETALLE.ERROR_ENVIAR_VALORACION'],
+              translations[mensajeError],
+              4000
+            );
+          });
+      },
+    });
+  }
+
+  // Obtener el array de estrellas para el formulario
+  getStarsArray(): number[] {
+    return [1, 2, 3, 4, 5];
+  }
+
+  // Establecer la calificación
+  setRating(rating: number): void {
+    this.valoracionForm.patchValue({ puntaje: rating });
+  }
 }

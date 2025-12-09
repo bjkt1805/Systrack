@@ -6,12 +6,9 @@
     <mat-card-header class="tech-card__header">
       <div class="header-content">
         <div class="icon-wrapper">
-          <img 
-            [src]="'http://localhost:3000/images/' + datos()?.foto" 
-            [alt]="datos()?.nombreUsuario || 'Avatar del técnico'"
-            class="tech-avatar"
-            onerror="this.src='http://localhost:3000/images/image-not-found.jpg'"
-          />
+          <img [src]="'http://localhost:3000/images/' + datos()?.foto"
+            [alt]="datos()?.nombreUsuario || 'Avatar del técnico'" class="tech-avatar"
+            onerror="this.src='http://localhost:3000/images/image-not-found.jpg'" />
         </div>
         <div class="title-group">
           <h1 class="tech-card__name">{{ datos()?.nombreUsuario }}</h1>
@@ -41,7 +38,7 @@
           <mat-icon>person</mat-icon>
           {{ 'TECNICO_DETALLE.INFORMACION_PERSONAL' | translate }}
         </h3>
-        
+
         <div class="info-grid">
           <div class="info-item">
             <span class="label">{{ 'TECNICO_DETALLE.NOMBRE_USUARIO' | translate }}</span>
@@ -79,13 +76,13 @@
           <mat-icon>workspace_premium</mat-icon>
           {{ 'TECNICO_DETALLE.ESPECIALIDADES' | translate }} ({{ datos()?.especialidades?.length }})
         </h3>
-        
+
         <div class="chips-container">
           @for (item of datos()?.especialidades; track item.id) {
-            <mat-chip class="chip chip-primary">
-              <mat-icon>star</mat-icon>
-              {{item.nombre}}
-            </mat-chip>
+          <mat-chip class="chip chip-primary">
+            <mat-icon>star</mat-icon>
+            {{item.nombre}}
+          </mat-chip>
           }
         </div>
       </section>
@@ -96,7 +93,7 @@
           <mat-icon>analytics</mat-icon>
           {{ 'TECNICO_DETALLE.ESTADISTICAS' | translate }}
         </h3>
-        
+
         <div class="sla-grid">
           <div class="sla-card">
             <div class="sla-icon">
@@ -123,8 +120,50 @@
         </div>
       </section>
 
+      <!-- SECCIÓN: VALORACIÓN DEL SERVICIO -->
+      <section class="info-section valoracion-section">
+        <h3 class="section-title">
+          <mat-icon>star_rate</mat-icon>
+          {{ 'TECNICO_DETALLE.VALORACION_SERVICIO' | translate }}
+        </h3>
+
+        @if (cargandoValoracion()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>{{ 'TECNICO_DETALLE.CARGANDO_VALORACIONES' | translate }}</p>
+        </div>
+        } @else {
+        <div class="valoracion-content">
+          <!-- Promedio con estrellas -->
+          <div class="rating-display">
+            <div class="stars-container">
+              @for (star of getStarsArray(); track star) {
+              <mat-icon class="star-icon" [style.color]="star <= promedioValoracion() ? '#ffd700' : '#e0e0e0'">
+                {{ star <= promedioValoracion() ? 'star' : 'star_border' }} </mat-icon>
+                  }
+            </div>
+            <div class="rating-info">
+              <span class="promedio-numero">{{ promedioValoracion() | number:'1.2-2' }}/5</span>
+              <span class="total-valoraciones">
+                ({{ totalValoraciones() }} {{ totalValoraciones() === 1 ? ('TECNICO_DETALLE.VALORACION' | translate) :
+                ('TECNICO_DETALLE.VALORACIONES' | translate) }})
+              </span>
+            </div>
+          </div>
+
+          <!-- Mensaje si no tiene valoraciones -->
+          @if (totalValoraciones() === 0) {
+          <div class="sin-valoraciones">
+            <mat-icon>info</mat-icon>
+            <p>{{ 'TECNICO_DETALLE.SIN_VALORACIONES' | translate }}</p>
+          </div>
+          }
+        </div>
+        }
+      </section>
+
     </mat-card-content>
-    
+
     <!-- FOOTER CON SOLO BOTÓN REGRESAR -->
     <mat-card-footer class="tech-card__footer">
       <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">

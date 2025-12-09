@@ -19,10 +19,7 @@
       <!--  BOTÓN PARA CAMBIAR ESTADO DEL TIQUETE-->
       @if (puedeActualizarEstado()) {
       <div class="header-actions">
-        <button style="font-weight: 600;"
-          mat-raised-button 
-          color="primary" 
-          (click)="abrirDialogoCambioEstado()"
+        <button style="font-weight: 600;" mat-raised-button color="primary" (click)="abrirDialogoCambioEstado()"
           class="btn-update-estado">
           <mat-icon>swap_horiz</mat-icon>
           {{'TICKET_DETALLE.ACTUALIZAR_ESTADO' | translate}}
@@ -42,7 +39,7 @@
           <mat-icon>info</mat-icon>
           {{'TICKET_DETALLE.INFORMACION_GENERAL' | translate}}
         </h3>
-        
+
         <div class="ticket-info">
           <div class="info-row">
             <span class="info-label">{{'TICKET_DETALLE.FECHA_CREACION' | translate}}</span>
@@ -57,7 +54,8 @@
                 <mat-icon>{{ getEstadoIcon(datos()?.estado) }}</mat-icon>
                 {{ datos()?.estado }}
               </span>
-            </span>          </div>
+            </span>
+          </div>
 
           <div class="info-row">
             <span class="info-label">{{'TICKET_DETALLE.PRIORIDAD' | translate}}</span>
@@ -87,7 +85,7 @@
           <mat-icon>schedule</mat-icon>
           {{'TICKET_DETALLE.SLA' | translate}}
         </h3>
-        
+
         <div class="ticket-info--sla">
           <!-- SLA de Respuesta -->
           <div class="sla-card">
@@ -134,28 +132,29 @@
           <mat-icon>task_alt</mat-icon>
           {{'TICKET_DETALLE.CUMPLIMIENTO_SLA' | translate}}
         </h3>
-        
+
         <div class="ticket-info">
           <div class="info-row">
             <span class="info-label">{{'TICKET_DETALLE.CUMPLIMIENTO_RESPUESTA' | translate}}</span>
             <span class="info-value">
               @if (cumplioRespuesta() === null) {
-                <span class="info-badge" style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
-                  <mat-icon>schedule</mat-icon>
-                  {{'TICKET_DETALLE.PENDIENTE' | translate}}
-                </span>
+              <span class="info-badge"
+                style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
+                <mat-icon>schedule</mat-icon>
+                {{'TICKET_DETALLE.PENDIENTE' | translate}}
+              </span>
               }
               @else if (cumplioRespuesta()) {
-                <span class="info-badge ok">
-                  <mat-icon>check_circle</mat-icon>
-                  {{'TICKET_DETALLE.CUMPLIDO' | translate}}
-                </span>
+              <span class="info-badge ok">
+                <mat-icon>check_circle</mat-icon>
+                {{'TICKET_DETALLE.CUMPLIDO' | translate}}
+              </span>
               }
               @else {
-                <span class="info-badge off">
-                  <mat-icon>cancel</mat-icon>
-                  {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
-                </span>
+              <span class="info-badge off">
+                <mat-icon>cancel</mat-icon>
+                {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
+              </span>
               }
             </span>
           </div>
@@ -164,22 +163,23 @@
             <span class="info-label">{{'TICKET_DETALLE.CUMPLIMIENTO_RESOLUCION' | translate}}</span>
             <span class="info-value">
               @if (cumplioResolucion() === null) {
-                <span class="info-badge" style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
-                  <mat-icon>schedule</mat-icon>
-                  {{'TICKET_DETALLE.PENDIENTE' | translate}}
-                </span>
+              <span class="info-badge"
+                style="background: color-mix(in srgb, #9e9e9e 15%, transparent); color: #9e9e9e; border: 1px solid color-mix(in srgb, #9e9e9e 30%, transparent);">
+                <mat-icon>schedule</mat-icon>
+                {{'TICKET_DETALLE.PENDIENTE' | translate}}
+              </span>
               }
               @else if (cumplioResolucion()) {
-                <span class="info-badge ok">
-                  <mat-icon>check_circle</mat-icon>
-                  {{'TICKET_DETALLE.CUMPLIDO' | translate}}
-                </span>
+              <span class="info-badge ok">
+                <mat-icon>check_circle</mat-icon>
+                {{'TICKET_DETALLE.CUMPLIDO' | translate}}
+              </span>
               }
               @else {
-                <span class="info-badge off">
-                  <mat-icon>cancel</mat-icon>
-                  {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
-                </span>
+              <span class="info-badge off">
+                <mat-icon>cancel</mat-icon>
+                {{'TICKET_DETALLE.INCUMPLIDO' | translate}}
+              </span>
               }
             </span>
           </div>
@@ -240,27 +240,87 @@
       </section>
       }
 
-      <!-- SECCIÓN: VALORACIÓN -->
+      <!-- SECCIÓN: VALORACIÓN (Mostrar directamente el formulario si puede valorar) -->
+      @if (puedeValorar()) {
+      <section class="info-section valoracion-form">
+        <h3 class="section-title">
+          <mat-icon>star_rate</mat-icon>
+          {{'TICKET_DETALLE.VALORACION_TITULO' | translate}}
+        </h3>
+        <p class="section-subtitle">{{'TICKET_DETALLE.VALORACION_SUBTITULO' | translate}}</p>
+
+        <form [formGroup]="valoracionForm" (ngSubmit)="enviarValoracion()">
+          <div class="form-content">
+
+            <!-- Calificación con estrellas -->
+            <div class="rating-input">
+              <label class="rating-label">{{'TICKET_DETALLE.PUNTAJE' | translate}}</label>
+              <div class="stars-container">
+                @for (star of getStarsArray(); track star) {
+                <button type="button" class="star-button" (click)="setRating(star)"
+                  [class.selected]="star <= valoracionForm.get('puntaje')?.value">
+                  <mat-icon class="star-icon">
+                    {{ star <= valoracionForm.get('puntaje')?.value ? 'star' : 'star_border' }} </mat-icon>
+                </button>
+                }
+                <span class="rating-value">
+                  @if (valoracionForm.get('puntaje')?.value > 0) {
+                  ({{ valoracionForm.get('puntaje')?.value }}/5)
+                  } @else {
+                  (0/5)
+                  }
+                </span>
+              </div>
+              @if (valoracionForm.get('puntaje')?.hasError('required') && valoracionForm.get('puntaje')?.touched) {
+              <mat-error class="error-message">La calificación es requerida</mat-error>
+              }
+            </div>
+
+            <!-- Comentario opcional -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{'TICKET_DETALLE.COMENTARIO_OPCIONAL' | translate}}</mat-label>
+              <textarea matInput formControlName="comentario" rows="4" maxlength="500"
+                [placeholder]="'TICKET_DETALLE.COMENTARIO_PLACEHOLDER' | translate">
+        </textarea>
+            </mat-form-field>
+
+            <!-- Botones de acción -->
+            <div class="form-actions">
+              <button type="submit" mat-raised-button color="primary"
+                [disabled]="valoracionForm.invalid || valoracionForm.get('puntaje')?.value === 0 || enviandoValoracion()">
+                <mat-icon>send</mat-icon>
+                @if (enviandoValoracion()) {
+                Enviando...
+                } @else {
+                {{'TICKET_DETALLE.ENVIAR_VALORACION' | translate}}
+                }
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+      }
+
+      <!-- SECCIÓN: VALORACIÓN EXISTENTE -->
       @if (datos()?.valoracion) {
       <section class="info-section">
         <h3 class="section-title">
           <mat-icon>star</mat-icon>
           {{'TICKET_DETALLE.VALORACION_SERVICIO' | translate}}
         </h3>
-        
+
         <div class="ticket-info">
           <div class="info-row">
             <span class="info-label">{{'TICKET_DETALLE.CALIFICACION' | translate}}</span>
             <span class="info-value rating-stars">
               @for (star of [1,2,3,4,5]; track star) {
-                <mat-icon [style.color]="star <= datos()!.valoracion!.puntaje ? '#ffd700' : '#e0e0e0'">
-                  {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }}
-                </mat-icon>
-              }
-              <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
+              <mat-icon [style.color]="star <= datos()!.valoracion!.puntaje ? '#ffd700' : '#e0e0e0'">
+                {{ star <= datos()!.valoracion!.puntaje ? 'star' : 'star_border' }} </mat-icon>
+                  }
+                  <span class="rating-number">({{ datos()?.valoracion?.puntaje }}/5)</span>
             </span>
           </div>
-          
+
           @if (datos()?.valoracion?.comentario) {
           <div class="info-row full-width">
             <span class="info-label">{{'TICKET_DETALLE.COMENTARIO' | translate}}</span>
@@ -270,9 +330,8 @@
         </div>
       </section>
       }
-
     </mat-card-content>
-    
+
     <!-- FOOTER -->
     <mat-card-footer class="ticket-card__actions">
       <button mat-raised-button color="primary" class="btn-back" (click)="goBack()">

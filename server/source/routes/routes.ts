@@ -9,6 +9,7 @@ import { ImageRoutes } from './image.routes';
 import { SLARoutes } from './SLA.routes';
 import { AsignacionRoutes } from './asignacion.routes';
 import { NotificacionRoutes } from './notificacion.routes';
+import { ValoracionRoutes } from './valoracion.routes';
 
 export class AppRoutes {
     static get routes(): Router {
@@ -25,6 +26,7 @@ export class AppRoutes {
         router.use('/sla',SLARoutes.routes)
         router.use('/asignacion', AsignacionRoutes.routes);
         router.use('/notificacion', NotificacionRoutes.routes);
+        router.use('/valoracion', ValoracionRoutes.routes);
         return router;
     }
 }
