@@ -167,6 +167,7 @@ get = async (req: Request, res: Response) => {
         },
       });
 
+      // Si no hay tickets con valoración, retornar promedio 0
       if (tickets.length === 0) {
         return res.status(200).json({
           tecnicoId,
@@ -175,6 +176,7 @@ get = async (req: Request, res: Response) => {
         });
       }
 
+      // Calcular el promedio de puntajes
       const sumaPuntajes = tickets.reduce(
         (sum, ticket) => sum + (ticket.valoracion?.puntaje || 0),
         0
