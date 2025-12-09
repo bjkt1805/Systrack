@@ -43,7 +43,7 @@ export const usuarios = [
   {
     nombreUsuario: "pedro.carrillo",
     nombreCompleto: "Pedro Carrillo",
-    telefono: "+506 6592 4486",
+    telefono: "65924486",
     correo: "pedro-tecnico2@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
@@ -55,7 +55,7 @@ export const usuarios = [
   {
     nombreUsuario: "andrea.lopez",
     nombreCompleto: "Andrea López",
-    telefono: "+506 8762 9695",
+    telefono: "87629695",
     correo: "andrea-tecnico3@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
@@ -67,7 +67,7 @@ export const usuarios = [
   {
     nombreUsuario: "juan.martinez",
     nombreCompleto: "Juan Martínez",
-    telefono: "+506 8006 7632",
+    telefono: "80067632",
     correo: "juan-tecnico4@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
@@ -79,7 +79,7 @@ export const usuarios = [
   {
     nombreUsuario: "felipe.ramirez",
     nombreCompleto: "Felipe Ramírez",
-    telefono: "+506 7423 9687",
+    telefono: "74239687",
     correo: "felipe-tecnico5@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
@@ -91,7 +91,7 @@ export const usuarios = [
   {
     nombreUsuario: "alberto.sanchez",
     nombreCompleto: "Alberto Sánchez",
-    telefono: "+506 7745 5315",
+    telefono: "77455315",
     correo: "alberto-tecnico6@systrack.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
     rol: Rol.TECNICO,
@@ -105,7 +105,7 @@ export const usuarios = [
   {
     nombreUsuario: "maria.gonzalez",
     nombreCompleto: "María González",
-    telefono: "+506 6998 1234",
+    telefono: "69981234",
     correo: "mgonzalez@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -114,7 +114,7 @@ export const usuarios = [
   {
     nombreUsuario: "andres.mora",
     nombreCompleto: "Andrés Mora",
-    telefono: "+506 8881 4422",
+    telefono: "88814422",
     correo: "andresmora@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -123,7 +123,7 @@ export const usuarios = [
   {
     nombreUsuario: "carolina.vega",
     nombreCompleto: "Carolina Vega",
-    telefono: "+506 7112 5589",
+    telefono: "71125589",
     correo: "carolinavega@outlook.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -132,7 +132,7 @@ export const usuarios = [
   {
     nombreUsuario: "diego.rojas",
     nombreCompleto: "Diego Rojas",
-    telefono: "+506 6023 9874",
+    telefono: "60239874",
     correo: "diegorojas@hotmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -141,7 +141,7 @@ export const usuarios = [
   {
     nombreUsuario: "sofia.castro",
     nombreCompleto: "Sofía Castro",
-    telefono: "+506 7011 3322",
+    telefono: "70113322",
     correo: "sofia.castro@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -150,7 +150,7 @@ export const usuarios = [
   {
     nombreUsuario: "ricardo.solis",
     nombreCompleto: "Ricardo Solís",
-    telefono: "+506 8299 4455",
+    telefono: "82994455",
     correo: "rsolis@icloud.com",
     contrasenaHash: "$2b$10$zn3fsRaO6OJUr1hpJ2r2cevfV9NpPNGfXiVD25srx6FODX3B6n//i",
   },
@@ -159,7 +159,7 @@ export const usuarios = [
   {
     nombreUsuario: "laura.martinez",
     nombreCompleto: "Laura Martínez",
-    telefono: "+506 6134 7788",
+    telefono: "61347788",
     correo: "laura.martinez@yahoo.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -168,7 +168,7 @@ export const usuarios = [
   {
     nombreUsuario: "felipe.araya",
     nombreCompleto: "Felipe Araya",
-    telefono: "+506 8876 0044",
+    telefono: "88760044",
     correo: "felipe.araya@correo.cr",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -177,7 +177,7 @@ export const usuarios = [
   {
     nombreUsuario: "paola.salas",
     nombreCompleto: "Paola Salas",
-    telefono: "+506 7044 6622",
+    telefono: "70446622",
     correo: "paola.salas@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -186,7 +186,7 @@ export const usuarios = [
   {
     nombreUsuario: "esteban.lopez",
     nombreCompleto: "Esteban López",
-    telefono: "+506 7155 2299",
+    telefono: "71552299",
     correo: "estebanlopez@outlook.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   },
@@ -195,7 +195,7 @@ export const usuarios = [
   {
     nombreUsuario: "valeria.chacon",
     nombreCompleto: "Valeria Chacón",
-    telefono: "+506 6099 8877",
+    telefono: "69855321",
     correo: "valeria.chacon@gmail.com",
     contrasenaHash: "$2b$10$1BaQqXuZYNLDAC42PY5fN.ufSOKjApmjkaZrQUYf7ms71PaS1mASO",
   }

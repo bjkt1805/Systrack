@@ -183,6 +183,8 @@ get = async (req: Request, res: Response) => {
       );
       const promedio = sumaPuntajes / tickets.length;
 
+      console.log(`[VALORACION CONTROLLER] Total de valoraciones para técnicoId ${tecnicoId}:`, tickets.length);
+
       return res.status(200).json({
         tecnicoId,
         promedio: parseFloat(promedio.toFixed(2)),

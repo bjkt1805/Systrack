@@ -43,8 +43,8 @@ export class ValoracionService {
    * @param tecnicoId ID del técnico
    * @returns Observable con el promedio
    */
-  getPromedioByTecnico(tecnicoId: number): Observable<{ promedio: number; total: number }> {
-    return this.http.get<{ promedio: number; total: number }>(`${this.apiUrl}/promedio/tecnico/${tecnicoId}`);
+  getPromedioByTecnico(tecnicoId: number): Observable<{ promedio: number; totalValoraciones: number }> {
+    return this.http.get<{ promedio: number; totalValoraciones: number }>(`${this.apiUrl}/promedio/tecnico/${tecnicoId}`);
   }
 
   /**

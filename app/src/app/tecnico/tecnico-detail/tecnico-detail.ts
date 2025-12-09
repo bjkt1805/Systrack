@@ -60,7 +60,7 @@ export class TecnicoDetail {
       next: (data) => {
         console.log('[TECNICO DETAIL] Promedio valoración:', data);
         this.promedioValoracion.set(data.promedio);
-        this.totalValoraciones.set(data.total);
+        this.totalValoraciones.set(data.totalValoraciones);
         this.cargandoValoracion.set(false);
       },
       error: (error) => {
