@@ -326,7 +326,8 @@
     "TICKET_YA_VALORADO": "Este ticket ya ha sido valorado",
     "SOLO_CLIENTE_PUEDE_VALORAR": "Solo el cliente puede valorar el ticket",
     "TICKET_DEBE_ESTAR_CERRADO": "El ticket debe estar cerrado para poder valorarlo",
-    "SELECCIONE_CALIFICACION": "Por favor seleccione una calificación"
+    "SELECCIONE_CALIFICACION": "Por favor seleccione una calificación",
+    "HISTORIAL_TICKET" : "Historial del tiquete"
   },
 
   "TICKET_HISTORIAL_VIEW": {
@@ -461,7 +462,7 @@
   },
 
   "ASIGNACION_AUTOMATICA_DIALOGO": {
-    "TITULO": "Asignanco Técnico",
+    "TITULO": "Asignando Técnico",
     "MENSAJE": "Por favor espere mientras buscamos el técnico más adecuado...",
     "ANALIZANDO_REGLAS": "Analizando reglas de asignación",
     "CALCULANDO_PRIORIDADES_SLA": "Calculando prioridades y SLA",
