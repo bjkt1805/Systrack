@@ -326,7 +326,8 @@
     "TICKET_YA_VALORADO": "This ticket has already been rated",
     "SOLO_CLIENTE_PUEDE_VALORAR": "Only the client can rate the ticket",
     "TICKET_DEBE_ESTAR_CERRADO": "The ticket must be closed to be rated",
-    "SELECCIONE_CALIFICACION": "Please select a rating"
+    "SELECCIONE_CALIFICACION": "Please select a rating",
+    "HISTORIAL_TICKET" : "Ticket History"
   },
 
   "TICKET_HISTORIAL_VIEW": {
