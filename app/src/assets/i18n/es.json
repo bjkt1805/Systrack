@@ -186,7 +186,7 @@
     "RESPUESTA": "Respuesta",
     "RESOLUCION": "Resolución",
     "VERDETALLES": "Ver Detalles",
-    "EDITAR": "Editar Categoría",
+    "EDITAR": "Editar",
     "NOHAYCATEGORIAS": "No hay categorías",
     "COMIENZA": "Comienza creando la primera categoría",
     "CREARPRIMERA": "Crear Primera Categoría"
@@ -231,7 +231,7 @@
   },
 
   "CATEGORIA_NOTIFICACIONES": {
-    "CREAR_TITULO": "Crear Categoría",
+    "CREAR_TITULO": "Crear",
     "CREAR_MENSAJE": "Categoría {{nombre}} creada",
     "ACTUALIZAR_TITULO": "Actualizar Categoría",
     "ACTUALIZAR_MENSAJE": "Categoría {{nombre}} actualizada",

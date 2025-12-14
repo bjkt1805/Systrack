@@ -74,8 +74,8 @@ export class CategoriaForm implements OnInit, OnDestroy {
       this.idCategoria = params['id'] ?? null;
       this.isCreate = this.idCategoria === null;
       const tituloKey = this.isCreate 
-        ? 'CATEGORIA_NOTIFICACIONES.TITULO_CREAR' 
-        : 'CATEGORIA_NOTIFICACIONES.TITULO_EDITAR';
+        ? 'CATEGORIA_NOTIFICACIONES.CREAR_TITULO' 
+        : 'CATEGORIA_NOTIFICACIONES.ACTUALIZAR_TITULO';
       
       this.translate.get(tituloKey).subscribe(titulo => {
         this.titleForm = titulo;
@@ -445,7 +445,7 @@ export class CategoriaForm implements OnInit, OnDestroy {
       next: (data) => {
         const tituloKey = this.isCreate 
           ? 'CATEGORIA_NOTIFICACIONES.CREAR_TITULO' 
-          : 'CATEGORIA_NOTIFICACIONES.ACTUALIZAR_TITULO';
+          : 'CATEGORIA_NOTIFICACIONES.EDITAR_TITULO';
         
         const mensajeKey = this.isCreate 
           ? 'CATEGORIA_NOTIFICACIONES.CREAR_MENSAJE' 
