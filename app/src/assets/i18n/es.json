@@ -232,9 +232,11 @@
 
   "CATEGORIA_NOTIFICACIONES": {
     "CREAR_TITULO": "Crear",
+    "EDITAR_TITULO": "Editar",
     "CREAR_MENSAJE": "Categoría {{nombre}} creada",
     "ACTUALIZAR_TITULO": "Actualizar Categoría",
     "ACTUALIZAR_MENSAJE": "Categoría {{nombre}} actualizada",
+
     "ERROR_TITULO": "Error",
     "ERROR_MENSAJE": "No se pudo procesar la categoría",
     "FORMULARIO_INVALIDO_TITULO": "Formulario Inválido",
